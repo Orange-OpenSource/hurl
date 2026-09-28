@@ -20,10 +20,10 @@ use base64::engine::general_purpose;
 use hurl_core::ast::{
     Assert, Base64, Body, BooleanOption, Bytes, Capture, CertificateAttributeName, Comment, Cookie,
     CountOption, Duration, DurationOption, Entry, EntryOption, File, FilenameParam, Filter,
-    FilterValue, Hex, HurlFile, JsonListElement, JsonValue, KeyValue, MultilineString,
-    MultilineStringKind, MultipartParam, NaturalOption, OptionKind, Placeholder, Predicate,
-    PredicateFuncValue, PredicateValue, Query, QueryValue, Regex, RegexValue, Request, Response,
-    StatusValue, VersionValue,
+    FilterValue, Hex, HurlFile, JsonListElement, JsonValue, JsonValueKind, KeyValue,
+    MultilineString, MultilineStringKind, MultipartParam, NaturalOption, OptionKind, Placeholder,
+    Predicate, PredicateFuncValue, PredicateValue, Query, QueryValue, Regex, RegexValue, Request,
+    Response, StatusValue, VersionValue,
 };
 use hurl_core::types::{Count, ToSource};
 
@@ -623,21 +623,21 @@ fn json_predicate_value(predicate_value: &PredicateValue) -> (JValue, Option<Str
 
 impl ToJson for JsonValue {
     fn to_json(&self) -> JValue {
-        match self {
-            JsonValue::Null => JValue::Null,
-            JsonValue::Number(s) => JValue::Number(s.to_string()),
-            JsonValue::String(s) => JValue::String(s.to_string()),
-            JsonValue::Boolean(v) => JValue::Boolean(*v),
-            JsonValue::List { elements, .. } => {
+        match &self.kind() {
+            JsonValueKind::Null => JValue::Null,
+            JsonValueKind::Number(s) => JValue::Number(s.to_string()),
+            JsonValueKind::String(s) => JValue::String(s.to_string()),
+            JsonValueKind::Boolean(v) => JValue::Boolean(*v),
+            JsonValueKind::List { elements, .. } => {
                 JValue::List(elements.iter().map(|e| e.to_json()).collect())
             }
-            JsonValue::Object { elements, .. } => JValue::Object(
+            JsonValueKind::Object { elements, .. } => JValue::Object(
                 elements
                     .iter()
                     .map(|elem| (elem.name.to_string(), elem.value.to_json()))
                     .collect(),
             ),
-            JsonValue::Placeholder(exp) => JValue::String(format!("{{{{{exp}}}}}")),
+            JsonValueKind::Placeholder(exp) => JValue::String(format!("{{{{{exp}}}}}")),
         }
     }
 }

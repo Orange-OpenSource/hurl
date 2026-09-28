@@ -220,7 +220,7 @@ fn body(reader: &mut Reader) -> ParseResult<Body> {
 mod tests {
     use super::*;
     use crate::ast::{
-        Bytes, Comment, JsonListElement, JsonValue, LineTerminator, MultilineString,
+        Bytes, Comment, JsonListElement, JsonValue, JsonValueKind, LineTerminator, MultilineString,
         MultilineStringKind, Template, TemplateElement, Whitespace,
     };
     use crate::reader::{CharPos, Pos};
@@ -424,26 +424,38 @@ mod tests {
         assert_eq!(r.method, Method::new("POST"));
         assert_eq!(
             r.body.unwrap().value,
-            Bytes::Json(JsonValue::List {
-                space0: String::new(),
-                elements: vec![
-                    JsonListElement {
-                        space0: String::new(),
-                        value: JsonValue::Number("1".to_string()),
-                        space1: String::new(),
-                    },
-                    JsonListElement {
-                        space0: String::new(),
-                        value: JsonValue::Number("2".to_string()),
-                        space1: String::new(),
-                    },
-                    JsonListElement {
-                        space0: String::new(),
-                        value: JsonValue::Number("3".to_string()),
-                        space1: String::new(),
-                    },
-                ],
-            })
+            Bytes::Json(JsonValue::new(
+                SourceInfo::new(Pos::new(2, 1), Pos::new(2, 8)),
+                JsonValueKind::List {
+                    space0: String::new(),
+                    elements: vec![
+                        JsonListElement {
+                            space0: String::new(),
+                            value: JsonValue::new(
+                                SourceInfo::new(Pos::new(2, 2), Pos::new(2, 3)),
+                                JsonValueKind::Number("1".to_string()),
+                            ),
+                            space1: String::new(),
+                        },
+                        JsonListElement {
+                            space0: String::new(),
+                            value: JsonValue::new(
+                                SourceInfo::new(Pos::new(2, 4), Pos::new(2, 5)),
+                                JsonValueKind::Number("2".to_string()),
+                            ),
+                            space1: String::new(),
+                        },
+                        JsonListElement {
+                            space0: String::new(),
+                            value: JsonValue::new(
+                                SourceInfo::new(Pos::new(2, 6), Pos::new(2, 7)),
+                                JsonValueKind::Number("3".to_string()),
+                            ),
+                            space1: String::new(),
+                        },
+                    ],
+                },
+            ))
         );
 
         let mut reader = Reader::new("POST http://localhost:8000/post-json-string\n\"Hello\"");
@@ -451,14 +463,17 @@ mod tests {
         assert_eq!(r.method, Method::new("POST"));
         assert_eq!(
             r.body.unwrap().value,
-            Bytes::Json(JsonValue::String(Template::new(
-                Some('"'),
-                vec![TemplateElement::String {
-                    value: "Hello".to_string(),
-                    source: "Hello".to_source(),
-                }],
-                SourceInfo::new(Pos::new(2, 2), Pos::new(2, 7)),
-            )))
+            Bytes::Json(JsonValue::new(
+                SourceInfo::new(Pos::new(2, 1), Pos::new(2, 8)),
+                JsonValueKind::String(Template::new(
+                    Some('"'),
+                    vec![TemplateElement::String {
+                        value: "Hello".to_string(),
+                        source: "Hello".to_source(),
+                    }],
+                    SourceInfo::new(Pos::new(2, 2), Pos::new(2, 7)),
+                )),
+            ))
         );
 
         let mut reader = Reader::new("POST http://localhost:8000/post-json-number\n100");
@@ -466,7 +481,10 @@ mod tests {
         assert_eq!(r.method, Method::new("POST"));
         assert_eq!(
             r.body.unwrap().value,
-            Bytes::Json(JsonValue::Number("100".to_string()))
+            Bytes::Json(JsonValue::new(
+                SourceInfo::new(Pos::new(2, 1), Pos::new(2, 4)),
+                JsonValueKind::Number("100".to_string()),
+            ))
         );
     }
 
@@ -548,26 +566,38 @@ mod tests {
         assert_eq!(b.line_terminators.len(), 0);
         assert_eq!(
             b.value,
-            Bytes::Json(JsonValue::List {
-                space0: String::new(),
-                elements: vec![
-                    JsonListElement {
-                        space0: String::new(),
-                        value: JsonValue::Number("1".to_string()),
-                        space1: String::new(),
-                    },
-                    JsonListElement {
-                        space0: String::new(),
-                        value: JsonValue::Number("2".to_string()),
-                        space1: String::new(),
-                    },
-                    JsonListElement {
-                        space0: String::new(),
-                        value: JsonValue::Number("3".to_string()),
-                        space1: String::new(),
-                    },
-                ],
-            })
+            Bytes::Json(JsonValue::new(
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 8)),
+                JsonValueKind::List {
+                    space0: String::new(),
+                    elements: vec![
+                        JsonListElement {
+                            space0: String::new(),
+                            value: JsonValue::new(
+                                SourceInfo::new(Pos::new(1, 2), Pos::new(1, 3)),
+                                JsonValueKind::Number("1".to_string()),
+                            ),
+                            space1: String::new(),
+                        },
+                        JsonListElement {
+                            space0: String::new(),
+                            value: JsonValue::new(
+                                SourceInfo::new(Pos::new(1, 4), Pos::new(1, 5)),
+                                JsonValueKind::Number("2".to_string()),
+                            ),
+                            space1: String::new(),
+                        },
+                        JsonListElement {
+                            space0: String::new(),
+                            value: JsonValue::new(
+                                SourceInfo::new(Pos::new(1, 6), Pos::new(1, 7)),
+                                JsonValueKind::Number("3".to_string()),
+                            ),
+                            space1: String::new(),
+                        },
+                    ],
+                },
+            ))
         );
         assert_eq!(reader.cursor().index, CharPos(8));
 
@@ -576,10 +606,13 @@ mod tests {
         assert_eq!(b.line_terminators.len(), 0);
         assert_eq!(
             b.value,
-            Bytes::Json(JsonValue::Object {
-                space0: String::new(),
-                elements: vec![],
-            })
+            Bytes::Json(JsonValue::new(
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 3)),
+                JsonValueKind::Object {
+                    space0: String::new(),
+                    elements: vec![],
+                },
+            ))
         );
         assert_eq!(reader.cursor().index, CharPos(2));
 
@@ -588,10 +621,13 @@ mod tests {
         assert_eq!(b.line_terminators.len(), 1);
         assert_eq!(
             b.value,
-            Bytes::Json(JsonValue::Object {
-                space0: String::new(),
-                elements: vec![],
-            })
+            Bytes::Json(JsonValue::new(
+                SourceInfo::new(Pos::new(2, 2), Pos::new(2, 4)),
+                JsonValueKind::Object {
+                    space0: String::new(),
+                    elements: vec![],
+                },
+            ))
         );
         assert_eq!(reader.cursor().index, CharPos(24));
 

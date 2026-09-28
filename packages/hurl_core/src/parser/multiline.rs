@@ -353,7 +353,8 @@ fn multiline_string_value(templatize: bool, reader: &mut Reader) -> ParseResult<
 mod tests {
     use super::*;
     use crate::ast::{
-        Expr, ExprKind, JsonObjectElement, JsonValue, Placeholder, TemplateElement, Variable,
+        Expr, ExprKind, JsonObjectElement, JsonValue, JsonValueKind, Placeholder, TemplateElement,
+        Variable,
     };
     use crate::reader::{CharPos, Pos};
     use crate::types::ToSource;
@@ -849,7 +850,9 @@ variables {
                             value: " ".to_string(),
                             source_info: SourceInfo::new(Pos::new(8, 10), Pos::new(8, 11)),
                         },
-                        value: JsonValue::Object {
+                        value: JsonValue::new(
+                            SourceInfo::new(Pos::new(8, 11), Pos::new(10, 2)),
+                            JsonValueKind::Object {
                             space0: "\n  ".to_string(),
                             elements: vec![JsonObjectElement {
                                 space0: String::new(),
@@ -865,19 +868,21 @@ variables {
                                 ),
                                 space1: String::new(),
                                 space2: " ".to_string(),
-                                value: JsonValue::String(Template::new(
-                                    Some('"'),
-                                    vec![
-                                        TemplateElement::String {
+                                value: JsonValue::new(
+                                    SourceInfo::new(Pos::new(9, 11), Pos::new(9, 21)),
+                                    JsonValueKind::String(Template::new(
+                                        Some('"'),
+                                        vec![TemplateElement::String {
                                             value: "Han Solo".to_string(),
                                             source: "Han Solo".to_source()
-                                        }
-                                    ],
-                                    SourceInfo::new(Pos::new(9, 12), Pos::new(9, 20))
-                                )),
+                                        }],
+                                        SourceInfo::new(Pos::new(9, 12), Pos::new(9, 20))
+                                    )),
+                                ),
                                 space3: "\n".to_string()
                             }]
-                        },
+                            },
+                        ),
                         whitespace: Whitespace {
                             value: "\n".to_string(),
                             source_info: SourceInfo::new(Pos::new(10, 2), Pos::new(11, 1))
