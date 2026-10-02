@@ -1,0 +1,7 @@
+error: Parsing JSON
+  --> tests_error_parser/json_max_depth.hurl:3:129
+   |
+ 3 | [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+   |                                                                                                                                 ^ maximum nesting depth of 128 exceeded
+   |
+
