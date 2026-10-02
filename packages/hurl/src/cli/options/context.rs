@@ -79,8 +79,8 @@ impl RunContext {
 
 /// Get config file path if any
 /// In order of precedence
-/// 1. from `XDG_CONFIG_HOME/hurl/config` if `XDG_CONFIG_HOME` is set
-/// 2. from `$HOME/.config/hurl/config` if $HOME is set
+/// 1. from `$XDG_CONFIG_HOME/hurl/config` if `$XDG_CONFIG_HOME` is set
+/// 2. from `$HOME/.config/hurl/config` if `$HOME` is set
 fn get_config_file(env_vars: &EnvVars) -> Option<PathBuf> {
     get_config_dir(env_vars).map(|config_dir| config_dir.join("hurl").join("config"))
 }

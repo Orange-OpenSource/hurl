@@ -122,8 +122,8 @@ More information on asserts can be found here [https://hurl.dev/docs/asserting-r
 
 Options that exist in curl have exactly the same semantics.
 
-Options specified on the command line are defined for every Hurl file's entry,
-except if they are tagged as cli-only (can not be defined in the Hurl request `[Options]` entry)
+Options specified on the command line are defined for every Hurl file's entry, except if they are tagged as cli-only 
+(can not be defined in the Hurl request `[Options]` entry)
 
 For instance:
 
@@ -145,11 +145,24 @@ HTTP 200
 
 will follow a redirection only for the second entry.
 
-Most of the options can also be defined with environment variables (like `HURL_INSECURE` for [`--insecure`](#insecure)). So, in order
-to configure Hurl, there are three sources from the lowest priority (most easily overridden) to highest (overrides all others):
+Hurl looks also for a configuration file at the following places `$XDG_CONFIG_HOME/hurl/config` if `$XDG_CONFIG_HOME` exists,
+or `$HOME/.config/hurl/config`. The configuration file is a list of options added to each Hurl run.
 
-- Environment variables (ex: `HURL_INSECURE`)
-- Command-line options (ex: `--insecure`)
+```shell
+$ cat ~/.config/hurl/config
+# Hurl config file
+--header x-identifier:quux
+--verbose
+--delay=1s
+--fail-with-body
+```
+
+Most of the options can also be defined with environment variables (like `HURL_INSECURE` for [`--insecure`](#insecure)). So, in order
+to configure Hurl, there are four sources from the lowest priority (most easily overridden) to highest (overrides all others):
+
+- Configuration file (ex: `~/.config/hurl/config`)
+- Environment variables (ex: `export HURL_INSECURE=true`)
+- Command-line options (ex: `hurl --insecure`)
 - Options section options (ex: `insecure: true` in file)
 
 ## ALL OPTIONS

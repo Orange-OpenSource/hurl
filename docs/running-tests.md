@@ -334,6 +334,9 @@ To use variables in your tests, you can:
 - use [`--variable` option]
 - use [`--variables-file` option]
 - define environment variables, for instance `HURL_VARIABLE_foo=bar`
+- define variables in an [`[Options]` section][options]
+- define variables in [Hurl configuration file]
+
 
 You will find a detailed description in the [Injecting Variables] section of the docs.
 
@@ -365,3 +368,5 @@ You will find a detailed description in the [Injecting Variables] section of the
 [performance check]: /docs/running-tests.md#stress-and-performance-tests
 [ephemeral ports exhaustion]: https://blog.cloudflare.com/how-to-stop-running-out-of-ephemeral-ports-and-start-to-love-long-lived-connections/
 [`--repeat`]: /docs/manual.md#repeat
+[options]: /docs/request.md#options
+[Hurl configuration file]: /docs/manual.md#configuration

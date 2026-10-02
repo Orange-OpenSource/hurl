@@ -108,8 +108,8 @@ More information on asserts can be found here \fIhttps://hurl.dev/docs/asserting
 
 Options that exist in curl have exactly the same semantics.
 
-Options specified on the command line are defined for every Hurl file's entry,
-except if they are tagged as cli-only (can not be defined in the Hurl request `[Options]` entry)
+Options specified on the command line are defined for every Hurl file's entry, except if they are tagged as cli-only 
+(can not be defined in the Hurl request `[Options]` entry)
 
 For instance:
 
@@ -127,13 +127,25 @@ will follow redirection for each entry in `foo.hurl`. You can also define an opt
 
 will follow a redirection only for the second entry.
 
+Hurl looks also for a configuration file at the following places `$XDG_CONFIG_HOME/hurl/config` if `$XDG_CONFIG_HOME` exists,
+or `$HOME/.config/hurl/config`. The configuration file is a list of options added to each Hurl run.
+
+    $ cat ~/.config/hurl/config
+    # Hurl config file
+    --header x-identifier:quux
+    --verbose
+    --delay=1s
+    --fail-with-body
+
 Most of the options can also be defined with environment variables (like `HURL_INSECURE` for \fI--insecure\fP). So, in order
-to configure Hurl, there are three sources from the lowest priority (most easily overridden) to highest (overrides all others):
+to configure Hurl, there are four sources from the lowest priority (most easily overridden) to highest (overrides all others):
 
 .IP \(bu 2
-Environment variables (ex: `HURL_INSECURE`)
+Configuration file (ex: `~/.config/hurl/config`)
 .IP \(bu 2
-Command-line options (ex: `--insecure`)
+Environment variables (ex: `export HURL_INSECURE=true`)
+.IP \(bu 2
+Command-line options (ex: `hurl --insecure`)
 .IP \(bu 2
 Options section options (ex: `insecure: true` in file)
 
