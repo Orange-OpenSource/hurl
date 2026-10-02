@@ -70,6 +70,7 @@ pub enum ParseErrorKind {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum JsonErrorVariant {
+    MaxDepthExceeded { max_depth: usize },
     TrailingComma,
     ExpectingElement,
     EmptyElement,
@@ -207,6 +208,9 @@ impl DisplaySourceError for ParseError {
                 format!("the option name is not valid. {did_you_mean}")
             }
             ParseErrorKind::Json(variant) => match variant {
+                JsonErrorVariant::MaxDepthExceeded { max_depth } => {
+                    format!("maximum nesting depth of {max_depth} exceeded")
+                }
                 JsonErrorVariant::TrailingComma => "trailing comma is not allowed".to_string(),
                 JsonErrorVariant::EmptyElement => {
                     "expecting an element; found empty element instead".to_string()

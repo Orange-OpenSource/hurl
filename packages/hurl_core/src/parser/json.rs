@@ -23,30 +23,45 @@ use crate::parser::template::EncodedString;
 use crate::parser::{JsonErrorVariant, ParseError, ParseErrorKind, ParseResult, templatize};
 use crate::reader::{Pos, Reader};
 
+const MAX_NESTING_DEPTH: usize = 128;
+
+/// Parse a JSON value from the reader.
 pub fn parse(reader: &mut Reader) -> ParseResult<JsonValue> {
-    choice(
-        &[
-            null_value,
-            boolean_value,
-            string_value,
-            number_value,
-            expression_value,
-            list_value,
-            object_value,
-        ],
-        reader,
-    )
+    parse_at_depth(reader, 0)
+}
+
+/// Parse a JSON value from the reader, considering the current nesting depth.
+fn parse_at_depth(reader: &mut Reader, depth: usize) -> ParseResult<JsonValue> {
+    let parsers = [
+        null_value,
+        boolean_value,
+        string_value,
+        number_value,
+        expression_value,
+    ];
+    let start = reader.cursor();
+    match choice(&parsers, reader) {
+        Err(error) if error.recoverable => reader.seek(start),
+        result => return result,
+    }
+
+    let start = reader.cursor();
+    match list_value(reader, depth) {
+        Err(error) if error.recoverable => reader.seek(start),
+        result => return result,
+    }
+    object_value(reader, depth)
 }
 
 /// Helper for parse, but already knowing that we are inside a JSON body.
-fn parse_in_json(reader: &mut Reader) -> ParseResult<JsonValue> {
+fn parse_in_json(reader: &mut Reader, depth: usize) -> ParseResult<JsonValue> {
     if let Some(c) = reader.peek()
         && c == ','
     {
         let kind = ParseErrorKind::Json(JsonErrorVariant::EmptyElement);
         return Err(ParseError::new(reader.cursor().pos, false, kind));
     }
-    match parse(reader) {
+    match parse_at_depth(reader, depth) {
         Ok(r) => Ok(r),
         // The only error that is recoverable is caused by reaching object_value try_literal('{'),
         // but this is not recoverable in this case, because we already know that we are in a JSON
@@ -275,14 +290,21 @@ fn expression_value(reader: &mut Reader) -> ParseResult<JsonValue> {
     Ok(JsonValue::Placeholder(exp))
 }
 
-fn list_value(reader: &mut Reader) -> ParseResult<JsonValue> {
+fn list_value(reader: &mut Reader, depth: usize) -> ParseResult<JsonValue> {
+    let start = reader.cursor();
     try_literal("[", reader)?;
+    if depth >= MAX_NESTING_DEPTH {
+        let kind = ParseErrorKind::Json(JsonErrorVariant::MaxDepthExceeded {
+            max_depth: MAX_NESTING_DEPTH,
+        });
+        return Err(ParseError::new(start.pos, false, kind));
+    }
     let space0 = whitespace(reader);
     let mut elements = vec![];
 
     // at least one element
     if reader.peek() != Some(']') {
-        let first_element = list_element(reader)?;
+        let first_element = list_element(reader, depth + 1)?;
         elements.push(first_element);
 
         loop {
@@ -304,7 +326,7 @@ fn list_value(reader: &mut Reader) -> ParseResult<JsonValue> {
                 let kind = ParseErrorKind::Json(JsonErrorVariant::TrailingComma);
                 return Err(ParseError::new(save.pos, false, kind));
             }
-            let element = list_element(reader)?;
+            let element = list_element(reader, depth + 1)?;
             elements.push(element);
         }
     }
@@ -313,9 +335,9 @@ fn list_value(reader: &mut Reader) -> ParseResult<JsonValue> {
     Ok(JsonValue::List { space0, elements })
 }
 
-fn list_element(reader: &mut Reader) -> ParseResult<JsonListElement> {
+fn list_element(reader: &mut Reader, depth: usize) -> ParseResult<JsonListElement> {
     let space0 = whitespace(reader);
-    let value = parse_in_json(reader)?;
+    let value = parse_in_json(reader, depth)?;
     let space1 = whitespace(reader);
     Ok(JsonListElement {
         space0,
@@ -324,12 +346,19 @@ fn list_element(reader: &mut Reader) -> ParseResult<JsonListElement> {
     })
 }
 
-pub fn object_value(reader: &mut Reader) -> ParseResult<JsonValue> {
+pub fn object_value(reader: &mut Reader, depth: usize) -> ParseResult<JsonValue> {
+    let start = reader.cursor();
     try_literal("{", reader)?;
+    if depth >= MAX_NESTING_DEPTH {
+        let kind = ParseErrorKind::Json(JsonErrorVariant::MaxDepthExceeded {
+            max_depth: MAX_NESTING_DEPTH,
+        });
+        return Err(ParseError::new(start.pos, false, kind));
+    }
     let space0 = whitespace(reader);
     let mut elements = vec![];
     if reader.peek() != Some('}') {
-        let first_element = object_element(reader)?;
+        let first_element = object_element(reader, depth + 1)?;
         elements.push(first_element);
 
         loop {
@@ -351,7 +380,7 @@ pub fn object_value(reader: &mut Reader) -> ParseResult<JsonValue> {
                 let kind = ParseErrorKind::Json(JsonErrorVariant::TrailingComma);
                 return Err(ParseError::new(save.pos, false, kind));
             }
-            let element = object_element(reader)?;
+            let element = object_element(reader, depth + 1)?;
             elements.push(element);
         }
     }
@@ -368,7 +397,7 @@ fn key(reader: &mut Reader) -> ParseResult<Template> {
     Ok(name)
 }
 
-fn object_element(reader: &mut Reader) -> ParseResult<JsonObjectElement> {
+fn object_element(reader: &mut Reader, depth: usize) -> ParseResult<JsonObjectElement> {
     let space0 = whitespace(reader);
     //literal("\"", reader)?;
     let name = key(reader)?;
@@ -385,7 +414,7 @@ fn object_element(reader: &mut Reader) -> ParseResult<JsonObjectElement> {
         let kind = ParseErrorKind::Json(JsonErrorVariant::EmptyElement);
         return Err(ParseError::new(save.pos, false, kind));
     }
-    let value = parse_in_json(reader)?;
+    let value = parse_in_json(reader, depth)?;
     let space3 = whitespace(reader);
     Ok(JsonObjectElement {
         space0,
@@ -415,7 +444,7 @@ mod tests {
     #[test]
     fn test_parse_error() {
         let mut reader = Reader::new("{ \"a\":\n}");
-        let error = parse(&mut reader).err().unwrap();
+        let error = parse_at_depth(&mut reader, 0).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
         assert_eq!(
             error.kind,
@@ -424,13 +453,38 @@ mod tests {
         assert!(!error.recoverable);
 
         let mut reader = Reader::new("[0,1,]");
-        let error = parse(&mut reader).err().unwrap();
+        let error = parse_at_depth(&mut reader, 0).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 5 });
         assert_eq!(
             error.kind,
             ParseErrorKind::Json(JsonErrorVariant::TrailingComma),
         );
         assert!(!error.recoverable);
+    }
+
+    #[test]
+    fn test_max_nesting_depth() {
+        for (opening, closing) in [("[", "]"), ("{\"a\":", "}")] {
+            let valid = format!(
+                "{}null{}",
+                opening.repeat(MAX_NESTING_DEPTH),
+                closing.repeat(MAX_NESTING_DEPTH)
+            );
+            assert!(parse_at_depth(&mut Reader::new(&valid), 0).is_ok());
+
+            let too_deep = format!(
+                "{}null{}",
+                opening.repeat(MAX_NESTING_DEPTH + 1),
+                closing.repeat(MAX_NESTING_DEPTH + 1)
+            );
+            let error = parse_at_depth(&mut Reader::new(&too_deep), 0).unwrap_err();
+            assert_eq!(
+                error.kind,
+                ParseErrorKind::Json(JsonErrorVariant::MaxDepthExceeded {
+                    max_depth: MAX_NESTING_DEPTH
+                })
+            );
+        }
     }
 
     #[test]
@@ -832,7 +886,7 @@ mod tests {
     fn test_list_value() {
         let mut reader = Reader::new("[]");
         assert_eq!(
-            list_value(&mut reader).unwrap(),
+            list_value(&mut reader, 0).unwrap(),
             JsonValue::List {
                 space0: String::new(),
                 elements: vec![]
@@ -842,7 +896,7 @@ mod tests {
 
         let mut reader = Reader::new("[ ]");
         assert_eq!(
-            list_value(&mut reader).unwrap(),
+            list_value(&mut reader, 0).unwrap(),
             JsonValue::List {
                 space0: " ".to_string(),
                 elements: vec![]
@@ -852,7 +906,7 @@ mod tests {
 
         let mut reader = Reader::new("[true, false]");
         assert_eq!(
-            list_value(&mut reader).unwrap(),
+            list_value(&mut reader, 0).unwrap(),
             JsonValue::List {
                 space0: String::new(),
                 elements: vec![
@@ -875,7 +929,7 @@ mod tests {
     #[test]
     fn test_list_error() {
         let mut reader = Reader::new("true");
-        let error = list_value(&mut reader).err().unwrap();
+        let error = list_value(&mut reader, 0).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
             error.kind,
@@ -886,7 +940,7 @@ mod tests {
         assert!(error.recoverable);
 
         let mut reader = Reader::new("[1, 2,]");
-        let error = list_value(&mut reader).err().unwrap();
+        let error = list_value(&mut reader, 0).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 6 });
         assert_eq!(
             error.kind,
@@ -899,7 +953,7 @@ mod tests {
     fn test_list_element() {
         let mut reader = Reader::new("true");
         assert_eq!(
-            list_element(&mut reader).unwrap(),
+            list_element(&mut reader, 1).unwrap(),
             JsonListElement {
                 space0: String::new(),
                 value: JsonValue::Boolean(true),
@@ -913,7 +967,7 @@ mod tests {
     fn test_object_value() {
         let mut reader = Reader::new("{}");
         assert_eq!(
-            object_value(&mut reader).unwrap(),
+            object_value(&mut reader, 0).unwrap(),
             JsonValue::Object {
                 space0: String::new(),
                 elements: vec![]
@@ -923,7 +977,7 @@ mod tests {
 
         let mut reader = Reader::new("{ }");
         assert_eq!(
-            object_value(&mut reader).unwrap(),
+            object_value(&mut reader, 0).unwrap(),
             JsonValue::Object {
                 space0: " ".to_string(),
                 elements: vec![]
@@ -933,7 +987,7 @@ mod tests {
 
         let mut reader = Reader::new("{\n  \"a\": true\n}");
         assert_eq!(
-            object_value(&mut reader).unwrap(),
+            object_value(&mut reader, 0).unwrap(),
             JsonValue::Object {
                 space0: "\n  ".to_string(),
                 elements: vec![JsonObjectElement {
@@ -956,7 +1010,7 @@ mod tests {
         assert_eq!(reader.cursor().index, CharPos(15));
 
         let mut reader = Reader::new("true");
-        let error = object_value(&mut reader).err().unwrap();
+        let error = object_value(&mut reader, 0).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
             error.kind,
@@ -970,7 +1024,7 @@ mod tests {
     #[test]
     fn test_object_error() {
         let mut reader = Reader::new("{ \"a\":\n}");
-        let error = object_value(&mut reader).err().unwrap();
+        let error = object_value(&mut reader, 0).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 7 });
         assert_eq!(
             error.kind,
@@ -983,7 +1037,7 @@ mod tests {
     fn test_object_element() {
         let mut reader = Reader::new("\"a\": true");
         assert_eq!(
-            object_element(&mut reader).unwrap(),
+            object_element(&mut reader, 1).unwrap(),
             JsonObjectElement {
                 space0: String::new(),
                 name: Template::new(
@@ -1006,7 +1060,7 @@ mod tests {
     #[test]
     fn test_object_element_error() {
         let mut reader = Reader::new(":");
-        let error = object_element(&mut reader).err().unwrap();
+        let error = object_element(&mut reader, 1).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 1 });
         assert_eq!(
             error.kind,
@@ -1017,7 +1071,7 @@ mod tests {
         assert!(!error.recoverable);
 
         let mut reader = Reader::new("\"name\":\n");
-        let error = object_element(&mut reader).err().unwrap();
+        let error = object_element(&mut reader, 1).err().unwrap();
         assert_eq!(error.pos, Pos { line: 1, column: 8 });
         assert_eq!(
             error.kind,

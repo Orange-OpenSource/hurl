@@ -301,7 +301,7 @@ fn graphql_variables(reader: &mut Reader) -> ParseResult<GraphQlVariables> {
     try_literal("variables", reader)?;
     let space = zero_or_more_spaces(reader)?;
     let start = reader.cursor();
-    let object = object_value(reader);
+    let object = object_value(reader, 0);
     let value = match object {
         Ok(obj) => obj,
         Err(_) => {
