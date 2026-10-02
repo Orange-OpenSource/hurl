@@ -12,7 +12,9 @@ class PatternTest(unittest.TestCase):
         self.assertEqual("^Hello .*!$", parse_pattern("Hello <<<.*>>>!"))
 
     def test_json(self):
-        self.assertEqual("""^{"time":\d+}$""", parse_pattern("""{"time":<<<\d+>>>}"""))
+        self.assertEqual(
+            r"""^\{"time":\d+\}$""", parse_pattern(r"""{"time":<<<\d+>>>}""")
+        )
 
     def test_escape_regex_metacharacters(self):
         self.assertEqual("""\\*\\*\\*""", escape_regex_metacharacters("***"))

@@ -13,8 +13,7 @@ Examples:
 
 import re
 import sys
-from datetime import date
-from typing import Optional
+from datetime import date, datetime, timezone
 
 
 def header(version: str, today: date) -> str:
@@ -22,12 +21,13 @@ def header(version: str, today: date) -> str:
     return f'.TH hurl 1 "{today_formatted}" "hurl {version}" " Hurl Manual"'
 
 
-def version() -> Optional[str]:
+def version() -> str | None:
     p = re.compile('version = "(.*)"')
-    for line in open("packages/hurl/Cargo.toml", "r").readlines():
-        m = p.match(line)
-        if m:
-            return m.group(1)
+    with open("packages/hurl/Cargo.toml", "r") as f:
+        for line in f:
+            m = p.match(line)
+            if m:
+                return m.group(1)
     return None
 
 
@@ -78,8 +78,9 @@ def convert_md(s) -> str:
 
 def main():
     input_file = sys.argv[1]
-    data = open(input_file).readlines()
-    print(header(version(), date.today()))
+    with open(input_file) as f:
+        data = f.readlines()
+    print(header(version(), datetime.now(tz=timezone.utc).date()))
 
     s = "".join([convert_md(line) for line in data])
 

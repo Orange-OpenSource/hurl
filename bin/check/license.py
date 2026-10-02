@@ -9,7 +9,7 @@ Examples:
 
 import json
 import subprocess
-from typing import List, Tuple
+import sys
 
 
 def main():
@@ -41,7 +41,7 @@ def is_forbidden(name: str) -> bool:
     return False
 
 
-def check_licenses(deps: List[Tuple[str, str, str, str]]):
+def check_licenses(deps: list[tuple[str, str, str, str]]):
     authorized = []
     forbidden = []
     unknown = []
@@ -73,14 +73,14 @@ def check_licenses(deps: List[Tuple[str, str, str, str]]):
 
     if len(forbidden) > 0:
         print("There are forbidden licenses")
-        exit(1)
+        sys.exit(1)
 
     if len(unknown) > 0:
         print("There are unknown licenses")
-        exit(2)
+        sys.exit(2)
 
 
-def get_deps() -> List[Tuple[str, str, str, str]]:
+def get_deps() -> list[tuple[str, str, str, str]]:
     """Returns a list of crates name and licenses"""
     p = subprocess.run(
         [
@@ -91,10 +91,11 @@ def get_deps() -> List[Tuple[str, str, str, str]]:
         ],
         capture_output=True,
         text=True,
+        check=False,
     )
     if p.returncode != 0:
         print("Error calling cargo metadata")
-        exit(1)
+        sys.exit(1)
     data = json.loads(p.stdout)
     packages = data["packages"]
     licenses = [

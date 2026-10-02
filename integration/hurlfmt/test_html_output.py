@@ -14,9 +14,9 @@ def test(html_file):
     hurl_file = os.path.splitext(html_file)[0] + ".hurl"
     if not os.path.isfile(hurl_file):
         return
-    expected = codecs.open(
-        hurl_file, encoding="utf-8-sig"
-    ).read()  # Input file can be saved with a BOM
+
+    with codecs.open(hurl_file, encoding="utf-8-sig") as f:
+        expected = f.read()  # Input file can be saved with a BOM
     if actual.strip() != expected.strip():
         print(">>> error in html file")
         print(f"actual: <{actual}>\nexpected: <{expected}>")
@@ -24,7 +24,8 @@ def test(html_file):
 
 
 def extract_hurl_content(hurl_file):
-    s = open(hurl_file).read()
+    with open(hurl_file) as f:
+        s = f.read()
     return BeautifulSoup(s, "html.parser").text
 
 

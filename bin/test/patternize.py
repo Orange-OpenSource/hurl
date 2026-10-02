@@ -8,10 +8,9 @@ Usage:
 import re
 import sys
 from pathlib import Path
-from typing import List
 
 
-def patternize_out(files: List[Path]) -> None:
+def patternize_out(files: list[Path]) -> None:
     """Patternize a list of .out.pattern files, replacing dynamic values with Hurl patterns."""
     for p in files:
         txt = p.read_text()
@@ -29,7 +28,7 @@ def patternize_out(files: List[Path]) -> None:
         p.write_text(txt)
 
 
-def patternize_err(files: List[Path]) -> None:
+def patternize_err(files: list[Path]) -> None:
     """Patternize a list of .err.pattern files, replacing dynamic values with Hurl patterns."""
     for p in files:
         txt = p.read_text()

@@ -33,8 +33,10 @@ def test(format_type: Literal["hurl", "html", "json"], hurl_file: str):
         return
     cmd = ["hurlfmt", "--out", format_type, hurl_file]
     print(" ".join(cmd))
-    result = subprocess.run(cmd, stdout=subprocess.PIPE)
-    expected = open(output_file, encoding="utf-8").read()
+    result = subprocess.run(cmd, stdout=subprocess.PIPE, check=False)
+
+    with open(output_file, encoding="utf-8") as f:
+        expected = f.read()
     actual = decode_string(result.stdout)
     if actual != expected:
         print(f">>> error in stdout for {format_type}")

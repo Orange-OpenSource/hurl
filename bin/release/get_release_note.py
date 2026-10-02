@@ -10,7 +10,6 @@ import argparse
 import datetime
 import json
 import sys
-from typing import List, Optional
 
 import requests
 
@@ -23,8 +22,8 @@ class Pull:
         url: str,
         description: str,
         author: str,
-        tags: Optional[List[str]] = None,
-        issues: Optional[List[int]] = None,
+        tags: list[str] | None = None,
+        issues: list[int] | None = None,
     ):
         if tags is None:
             tags = []
@@ -37,13 +36,7 @@ class Pull:
         self.issues = issues
 
     def __repr__(self):
-        return 'Pull("%s", "%s", "%s", "%s", %s)' % (
-            self.url,
-            self.description,
-            self.author,
-            str(self.tags),
-            str(self.issues),
-        )
+        return f'Pull("{self.url}", "{self.description}", "{self.author}", "{self.tags}", {self.issues})'
 
     def __eq__(self, other):
         """Overrides the default implementation"""
@@ -56,34 +49,31 @@ class Pull:
                 return False
             if self.tags != other.tags:
                 return False
-            if self.issues != other.issues:
+            if self.issues != other.issues:  # noqa: SIM103
                 return False
             return True
         return False
 
 
 class Issue:
-    def __init__(self, number: int, tags: List[str], author: str, pulls: List[Pull]):
+    def __init__(self, number: int, tags: list[str], author: str, pulls: list[Pull]):
         self.number = number
         self.tags = tags
         self.author = author
         self.pulls = pulls
 
     def __repr__(self):
+        tags = ",".join([f'"{t!s}"' for t in self.tags])
+        pulls = ",".join([str(p) for p in self.pulls])
         return (
-            'Issue(\n    number=%s,\n    tag=["%s"],\n    author="%s",\n    pulls=[%s]\n)'
-            % (
-                self.number,
-                ",".join(['"%s"' % t for t in self.tags]),
-                self.author,
-                ",".join([str(p) for p in self.pulls]),
-            )
+            f'Issue(\n    number={self.number!s},\n    tag=["{tags}"],\n'
+            f'    author="{self.author!s}",\n    pulls=[{pulls}]\n)'
         )
 
 
-def release_note(milestone: str, token: Optional[str]) -> str:
-    """return markdown release note for the given milestone"""
-    date = datetime.datetime.now()
+def release_note(milestone: str, token: str | None) -> str:
+    """return Markdown release note for the given milestone"""
+    date = datetime.datetime.now().astimezone()
 
     query = """\
 query {
@@ -161,7 +151,7 @@ query {
     return generate_md(milestone, date, pulls, authors)
 
 
-def pulls_from_issues(issues: List[Issue]) -> List[Pull]:
+def pulls_from_issues(issues: list[Issue]) -> list[Pull]:
     """return list of pulls from list of issues"""
     pulls: dict[str, Pull] = {}
     for issue in issues:
@@ -181,7 +171,7 @@ def pulls_from_issues(issues: List[Issue]) -> List[Pull]:
     return list(pulls.values())
 
 
-def authors_from_issues(issues: List[Issue]) -> List[str]:
+def authors_from_issues(issues: list[Issue]) -> list[str]:
     """return list of unique authors from a list of issues"""
     authors = []
     for issue in issues:
@@ -194,19 +184,16 @@ def authors_from_issues(issues: List[Issue]) -> List[str]:
 
 
 def generate_md(
-    milestone: str, date: datetime.datetime, pulls: List[Pull], authors: List[str]
+    milestone: str, date: datetime.datetime, pulls: list[Pull], authors: list[str]
 ) -> str:
     """Generate Markdown"""
 
-    s = "[%s (%s)](%s)" % (
-        milestone,
-        date.strftime("%Y-%m-%d"),
-        hurl_repo_url + "/blob/master/CHANGELOG.md#" + milestone,
-    )
+    changelog_url = hurl_repo_url + "/blob/master/CHANGELOG.md#" + milestone
+    s = f"[{milestone!s} ({date.strftime('%Y-%m-%d')})]({changelog_url})"
     s += "\n========================================================================================================================"
     s += "\n\nThanks to"
     for author in authors:
-        s += "\n[@%s](https://github.com/%s)," % (author, author)
+        s += f"\n[@{author!s}](https://github.com/{author!s}),"
 
     categories = {
         "breaking": "Breaking Changes",
@@ -216,33 +203,35 @@ def generate_md(
         "deprecation": "Deprecations",
     }
 
-    for category in categories:
+    for category, heading in categories.items():
         category_pulls = [pull for pull in pulls if category in pull.tags]
         if len(category_pulls) > 0:
-            s += "\n\n" + categories[category] + ":" + "\n\n"
+            s += "\n\n" + heading + ":" + "\n\n"
         for pull in category_pulls:
             issues = " ".join(
-                "[#%s](%s/issues/%s)" % (issue, hurl_repo_url, issue)
+                f"[#{issue!s}]({hurl_repo_url!s}/issues/{issue!s})"
                 for issue in pull.issues
             )
-            s += "* %s %s\n" % (pull.description, issues)
+            s += f"* {pull.description!s} {issues}\n"
 
     s += "\n"
     return s
 
 
-def github_graphql(token: Optional[str], query: str) -> str:
+def github_graphql(token: str | None, query: str) -> str:
     """Execute a GraphQL query using GitHub API."""
     url = "https://api.github.com/graphql"
     query_json = {"query": query}
     body = json.dumps(query_json)
-    sys.stderr.write("* POST %s\n" % url)
+    sys.stderr.write(f"* POST {url}\n")
     headers = {}
     if token:
         headers["Authorization"] = f"Bearer {token}"
     r = requests.post(url, data=body, headers=headers)
     if r.status_code != 200:
-        raise Exception("HTTP Error %s - %s" % (r.status_code, r.text))
+        raise requests.HTTPError(
+            f"HTTP Error {r.status_code!s} - {r.text!s}", response=r
+        )
     return r.text
 
 
@@ -254,7 +243,7 @@ def main():
     parser.add_argument("--token", help="GitHub authentication token")
     args = parser.parse_args()
     if args.version == "":
-        raise Exception("version can not be empty")
+        raise ValueError("version can not be empty")
     print(release_note(milestone=args.version, token=args.token))
 
 

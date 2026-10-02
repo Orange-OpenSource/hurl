@@ -3,12 +3,10 @@
 Generate Completion files
 """
 
-from typing import List
-
 from option import Option
 
 
-def generate_bash_completion(name: str, options: List[Option]):
+def generate_bash_completion(name: str, options: list[Option]):
     available_options = ["--" + option.long for option in options] + [
         "--help",
         "--version",
@@ -42,7 +40,7 @@ _"""
     )
 
 
-def generate_zsh_completion(name: str, options: List[Option]):
+def generate_zsh_completion(name: str, options: list[Option]):
     return (
         """#compdef """
         + name
@@ -134,7 +132,7 @@ def zsh_option(option: Option):
     return f"'{option_specifier}[{help}]{action}' \\"
 
 
-def generate_fish_completion(name: str, options: List[Option]):
+def generate_fish_completion(name: str, options: list[Option]):
     return (
         "\n".join([fish_option(name, option) for option in options])
         + """
@@ -152,7 +150,7 @@ def fish_option(name: str, option: Option):
     return "complete -c " + name + " -l " + option.long + " -d '" + option.help + "'"
 
 
-def generate_powershell_completion(name: str, options: List[Option]):
+def generate_powershell_completion(name: str, options: list[Option]):
     return (
         """using namespace System.Management.Automation
 using namespace System.Management.Automation.Language

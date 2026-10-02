@@ -1,4 +1,3 @@
-# coding=utf-8
 from app import app
 
 counter = 0
@@ -20,5 +19,4 @@ def skip_increment():
 
 @app.route("/skip/get")
 def skip_get():
-    global counter
     return str(counter)

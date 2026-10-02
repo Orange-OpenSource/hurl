@@ -1,11 +1,9 @@
-#!/usr/bin/env python3
 from dataclasses import dataclass, field
-from typing import Optional
 
 
 @dataclass
 class OptionGroup:
-    name: Optional[str]
+    name: str | None
     options: list[str] = field(default_factory=list)
 
 
@@ -14,21 +12,21 @@ class Option:
     name: str
     long: str
     description: str
-    short: Optional[str] = None
-    value: Optional[str] = None
-    value_default: Optional[str] = None
-    value_parser: Optional[str] = None
-    help: Optional[str] = None
-    help_heading: Optional[str] = None
-    conflict: Optional[str] = None
-    alias: Optional[str] = None
+    short: str | None = None
+    value: str | None = None
+    value_default: str | None = None
+    value_parser: str | None = None
+    help: str | None = None
+    help_heading: str | None = None
+    conflict: str | None = None
+    alias: str | None = None
     append: bool = False
     cli_only: bool = False
     allow_negative_numbers: bool = False
     deprecated: bool = False
     experimental: bool = False
     config_file: bool = False
-    env_var: Optional[str] = None
+    env_var: str | None = None
 
     def __str__(self):
         s = "name: " + self.name
@@ -111,7 +109,7 @@ class Option:
                 elif key == "help":
                     help = v
                     if help.endswith("."):
-                        raise Exception(f"{name}: help should not end with period")
+                        raise ValueError(f"{name}: help should not end with period")
                 elif key == "help_heading":
                     help_heading = v
                 elif key == "conflict":
@@ -127,7 +125,7 @@ class Option:
                     elif v == "false":
                         cli_only = False
                     else:
-                        raise Exception(
+                        raise ValueError(
                             f"{name}: Expected true or false for cli attribute"
                         )
                 elif key == "allow_negative_numbers":
@@ -136,7 +134,7 @@ class Option:
                     elif v == "false":
                         allow_negative_numbers = False
                     else:
-                        raise Exception(
+                        raise ValueError(
                             f"{name}: Expected true or false for allow_negative_numbers attribute"
                         )
                 elif key == "deprecated":
@@ -145,7 +143,7 @@ class Option:
                     elif v == "false":
                         deprecated = False
                     else:
-                        raise Exception(
+                        raise ValueError(
                             f"{name}: Expected true or false for deprecated attribute"
                         )
                 elif key == "experimental":
@@ -154,7 +152,7 @@ class Option:
                     elif v == "false":
                         experimental = False
                     else:
-                        raise Exception(
+                        raise ValueError(
                             f"{name}: Expected true or false for experimental attribute"
                         )
                 elif key == "config_file":
@@ -163,19 +161,19 @@ class Option:
                     elif v == "false":
                         config_file = False
                     else:
-                        raise Exception(
+                        raise ValueError(
                             f"{name}: Expected true or false for config_file attribute"
                         )
                 elif key == "env_var":
                     env_var = v.strip()
                 else:
-                    raise Exception(f"{name}: Invalid attribute " + key)
+                    raise ValueError(f"{name}: Invalid attribute " + key)
 
         if name is None:
-            raise Exception("missing name attribute")
+            raise ValueError("missing name attribute")
 
         if long is None:
-            raise Exception(f"{name}: missing long attribute")
+            raise ValueError(f"{name}: missing long attribute")
 
         return Option(
             name=name,
@@ -201,13 +199,14 @@ class Option:
     @staticmethod
     def parse_file(filename: str) -> "Option":
         # sys.stderr.write("Parsing " + filename + "\n")
-        s = open(filename).read()
+        with open(filename) as f:
+            s = f.read()
         return Option.parse(s)
 
 
 def parse_key_value(s: str) -> tuple[str, str]:
     if ":" not in s:
-        raise Exception("Expecting key value")
+        raise ValueError("Expecting key value")
     index = s.index(":")
     key = s[:index].strip()
     value = s[index + 1 :].strip()

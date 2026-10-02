@@ -1,7 +1,6 @@
-#!/usr/bin/env python3
 """
 Examples:
-    $ python3 contrib/npm/check_archive.py 1.6.1
+    $ python3 contrib/npm/check_publish.py 1.6.1
 """
 
 import hashlib
@@ -96,7 +95,6 @@ def check_version(hurl_version: str, package_version: str):
 def check_manual(hurl_version: str, package_version: str):
     print(bold_blue("Checking manual:"))
     print()
-    pass
 
 
 def main(hurl_version: str, package_version):

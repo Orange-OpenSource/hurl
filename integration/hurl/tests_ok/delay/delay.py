@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from app import app
 
@@ -10,7 +10,7 @@ counter = 0
 @app.route("/delay-init")
 def delay_init():
     global last, counter
-    last = datetime.now()
+    last = datetime.now(timezone.utc)
     counter = 0
     return ""
 
@@ -18,9 +18,9 @@ def delay_init():
 @app.route("/delay")
 def delay():
     global last
-    diff = (datetime.now() - last).total_seconds()
+    diff = (datetime.now(timezone.utc) - last).total_seconds()
     assert 1 < diff < 2
-    last = datetime.now()
+    last = datetime.now(timezone.utc)
     return ""
 
 
@@ -30,8 +30,8 @@ def delay_and_retry():
     counter += 1
 
     if counter > 5:
-        diff = (datetime.now() - last).total_seconds()
+        diff = (datetime.now(timezone.utc) - last).total_seconds()
         assert 1 < diff < 3
-        last = datetime.now()
+        last = datetime.now(timezone.utc)
 
     return f"{counter}"

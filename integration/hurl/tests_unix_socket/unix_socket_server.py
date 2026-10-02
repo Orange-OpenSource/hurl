@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 from os import path, unlink
 from socket import AF_UNIX, socket
 

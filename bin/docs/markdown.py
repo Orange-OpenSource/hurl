@@ -10,7 +10,6 @@ This module allows to manipulate Markdown document:
 import re
 import unicodedata
 from textwrap import dedent
-from typing import List, Optional
 
 from parser import Parser
 
@@ -18,28 +17,22 @@ from parser import Parser
 class Node:
     """Represent the base class for a Markdown document token."""
 
-    content: Optional[str]
+    content: str | None
 
-    def __init__(self, content: Optional[str]) -> None:
+    def __init__(self, content: str | None) -> None:
         self.content = content
 
 
 class Code(Node):
     """A code block token (https://daringfireball.net/projects/markdown/syntax#precode)."""
 
-    pass
-
 
 class Paragraph(Node):
     """A paragraph token (https://daringfireball.net/projects/markdown/syntax#p)."""
 
-    pass
-
 
 class Whitespace(Node):
     """A whitespace token."""
-
-    pass
 
 
 def build_header(title: str, level: int, _id: str | None) -> str:
@@ -63,7 +56,7 @@ class Header(Node):
     level: int
     _id: str | None
 
-    def __init__(self, title: str, level: int, _id: str = None) -> None:
+    def __init__(self, title: str, level: int, _id: str | None = None) -> None:
         super().__init__(content=None)
         self.title = title
         self.level = level
@@ -300,7 +293,7 @@ class MarkdownDoc:
         children: children nodes of this document.
     """
 
-    children: List[Node]
+    children: list[Node]
 
     def __init__(self) -> None:
         self.children = []
@@ -309,7 +302,7 @@ class MarkdownDoc:
         """Add a node to the document."""
         self.children.append(node)
 
-    def find_first(self, func, start: Optional[Node] = None) -> Optional[Node]:
+    def find_first(self, func, start: Node | None = None) -> Node | None:
         """Search the first child node that meet a criteria.
 
         Args:
@@ -347,7 +340,7 @@ class MarkdownDoc:
         index = self.children.index(start)
         self.children.insert(index, node)
 
-    def insert_nodes(self, start: Node, nodes: List[Node]) -> None:
+    def insert_nodes(self, start: Node, nodes: list[Node]) -> None:
         """Insert children nodes to the current document, before a specified node."""
         index = self.children.index(start)
         self.children[index:index] = nodes
@@ -360,11 +353,11 @@ class MarkdownDoc:
         except ValueError:
             pass
 
-    def remove_nodes(self, nodes: List[Node]) -> None:
+    def remove_nodes(self, nodes: list[Node]) -> None:
         """Remove children nodes."""
         self.children = [node for node in self.children if node not in nodes]
 
-    def slice(self, node_a: Node, node_b: Node) -> List[Node]:
+    def slice(self, node_a: Node, node_b: Node) -> list[Node]:
         """Return a slice of the current children nodes
 
         Args:
@@ -375,7 +368,7 @@ class MarkdownDoc:
         index_b = self.children.index(node_b)
         return self.children[index_a:index_b]
 
-    def next_node(self, node: Node) -> Optional[Node]:
+    def next_node(self, node: Node) -> Node | None:
         """Return the following node of a specified child node."""
         index = self.children.index(node)
         if index < len(self.children):
@@ -383,7 +376,7 @@ class MarkdownDoc:
         else:
             return None
 
-    def previous_node(self, node: Node) -> Optional[Node]:
+    def previous_node(self, node: Node) -> Node | None:
         """Return the following node of a specified child node."""
         index = self.children.index(node)
         if index > 0:

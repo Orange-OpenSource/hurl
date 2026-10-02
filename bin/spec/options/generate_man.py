@@ -3,12 +3,11 @@
 
 import sys
 from functools import cmp_to_key
-from typing import List, Optional
 
 from option import Option, OptionGroup
 
 
-def generate_man(filenames: List[str]) -> str:
+def generate_man(filenames: list[str]) -> str:
     """Parse option files and return a man page string with all options grouped and sorted.
 
     Args:
@@ -71,11 +70,11 @@ def generate_man_option(option: Option) -> str:
     """
     s = "####"
     if option.short:
-        s += " -%s," % option.short
-    s += " --%s" % option.long
+        s += f" -{option.short},"
+    s += f" --{option.long}"
     if option.value:
-        s += " <%s>" % option.value
-    s += " {#%s}" % option.long.replace(".", "")
+        s += f" <{option.value}>"
+    s += f" {{#{option.long.replace('.', '')}}}"
     s += "\n\n"
     s += option.description
     if option.env_var:
@@ -87,7 +86,7 @@ def generate_man_option(option: Option) -> str:
     return s
 
 
-def cmp_group(a: Optional[str], b: Optional[str]) -> int:
+def cmp_group(a: str | None, b: str | None) -> int:
     """Compare two group of options"""
 
     def get(elems, value, default):

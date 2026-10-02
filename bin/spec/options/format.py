@@ -14,7 +14,8 @@ def main():
         sys.exit(1)
     for option_file in sys.argv[1:]:
         option = Option.parse_file(option_file)
-        open(option_file, "w").write(str(option) + "\n")
+        with open(option_file, "w") as output:
+            output.write(str(option) + "\n")
 
 
 if __name__ == "__main__":

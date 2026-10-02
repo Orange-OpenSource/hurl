@@ -9,7 +9,8 @@ COVERAGE_DIR = "target/coverage"
 def uncovered_lines(src_file):
     html_file = COVERAGE_DIR + "/" + src_file + ".html"
     sys.stderr.write(html_file + "\n")
-    html = open(html_file).read()
+    with open(html_file) as f:
+        html = f.read()
     soup = BeautifulSoup(html, "html.parser")
     elements = soup.select('div[role="row"]')
     lines = []
@@ -36,7 +37,7 @@ def main():
         if len(lines) > 0:
             print(src_file)
             for line_number, line in lines:
-                print("%s %s" % (line_number, line))
+                print(f"{line_number} {line}")
 
 
 if __name__ == "__main__":

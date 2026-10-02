@@ -5,7 +5,9 @@ import sys
 
 def extract(changelog_file, version):
     print_line = False
-    for line in open(changelog_file).readlines():
+    with open(changelog_file) as f:
+        lines = f.readlines()
+    for line in lines:
         if "CHANGELOG" in line and line.startswith("["):
             if line[1:].startswith(version):
                 print_line = True

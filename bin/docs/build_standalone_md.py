@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Build a standalone Markdown file of all the documentation. All links and anchors are rewritten so the
 links are functional: during the concatenation of two files, the script insures that an anchor is well
@@ -13,7 +12,7 @@ import os
 import re
 import sys
 import unicodedata
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 import markdown
@@ -126,7 +125,7 @@ def rewrite_links(md: MarkdownDoc, prefix: str):
         add_header_id(header, prefix=prefix)
 
     # Replace `[Foo](#anchor)` => `[Foo](#current-page-anchor)`
-    nodes = [c for c in md.children if isinstance(c, Paragraph) or isinstance(c, Table)]
+    nodes = [c for c in md.children if isinstance(c, (Paragraph, Table))]
     for node in nodes:
 
         def repl(match_obj):
@@ -140,7 +139,7 @@ def rewrite_links(md: MarkdownDoc, prefix: str):
         )
 
     # Replace `[Foo](/docs/some-page.md#anchor)` => `[Foo](#some-page-anchor)`
-    nodes = [c for c in md.children if isinstance(c, Paragraph) or isinstance(c, Table)]
+    nodes = [c for c in md.children if isinstance(c, (Paragraph, Table))]
     for node in nodes:
 
         def repl(match_obj):
@@ -275,7 +274,7 @@ def main() -> int:
     standalone_md.children.insert(0, title)
     ws = Whitespace(content="\n")
     standalone_md.children.insert(1, ws)
-    date = datetime.today().strftime("%d-%m-%Y")
+    date = datetime.now(tz=timezone.utc).strftime("%d-%m-%Y")
     title = Header(title=f"Version {version} - {date}", level=2)
     standalone_md.children.insert(2, title)
     ws = Whitespace(content="\n")

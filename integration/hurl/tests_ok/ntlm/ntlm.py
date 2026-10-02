@@ -27,7 +27,7 @@ def get_auth_response(auth_type, advertise_nego_and_ntlm=False, no_challenge=Fal
             )
         }
         status_code = 401
-        response = "auth with '%s\\%s':'%s'" % (domain, username, password)
+        response = f"auth with '{domain!s}\\{username!s}':'{password!s}'"
     else:
         # Set human readable names for message types
         # see https://msdn.microsoft.com/en-us/library/cc236639.aspx for more details
@@ -39,8 +39,7 @@ def get_auth_response(auth_type, advertise_nego_and_ntlm=False, no_challenge=Fal
         signature = msg[0:8]
         if signature != expected_signature:
             raise ValueError(
-                "Mismatch on NTLM message signature, expecting: %s, actual: %s"
-                % (expected_signature, signature)
+                f"Mismatch on NTLM message signature, expecting: {expected_signature!s}, actual: {signature!s}"
             )
         # Get the NTLM version number (bytes 9 - 12)
         message_type = struct.unpack("<I", msg[8:12])[0]
@@ -58,7 +57,7 @@ def get_auth_response(auth_type, advertise_nego_and_ntlm=False, no_challenge=Fal
             )
             challenge_header = auth_type + " " + challenge_response
             response_headers = {"WWW-Authenticate": challenge_header}
-            response = "auth with '%s\\%s':'%s'" % (domain, username, password)
+            response = f"auth with '{domain!s}\\{username!s}':'{password!s}'"
             status_code = 401
         elif message_type == authenticate_message_type:
             # Received final NTLM message, return 200
@@ -68,8 +67,7 @@ def get_auth_response(auth_type, advertise_nego_and_ntlm=False, no_challenge=Fal
         else:
             # Should only ever receive a negotiate (1) or auth (3) message from requests_ntlm
             raise ValueError(
-                "Mismatch on NTLM message type, expecting: 1 or 3, actual: %d"
-                % message_type
+                f"Mismatch on NTLM message type, expecting: 1 or 3, actual: {message_type:d}"
             )
 
     return response, status_code, response_headers

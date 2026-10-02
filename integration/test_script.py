@@ -74,7 +74,8 @@ def test(script_file: str, tty: bool):
 def test_exit_code(f: str, result: subprocess.CompletedProcess) -> bool:
     """Test actual exit code `result` against an expected exit code in file `f`"""
     if os.path.exists(f):
-        expected = int(open(f, encoding="utf-8").read().strip())
+        with open(f, encoding="utf-8") as file:
+            expected = int(file.read().strip())
     else:
         expected = 0
     actual = result.returncode
@@ -103,7 +104,8 @@ def test_stdout(f, result):
     if not os.path.exists(f):
         return
 
-    expected = open(f, "rb").read()
+    with open(f, "rb") as file:
+        expected = file.read()
     actual = result.stdout
     if actual != expected:
         print(">>> error in stdout")
@@ -116,7 +118,8 @@ def test_stdout_pattern(f, result):
     if not os.path.exists(f):
         return
 
-    expected = open(f, encoding="utf-8").read()
+    with open(f, encoding="utf-8") as file:
+        expected = file.read()
 
     # curl debug logs are too dependent on the context, so we filter
     # them and not take them into account for testing differences.
@@ -136,13 +139,13 @@ def test_stdout_pattern(f, result):
         print(f"actual <{actual}>")
         print("# Actual lines")
         for i, line in enumerate(actual_lines):
-            print("%2d: %s" % (i, line))
+            print(f"{i:2d}: {line!s}")
         print("# Expected lines")
         for i, line in enumerate(expected_lines):
-            print("%2d: %s" % (i, line))
+            print(f"{i:2d}: {line!s}")
         print("# Expected Pattern lines")
         for i, line in enumerate(expected_pattern_lines):
-            print("%2d: %s" % (i, line))
+            print(f"{i:2d}: {line!s}")
 
         sys.exit(1)
     for i in range(len(expected_pattern_lines)):
@@ -171,7 +174,8 @@ def test_stderr(f, result):
     # > newline determines how to parse newline characters from the stream. It can be None, '', '\n', '\r', and '\r\n'. It works as follows:
     # > When reading input from the stream, if newline is None, universal newlines mode is enabled. Lines in the input
     # > can end in '\n', '\r', or '\r\n', and these are translated into '\n' before being returned to the caller.
-    expected = open(f, encoding="utf-8", newline=None).read()
+    with open(f, encoding="utf-8", newline=None) as file:
+        expected = file.read()
     expected_filtered = ignore_lines(expected)
 
     actual = decode_string(result.stderr)
@@ -203,7 +207,8 @@ def test_stderr_pattern(f, result):
     if not os.path.exists(f):
         return
 
-    expected = open(f, encoding="utf-8").read()
+    with open(f, encoding="utf-8") as file:
+        expected = file.read()
 
     # curl debug logs are too dependent on the context, so we filter
     # them and not take them into account for testing differences.
@@ -225,13 +230,13 @@ def test_stderr_pattern(f, result):
         )
         print("# Actual lines")
         for i, line in enumerate(actual_lines):
-            print("%2d: %s" % (i, line))
+            print(f"{i:2d}: {line}")
         print("# Expected lines")
         for i, line in enumerate(expected_lines):
-            print("%2d: %s" % (i, line))
+            print(f"{i:2d}: {line}")
         print("# Expected Pattern lines")
         for i, line in enumerate(expected_pattern_lines):
-            print("%2d: %s" % (i, line))
+            print(f"{i:2d}: {line}")
 
         sys.exit(1)
     for i in range(len(expected_pattern_lines)):

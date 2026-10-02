@@ -220,7 +220,7 @@ Bugs Fixed:
 """,
             generate_md(
                 milestone="1.0.0",
-                date=datetime.datetime(2022, 1, 1),
+                date=datetime.datetime(2022, 1, 1, tzinfo=datetime.timezone.utc),
                 pulls=PULLS,
                 authors=["bob", "bill"],
             ),

@@ -24,7 +24,7 @@ def get_latest_release(token: str | None) -> None | tuple[str, datetime]:
     latest_release = releases[0]
     version = latest_release["tag_name"]
     date_str = latest_release["published_at"]
-    date = datetime.datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%SZ")
+    date = datetime.datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S%z")
     return version, date
 
 
@@ -59,7 +59,7 @@ def main():
         sys.stderr.write(
             f"Rust version must be updated from {current_version} to the latest version {latest_version}\n"
         )
-        days_before_now = datetime.datetime.now() - date
+        days_before_now = datetime.datetime.now(datetime.timezone.utc) - date
         if days_before_now > datetime.timedelta(days=num_days_before_error):
             sys.exit(1)
     else:

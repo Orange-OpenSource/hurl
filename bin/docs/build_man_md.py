@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Build Grammar Markdown Manual File.
 
 This script converts Hurl manual file to Markdown suitable for the Hurl canonical docs.
@@ -13,7 +12,6 @@ Examples:
 import re
 import sys
 from pathlib import Path
-from typing import List, Optional
 
 from markdown import (
     Header,
@@ -37,7 +35,7 @@ def normalize_h2(doc: MarkdownDoc) -> None:
 
 
 def process_table(
-    doc: MarkdownDoc, nodes: List[Node], col_name: str, level: int, title: Optional[str]
+    doc: MarkdownDoc, nodes: list[Node], col_name: str, level: int, title: str | None
 ) -> None:
     """Transform the list of items from the source manual document to a beautiful HTML tables.
 

@@ -1,13 +1,11 @@
-#!/usr/bin/env python3
 # TTY and PTY runners for executing commands in terminal and pseudo-terminal environment.
 #
 import subprocess
-from typing import List
 
 
 class Term:
-    def run(self, cmd: List[str]) -> subprocess.CompletedProcess:
-        result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    def run(self, cmd: list[str]) -> subprocess.CompletedProcess:
+        result = subprocess.run(cmd, capture_output=True, check=False)
         return result
 
 
@@ -28,7 +26,7 @@ class PseudoTerm:
         self.width = col
         self.read_chunk_size = read_chunk_size
 
-    def run(self, cmd: List[str]) -> subprocess.CompletedProcess:
+    def run(self, cmd: list[str]) -> subprocess.CompletedProcess:
         """Run command with pseudo-terminals to simulate real TTYs for both stdout and stderr.
 
         Args:
@@ -90,8 +88,7 @@ class PseudoTerm:
                             del fds[fd]
                     except OSError:
                         # Error reading, remove this fd
-                        if fd in fds:
-                            del fds[fd]
+                        fds.pop(fd, None)
 
             # Wait for process to finish
             return_code = process.wait()
