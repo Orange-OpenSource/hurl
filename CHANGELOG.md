@@ -15,7 +15,6 @@ Thanks to
 
 Enhancements:
 
-* Add --variables-file per request option [#2021](https://github.com/Orange-OpenSource/hurl/issues/2021)
 * Add --no-header option to remove specific HTTP header [#4884](https://github.com/Orange-OpenSource/hurl/issues/4884)
 * Add --fail-with-body option to output response body when there are errors [#4776](https://github.com/Orange-OpenSource/hurl/issues/4776)
 * Add no jsonpath coercion option [#5077](https://github.com/Orange-OpenSource/hurl/issues/5077)
@@ -39,7 +38,7 @@ Security Issues Fixed:
 * Fix CVE-2026-63481 stripping cookie from Cookies section when redirecting to a different host [#5118](https://github.com/Orange-OpenSource/hurl/issues/5118)
 * Fix escaping headers values in HTML report [#5228](https://github.com/Orange-OpenSource/hurl/issues/5228)
 * Fix symlinks escaping file root [#5289](https://github.com/Orange-OpenSource/hurl/issues/5289)
-* Fix credentials leaking using --header and following redirection. [#5310](https://github.com/Orange-OpenSource/hurl/issues/5310)
+* Fix credentials leaking using --header and following redirection [#5310](https://github.com/Orange-OpenSource/hurl/issues/5310)
 
 
 [8.0.1 (2026-04-28)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#8.0.1)
