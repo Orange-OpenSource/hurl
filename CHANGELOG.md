@@ -3,8 +3,8 @@
 
 Thanks to
 [@BillyLiou](https://github.com/BillyLiou),
-[@eyupcanakman](https://github.com/eyupcanakman),
 [@Thomasdezeeuw](https://github.com/Thomasdezeeuw),
+[@eyupcanakman](https://github.com/eyupcanakman),
 [@fubar-coder](https://github.com/fubar-coder),
 [@ptwales](https://github.com/ptwales),
 [@jgarte](https://github.com/jgarte),
@@ -12,6 +12,7 @@ Thanks to
 [@linkdd](https://github.com/linkdd),
 [@jkellz-dev](https://github.com/jkellz-dev),
 [@qrn12580](https://github.com/qrn12580),
+[@1diot9](https://github.com/1diot9),
 
 Enhancements:
 
@@ -39,6 +40,7 @@ Security Issues Fixed:
 * Fix escaping headers values in HTML report [#5228](https://github.com/Orange-OpenSource/hurl/issues/5228)
 * Fix symlinks escaping file root [#5289](https://github.com/Orange-OpenSource/hurl/issues/5289)
 * Fix credentials leaking using --header and following redirection [#5310](https://github.com/Orange-OpenSource/hurl/issues/5310)
+* Add explicit nesting limit to JSON Body parsing [#5317](https://github.com/Orange-OpenSource/hurl/issues/5317)
 
 
 [8.0.1 (2026-04-28)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#8.0.1)
