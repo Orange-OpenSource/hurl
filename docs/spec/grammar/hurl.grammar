@@ -108,7 +108,7 @@ filename-content-type: value-string
 
 capture:
   lt*
-  key-string ":" query (sp filter)* (sp "redact")? lt
+  variable-name ":" query (sp filter)* (sp "redact")? lt
 
 assert:
   lt*
@@ -551,9 +551,6 @@ placeholder: "{{" expr "}}"
 
 expr: (variable-name | function) (sp filter)*
 
-variable-name: [A-Za-z] [A-Za-z_-0-9]*
-
-
 # Function
 
 function:
@@ -702,3 +699,5 @@ regex-content: (regex-text|regex-escaped-char)*
 regex-text: ~[\n\/]+
 
 regex-escaped-char: "\\" ~[\n]
+
+variable-name: [A-Za-z] [A-Za-z_-0-9]*
