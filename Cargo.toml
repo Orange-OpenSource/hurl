@@ -20,7 +20,7 @@ warnings = "deny"
 empty_structs_with_brackets = "deny"
 manual_string_new = "deny"
 semicolon_if_nothing_returned = "deny"
-wildcard-imports = "deny"
+wildcard_imports = "deny"
 
 # Patch cargo-semver
 [workspace.metadata.cargo-semver-checks.lints]
