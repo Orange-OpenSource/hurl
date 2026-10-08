@@ -16,10 +16,11 @@
  *
  */
 use crate::ast::{Expr, ExprKind, SourceInfo, Variable};
-use crate::parser::{ParseError, ParseErrorKind, ParseResult, function};
+use crate::parser::primitives::variable_name;
+use crate::parser::{ParseResult, function};
 use crate::reader::Reader;
 
-/// Parse an expression
+/// Parses an expression.
 ///
 /// Currently, an expression can only be found inside a placeholder
 pub fn parse(reader: &mut Reader) -> ParseResult<Expr> {
@@ -30,7 +31,11 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Expr> {
         Err(e) => {
             if e.recoverable {
                 reader.seek(save_state);
-                let variable = variable_name(reader)?;
+                let name = variable_name(reader)?;
+                let variable = Variable {
+                    name,
+                    source_info: SourceInfo::new(start, reader.cursor().pos),
+                };
                 ExprKind::Variable(variable)
             } else {
                 return Err(e);
@@ -40,47 +45,4 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Expr> {
     let end = reader.cursor().pos;
     let source_info = SourceInfo::new(start, end);
     Ok(Expr { source_info, kind })
-}
-
-fn variable_name(reader: &mut Reader) -> ParseResult<Variable> {
-    let start = reader.cursor();
-    let name = reader.read_while(|c| c.is_alphanumeric() || c == '_' || c == '-');
-    if name.is_empty() {
-        return Err(ParseError::new(
-            start.pos,
-            false,
-            ParseErrorKind::TemplateVariable,
-        ));
-    }
-    Ok(Variable {
-        name,
-        source_info: SourceInfo::new(start.pos, reader.cursor().pos),
-    })
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::reader::Pos;
-
-    #[test]
-    fn test_variable() {
-        let mut reader = Reader::new("name");
-        assert_eq!(
-            variable_name(&mut reader).unwrap(),
-            Variable {
-                name: String::from("name"),
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 5)),
-            }
-        );
-
-        let mut reader = Reader::new("my-id");
-        assert_eq!(
-            variable_name(&mut reader).unwrap(),
-            Variable {
-                name: String::from("my-id"),
-                source_info: SourceInfo::new(Pos::new(1, 1), Pos::new(1, 6)),
-            }
-        );
-    }
 }

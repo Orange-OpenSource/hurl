@@ -18,13 +18,13 @@
 use super::placeholder;
 use crate::ast::{
     BooleanOption, CountOption, DurationOption, EntryOption, NaturalOption, OptionKind, SourceInfo,
-    VariableDefinition, VariableValue, VerbosityOption, is_variable_reserved,
+    VariableDefinition, VariableValue, VerbosityOption,
 };
 use crate::combinator::{choice, non_recover};
 use crate::parser::duration::duration;
 use crate::parser::number::{integer, natural, number};
 use crate::parser::primitives::{
-    boolean, line_terminator, literal, null, optional_line_terminators, try_literal,
+    boolean, line_terminator, literal, null, optional_line_terminators, try_literal, variable_name,
     zero_or_more_spaces,
 };
 use crate::parser::string::{quoted_template, unquoted_template};
@@ -460,23 +460,6 @@ fn variable_definition(reader: &mut Reader) -> ParseResult<VariableDefinition> {
         space1,
         value,
     })
-}
-
-fn variable_name(reader: &mut Reader) -> ParseResult<String> {
-    let start = reader.cursor();
-    let name = reader.read_while(|c| c.is_alphanumeric() || c == '_' || c == '-');
-    if name.is_empty() {
-        let kind = ParseErrorKind::Expecting {
-            value: "variable name".to_string(),
-        };
-        return Err(ParseError::new(start.pos, false, kind));
-    } else if is_variable_reserved(&name) {
-        let kind = ParseErrorKind::Variable(format!(
-            "conflicts with the {name} function, use a different name"
-        ));
-        return Err(ParseError::new(start.pos, false, kind));
-    }
-    Ok(name)
 }
 
 // `null`, a boolean or a number is only a variable value when the literal spans the whole

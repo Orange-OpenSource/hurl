@@ -35,7 +35,9 @@ pub struct ParseError {
 pub enum ParseErrorKind {
     DuplicateSection,
     EscapeChar,
-    Expecting { value: String },
+    Expecting {
+        value: String,
+    },
     FileContentType,
     Filename,
     GraphQlVariables,
@@ -45,23 +47,35 @@ pub enum ParseErrorKind {
     InvalidOption(String),
     Json(JsonErrorVariant),
     JsonPathExpr,
-    Method { name: String },
+    Method {
+        name: String,
+    },
     Multiline,
     MultilineLanguageHint(String),
     OddNumberOfHexDigits,
     Predicate,
     PredicateValue,
-    RegexExpr { message: String },
+    RegexExpr {
+        message: String,
+    },
     RequestSection,
-    RequestSectionName { name: String },
+    RequestSectionName {
+        name: String,
+    },
     ResponseSection,
-    ResponseSectionName { name: String },
+    ResponseSectionName {
+        name: String,
+    },
     Space,
     Status,
+    // TODO: delete this variant, we already have a variant `Variable` that can be used
+    // instead of this one.
     TemplateVariable,
     Unicode,
     UrlIllegalCharacter(char),
     UrlInvalidStart,
+    /// A variable name is not valid for reason
+    // TODO: use a struct with `reason` field
     Variable(String),
     Version,
     XPathExpr,

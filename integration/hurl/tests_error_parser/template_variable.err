@@ -1,4 +1,4 @@
-error: Parsing template variable
+error: Parsing variable
   --> tests_error_parser/template_variable.hurl:1:7
    |
  1 | GET {{}}
