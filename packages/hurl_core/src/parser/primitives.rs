@@ -17,6 +17,7 @@
  */
 use crate::ast::{
     Base64, Comment, File, Hex, KeyValue, LineTerminator, Regex, SourceInfo, Whitespace,
+    is_variable_reserved,
 };
 use crate::combinator::{one_or_more, optional, recover, zero_or_more};
 use crate::parser::string::unquoted_template;
@@ -420,6 +421,21 @@ pub fn hex_digit(reader: &mut Reader) -> ParseResult<u32> {
         },
         None => Err(ParseError::new(start.pos, true, ParseErrorKind::HexDigit)),
     }
+}
+
+pub fn variable_name(reader: &mut Reader) -> ParseResult<String> {
+    let start = reader.cursor();
+    let name = reader.read_while(|c| c.is_alphanumeric() || c == '_' || c == '-');
+    if name.is_empty() {
+        let kind = ParseErrorKind::Variable("expecting a variable".to_string());
+        return Err(ParseError::new(start.pos, false, kind));
+    } else if is_variable_reserved(&name) {
+        let kind = ParseErrorKind::Variable(format!(
+            "conflicts with the {name} function, use a different name"
+        ));
+        return Err(ParseError::new(start.pos, false, kind));
+    }
+    Ok(name)
 }
 
 #[cfg(test)]
@@ -1047,5 +1063,39 @@ mod tests {
             }
         );
         assert_eq!(reader.cursor().index, CharPos(15));
+    }
+
+    #[test]
+    fn test_variable() {
+        let mut reader = Reader::new("name");
+        assert_eq!(variable_name(&mut reader).unwrap(), "name".to_string());
+
+        let mut reader = Reader::new("my-id");
+        assert_eq!(variable_name(&mut reader).unwrap(), "my-id".to_string());
+
+        let mut reader = Reader::new("newUuid");
+        assert_eq!(
+            variable_name(&mut reader).unwrap_err(),
+            ParseError::new(
+                Pos::new(1, 1),
+                false,
+                ParseErrorKind::Variable(
+                    "conflicts with the newUuid function, use a different name".to_string()
+                )
+            )
+        );
+
+        // A variable name can not use Hurl Unicode literals
+        let mut reader = Reader::new(
+            "\\u{3c}script\\u{3e}alert\\u{28}document\\u{2e}domain\\u{29}\\u{3c}\\u{2f}script\\u{3e}",
+        );
+        assert_eq!(
+            variable_name(&mut reader).unwrap_err(),
+            ParseError::new(
+                Pos::new(1, 1),
+                false,
+                ParseErrorKind::Variable("expecting a variable".to_string())
+            )
+        );
     }
 }
