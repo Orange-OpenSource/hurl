@@ -18,7 +18,7 @@
 
 use hurl_core::reader::Reader;
 
-use crate::jsonpath::ast::literal::Number;
+use crate::jsonpath::ast::literal::{FiniteFloatError, Number};
 use crate::jsonpath::parser::primitives::match_str;
 use crate::jsonpath::parser::{ParseError, ParseErrorKind, ParseResult};
 
@@ -84,10 +84,18 @@ pub fn try_number(reader: &mut Reader) -> ParseResult<Option<Number>> {
         if let Some(frac) = fraction {
             value += frac;
         }
-        if let Some(exp) = exponent {
+        if let Some(exp) = exponent
+            && value != 0.0
+        {
             value *= 10f64.powi(exp);
         }
-        Ok(Some(Number::Float(value)))
+        Ok(Some(Number::try_finite_float(value).map_err(|e| {
+            let message = match e {
+                FiniteFloatError::Inf => "Number is too big".to_string(),
+                FiniteFloatError::NaN => "NaN is not allowed".to_string(),
+            };
+            ParseError::new(save.pos, ParseErrorKind::Expecting(message))
+        })?))
     }
 }
 
@@ -235,6 +243,36 @@ mod tests {
             Number::Float(100.0)
         );
         assert_eq!(reader.cursor().index, CharPos(3));
+
+        let mut reader = Reader::new("0e309");
+        assert_eq!(
+            try_number(&mut reader).unwrap().unwrap(),
+            Number::Float(0.0)
+        );
+        assert_eq!(reader.cursor().index, CharPos(5));
+    }
+
+    #[test]
+    fn test_float_error() {
+        let mut reader = Reader::new("1e999");
+        assert_eq!(
+            try_number(&mut reader).unwrap_err(),
+            ParseError::new(
+                Pos::new(1, 1),
+                ParseErrorKind::Expecting("Number is too big".to_string())
+            )
+        );
+        assert_eq!(reader.cursor().index, CharPos(5));
+
+        let mut reader = Reader::new("-1e309");
+        assert_eq!(
+            try_number(&mut reader).unwrap_err(),
+            ParseError::new(
+                Pos::new(1, 1),
+                ParseErrorKind::Expecting("Number is too big".to_string())
+            )
+        );
+        assert_eq!(reader.cursor().index, CharPos(6));
     }
 
     #[test]

@@ -19,8 +19,8 @@ pub(crate) mod number;
 pub(crate) mod string;
 
 use crate::jsonpath::ast::literal::Literal;
+use crate::jsonpath::parser::ParseResult;
 use crate::jsonpath::parser::primitives::match_str;
-use crate::jsonpath::parser::{ParseError, ParseErrorKind, ParseResult};
 use hurl_core::reader::Reader;
 use number::try_number;
 use string::try_parse as try_string;
@@ -32,23 +32,6 @@ use string::try_parse as try_string;
 /// Number can be either integer, or floats
 /// If the number contains a decimal point or an exponent, it is parsed as a float (Like Serde::json)
 /// 110 is an integer, but 110.0 or 1.1e2 are floats
-pub fn parse(reader: &mut Reader) -> ParseResult<Literal> {
-    if try_null(reader) {
-        Ok(Literal::Null)
-    } else if let Some(value) = try_boolean(reader) {
-        Ok(Literal::Bool(value))
-    } else if let Some(value) = number::try_number(reader)? {
-        Ok(Literal::Number(value))
-    } else if let Some(value) = string::try_parse(reader)? {
-        Ok(Literal::String(value))
-    } else {
-        Err(ParseError::new(
-            reader.cursor().pos,
-            ParseErrorKind::Expecting("a literal".to_string()),
-        ))
-    }
-}
-
 pub fn try_parse(reader: &mut Reader) -> ParseResult<Option<Literal>> {
     if try_null(reader) {
         Ok(Some(Literal::Null))
@@ -83,6 +66,7 @@ fn try_null(reader: &mut Reader) -> bool {
 mod tests {
 
     use super::*;
+    use crate::jsonpath::parser::{ParseError, ParseErrorKind};
     use hurl_core::reader::{CharPos, Pos, Reader};
 
     #[test]
@@ -102,13 +86,17 @@ mod tests {
     #[test]
     pub fn test_literal_error() {
         let mut reader = Reader::new("NULL");
+        assert!(try_parse(&mut reader).unwrap().is_none(),);
+        assert_eq!(reader.cursor().index, CharPos(0));
+
+        let mut reader = Reader::new("1e999");
         assert_eq!(
-            parse(&mut reader).unwrap_err(),
+            try_parse(&mut reader).unwrap_err(),
             ParseError::new(
                 Pos::new(1, 1),
-                ParseErrorKind::Expecting("a literal".to_string())
+                ParseErrorKind::Expecting("Number is too big".to_string())
             )
         );
-        assert_eq!(reader.cursor().index, CharPos(0));
+        assert_eq!(reader.cursor().index, CharPos(5));
     }
 }

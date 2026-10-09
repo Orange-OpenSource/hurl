@@ -88,3 +88,12 @@ error: Invalid JSONPath
    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ JSONPath expression '$.items[?search(@.name, 1)]' is not valid
    |
 
+error: Invalid JSONPath
+  --> tests_failed/invalid_jsonpath/invalid_jsonpath.hurl:18:10
+   |
+   | GET http://localhost:8000/error-invalid-jsonpath
+   | ...
+18 | jsonpath "$[?@ == 1e999]" == 1
+   |          ^^^^^^^^^^^^^^^^ JSONPath expression '$[?@ == 1e999]' is not valid
+   |
+

@@ -14,3 +14,5 @@ jsonpath "$.items[?search(@.name, '[]')]" not exists
 # invalid type for regex
 jsonpath "$.items[?match(@.name, 1)].name" not exists
 jsonpath "$.items[?search(@.name, 1)]" not exists
+# Number too big
+jsonpath "$[?@ == 1e999]" == 1

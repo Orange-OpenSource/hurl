@@ -62,7 +62,7 @@ fn comparable(reader: &mut Reader) -> ParseResult<Comparable> {
 
 /// Try to parse a comparable.
 fn try_comparable(reader: &mut Reader) -> ParseResult<Option<Comparable>> {
-    if let Ok(literal) = literal::parse(reader) {
+    if let Some(literal) = literal::try_parse(reader)? {
         Ok(Some(Comparable::Literal(literal)))
     } else if let Some(singular_query) = try_singular_query(reader)? {
         Ok(Some(Comparable::SingularQuery(singular_query)))
@@ -100,7 +100,7 @@ mod tests {
     use crate::jsonpath::ast::selector::NameSelector;
     use crate::jsonpath::ast::singular_query::{RelativeSingularQuery, SingularQuerySegment};
     use crate::jsonpath::ast::{comparison::ComparisonOp, singular_query::SingularQuery};
-    use hurl_core::reader::{CharPos, Reader};
+    use hurl_core::reader::{CharPos, Pos, Reader};
 
     use super::*;
 
@@ -134,6 +134,19 @@ mod tests {
     }
 
     #[test]
+    pub fn test_comparison_expr_error() {
+        let mut reader = Reader::new("@ == 1e999");
+        assert_eq!(
+            try_parse(&mut reader).unwrap_err(),
+            ParseError::new(
+                Pos::new(1, 6),
+                ParseErrorKind::Expecting("Number is too big".to_string())
+            )
+        );
+        assert_eq!(reader.cursor().index, CharPos(10));
+    }
+
+    #[test]
     pub fn test_comparison_expr_none() {
         // This is a test expression, not a comparison expression
         let mut reader = Reader::new("@.b]");
@@ -154,6 +167,19 @@ mod tests {
             Comparable::Literal(Literal::Number(Number::Integer(1)))
         );
         assert_eq!(reader.cursor().index, CharPos(1));
+    }
+
+    #[test]
+    pub fn test_comparable_error() {
+        let mut reader = Reader::new("1e999");
+        assert_eq!(
+            try_comparable(&mut reader).unwrap_err(),
+            ParseError::new(
+                Pos::new(1, 1),
+                ParseErrorKind::Expecting("Number is too big".to_string())
+            )
+        );
+        assert_eq!(reader.cursor().index, CharPos(5));
     }
 
     #[test]
