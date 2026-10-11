@@ -290,6 +290,7 @@ impl ClientOptions {
             resolves: runner_options.resolves.clone(),
             ssl_no_revoke: runner_options.ssl_no_revoke,
             timeout: runner_options.timeout,
+            tls_max: runner_options.tls_max,
             unix_socket: runner_options.unix_socket.clone(),
             use_cookie_store: runner_options.use_cookie_store,
             user: runner_options.user.clone(),

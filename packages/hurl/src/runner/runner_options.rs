@@ -19,7 +19,7 @@ use std::time::Duration;
 
 use hurl_core::types::{BytesPerSec, Count};
 
-use crate::http::{FollowLocation, HeaderVec, IpResolve, RequestedHttpVersion};
+use crate::http::{FollowLocation, HeaderVec, IpResolve, RequestedHttpVersion, TlsVersion};
 use crate::pretty::PrettyMode;
 use crate::util::path::ContextDir;
 
@@ -73,6 +73,7 @@ pub struct RunnerOptionsBuilder {
     skip: bool,
     ssl_no_revoke: bool,
     timeout: Duration,
+    tls_max: Option<TlsVersion>,
     to_entry: Option<usize>,
     unix_socket: Option<String>,
     use_cookie_store: bool,
@@ -130,6 +131,7 @@ impl Default for RunnerOptionsBuilder {
             skip: false,
             ssl_no_revoke: false,
             timeout: Duration::from_secs(300),
+            tls_max: None,
             to_entry: None,
             unix_socket: None,
             use_cookie_store: true,
@@ -463,6 +465,12 @@ impl RunnerOptionsBuilder {
         self
     }
 
+    /// Sets the maximum TLS version.
+    pub fn tls_max(&mut self, tls_max: Option<TlsVersion>) -> &mut Self {
+        self.tls_max = tls_max;
+        self
+    }
+
     /// Executes Hurl file to `to_entry` (starting at 1), ignores the remaining of the file.
     pub fn to_entry(&mut self, to_entry: Option<usize>) -> &mut Self {
         self.to_entry = to_entry;
@@ -547,6 +555,7 @@ impl RunnerOptionsBuilder {
             skip: self.skip,
             ssl_no_revoke: self.ssl_no_revoke,
             timeout: self.timeout,
+            tls_max: self.tls_max,
             to_entry: self.to_entry,
             unix_socket: self.unix_socket.clone(),
             use_cookie_store: self.use_cookie_store,
@@ -656,6 +665,7 @@ pub struct RunnerOptions {
     pub(crate) ssl_no_revoke: bool,
     /// Sets maximum time allowed for the transfer.
     pub(crate) timeout: Duration,
+    pub(crate) tls_max: Option<TlsVersion>,
     /// Executes Hurl file to to_entry (starting at 1), ignores the remaining of the file.
     pub(crate) to_entry: Option<usize>,
     /// Sets the specified unix domain socket to connect through, instead of using the network.

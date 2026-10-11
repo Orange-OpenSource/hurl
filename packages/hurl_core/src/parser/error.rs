@@ -195,6 +195,7 @@ impl DisplaySourceError for ParseError {
                     "retry",
                     "retry-interval",
                     "skip",
+                    "tls-max",
                     "unix-socket",
                     "user",
                     "variable",
