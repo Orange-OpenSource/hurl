@@ -300,17 +300,17 @@ pub fn get_entry_options(
             OptionKind::TlsMax(value) => {
                 let source_info = value.source_info;
                 let value = eval_template(value, variables)?;
-                entry_options.tls_max = Some(value.parse().map_err(|_| {
+                entry_options.tls_max = value.parse().map_err(|err: &str| {
                     RunnerError::new(
                         source_info,
                         RunnerErrorKind::InvalidOptionValue {
                             name: "tls-max".to_string(),
                             value: value.clone(),
-                            message: "expected 1.0, 1.1, 1.2 or 1.3".to_string(),
+                            message: err.to_string(),
                         },
                         false,
                     )
-                })?);
+                })?;
             }
             OptionKind::UnixSocket(value) => {
                 let value = eval_template(value, variables)?;

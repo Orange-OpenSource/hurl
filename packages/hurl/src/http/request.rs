@@ -58,8 +58,11 @@ pub enum RequestedHttpVersion {
     Http3,
 }
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+/// Transport Layer Security version (see <https://en.wikipedia.org/wiki/Transport_Layer_Security>)
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Default)]
 pub enum TlsVersion {
+    #[default]
+    Default,
     Tls10,
     Tls11,
     Tls12,
@@ -67,7 +70,7 @@ pub enum TlsVersion {
 }
 
 impl FromStr for TlsVersion {
-    type Err = ();
+    type Err = &'static str;
 
     fn from_str(value: &str) -> Result<Self, Self::Err> {
         match value {
@@ -75,7 +78,7 @@ impl FromStr for TlsVersion {
             "1.1" => Ok(TlsVersion::Tls11),
             "1.2" => Ok(TlsVersion::Tls12),
             "1.3" => Ok(TlsVersion::Tls13),
-            _ => Err(()),
+            _ => Err("expecting 1.0, 1.1, 1.2, 1.3"),
         }
     }
 }
@@ -83,6 +86,7 @@ impl FromStr for TlsVersion {
 impl fmt::Display for TlsVersion {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let value = match self {
+            TlsVersion::Default => "default",
             TlsVersion::Tls10 => "1.0",
             TlsVersion::Tls11 => "1.1",
             TlsVersion::Tls12 => "1.2",

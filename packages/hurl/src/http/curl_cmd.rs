@@ -19,10 +19,10 @@ use core::fmt;
 use std::collections::HashMap;
 use std::path::Path;
 
-use hurl_core::types::Count;
-
+use crate::http::TlsVersion;
 use crate::runner::Output;
 use crate::util::path::ContextDir;
+use hurl_core::types::Count;
 
 use super::cookie_store::CookieStore;
 use super::header::{CONTENT_TYPE, Header, HeaderVec};
@@ -514,9 +514,12 @@ impl ClientOptions {
             args.push("--max-time".to_string());
             args.push(self.timeout.as_secs().to_string());
         }
-        if let Some(tls_max) = self.tls_max {
-            args.push("--tls-max".to_string());
-            args.push(tls_max.to_string());
+        match self.tls_max {
+            TlsVersion::Default => {}
+            version => {
+                args.push("--tls-max".to_string());
+                args.push(version.to_string());
+            }
         }
         if self.negotiate {
             args.push("--negotiate".to_string());
@@ -764,7 +767,7 @@ mod tests {
             ],
             ssl_no_revoke: false,
             timeout: Duration::from_secs(10),
-            tls_max: Some(TlsVersion::Tls12),
+            tls_max: TlsVersion::Tls12,
             unix_socket: Some("/var/run/example.sock".to_string()),
             use_cookie_store: true,
             user: Some("user:password".to_string()),

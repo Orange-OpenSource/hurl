@@ -73,7 +73,7 @@ pub struct RunnerOptionsBuilder {
     skip: bool,
     ssl_no_revoke: bool,
     timeout: Duration,
-    tls_max: Option<TlsVersion>,
+    tls_max: TlsVersion,
     to_entry: Option<usize>,
     unix_socket: Option<String>,
     use_cookie_store: bool,
@@ -131,7 +131,7 @@ impl Default for RunnerOptionsBuilder {
             skip: false,
             ssl_no_revoke: false,
             timeout: Duration::from_secs(300),
-            tls_max: None,
+            tls_max: TlsVersion::default(),
             to_entry: None,
             unix_socket: None,
             use_cookie_store: true,
@@ -466,7 +466,7 @@ impl RunnerOptionsBuilder {
     }
 
     /// Sets the maximum TLS version.
-    pub fn tls_max(&mut self, tls_max: Option<TlsVersion>) -> &mut Self {
+    pub fn tls_max(&mut self, tls_max: TlsVersion) -> &mut Self {
         self.tls_max = tls_max;
         self
     }
@@ -665,7 +665,8 @@ pub struct RunnerOptions {
     pub(crate) ssl_no_revoke: bool,
     /// Sets maximum time allowed for the transfer.
     pub(crate) timeout: Duration,
-    pub(crate) tls_max: Option<TlsVersion>,
+    /// Sets met the maximum allowed TLS version.
+    pub(crate) tls_max: TlsVersion,
     /// Executes Hurl file to to_entry (starting at 1), ignores the remaining of the file.
     pub(crate) to_entry: Option<usize>,
     /// Sets the specified unix domain socket to connect through, instead of using the network.
