@@ -1,0 +1,2 @@
+curl --insecure --tls-max 1.2 'https://localhost:8001/hello'
+curl --insecure --tls-max 1.2 'https://localhost:8001/hello'
