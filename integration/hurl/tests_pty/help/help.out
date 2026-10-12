@@ -81,6 +81,8 @@ HTTP options:
           Provide a custom address for a specific HOST and PORT pair
       --ssl-no-revoke
           (Windows) Tell Hurl to disable certificate revocation checks
+      --tls-max <VERSION>
+          Set the maximum allowed TLS version [possible values: 1.0, 1.1, 1.2, 1.3]
       --unix-socket <PATH>
           (HTTP) Connect through this Unix domain socket, instead of using the network
   -u, --user <USER:PASSWORD>

@@ -1,4 +1,4 @@
-.TH hurl 1 "02 Oct 2026" "hurl 8.1.0" " Hurl Manual"
+.TH hurl 1 "12 Oct 2026" "hurl 8.1.0" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -365,6 +365,16 @@ Provide a custom address for a specific host and port pair. Using this, you can 
 (Windows) This option tells Hurl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for exactly that.
 
 This is a cli-only option.
+
+.IP "--tls-max <VERSION> "
+
+Set the maximum allowed TLS version. If the connection is done without TLS, this option has no effect. This includes QUIC-using (HTTP/3) transfers.
+
+default   Use up to the recommended TLS version.
+1.0       Use up to TLSv1.0.
+1.1       Use up to TLSv1.1.
+1.2       Use up to TLSv1.2.
+1.3       Use up to TLSv1.3.
 
 .IP "--unix-socket <PATH> "
 

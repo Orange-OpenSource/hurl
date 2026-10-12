@@ -113,6 +113,7 @@ pub struct CliOptions {
     pub tap_file: Option<PathBuf>,
     pub test: bool,
     pub timeout: Duration,
+    pub tls_max: Option<TlsVersion>,
     pub to_entry: Option<usize>,
     pub unix_socket: Option<String>,
     pub user: Option<String>,
@@ -242,6 +243,40 @@ impl From<IpResolve> for http::IpResolve {
         match value {
             IpResolve::IpV4 => http::IpResolve::IpV4,
             IpResolve::IpV6 => http::IpResolve::IpV6,
+        }
+    }
+}
+
+/// TLS version
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub enum TlsVersion {
+    Tls10,
+    Tls11,
+    Tls12,
+    Tls13,
+}
+
+impl From<TlsVersion> for http::TlsVersion {
+    fn from(value: TlsVersion) -> Self {
+        match value {
+            TlsVersion::Tls10 => http::TlsVersion::Tls10,
+            TlsVersion::Tls11 => http::TlsVersion::Tls11,
+            TlsVersion::Tls12 => http::TlsVersion::Tls12,
+            TlsVersion::Tls13 => http::TlsVersion::Tls13,
+        }
+    }
+}
+
+impl FromStr for TlsVersion {
+    type Err = &'static str;
+
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        match value {
+            "1.0" => Ok(TlsVersion::Tls10),
+            "1.1" => Ok(TlsVersion::Tls11),
+            "1.2" => Ok(TlsVersion::Tls12),
+            "1.3" => Ok(TlsVersion::Tls13),
+            _ => Err("expecting 1.0, 1.1, 1.2 or 1.3"),
         }
     }
 }
@@ -388,6 +423,7 @@ impl Default for CliOptions {
             tap_file: None,
             test: false,
             timeout: Duration::from_secs(300),
+            tls_max: None,
             to_entry: None,
             unix_socket: None,
             user: None,
@@ -502,6 +538,10 @@ impl CliOptions {
         let negotiate = self.negotiate;
         let ntlm = self.ntlm;
         let timeout = self.timeout;
+        let tls_max = match self.tls_max {
+            Some(version) => version.into(),
+            None => http::TlsVersion::default(),
+        };
         let to_entry = self.to_entry;
         let unix_socket = self.unix_socket.clone();
         let use_cookie_store = !self.no_cookie_store;
@@ -553,6 +593,7 @@ impl CliOptions {
             .retry_interval(retry_interval)
             .ssl_no_revoke(ssl_no_revoke)
             .timeout(timeout)
+            .tls_max(tls_max)
             .to_entry(to_entry)
             .unix_socket(unix_socket)
             .use_cookie_store(use_cookie_store)

@@ -382,6 +382,16 @@ Provide a custom address for a specific host and port pair. Using this, you can 
 
 This is a cli-only option.
 
+#### --tls-max <VERSION> {#tls-max}
+
+Set the maximum allowed TLS version. If the connection is done without TLS, this option has no effect. This includes QUIC-using (HTTP/3) transfers.
+
+default   Use up to the recommended TLS version.
+1.0       Use up to TLSv1.0.
+1.1       Use up to TLSv1.1.
+1.2       Use up to TLSv1.2.
+1.3       Use up to TLSv1.3.
+
 #### --unix-socket <PATH> {#unix-socket}
 
 (HTTP) Connect through this Unix domain socket, instead of using the network.

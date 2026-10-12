@@ -667,6 +667,16 @@ pub fn test() -> clap::Arg {
         .action(clap::ArgAction::SetTrue)
 }
 
+pub fn tls_max() -> clap::Arg {
+    clap::Arg::new("tls_max")
+        .long("tls-max")
+        .value_name("VERSION")
+        .value_parser(["1.0", "1.1", "1.2", "1.3"])
+        .help("Set the maximum allowed TLS version")
+        .help_heading("HTTP options")
+        .num_args(1)
+}
+
 pub fn to_entry() -> clap::Arg {
     clap::Arg::new("to_entry")
         .long("to-entry")

@@ -33,7 +33,7 @@ use hurl_core::types::{BytesPerSec, Count, DurationUnit};
 use super::context::RunContext;
 use super::variables::TypeKind;
 use super::variables_file::VariablesFile;
-use super::{BoolOpt, CliOptions, commands, duration, get_version, secret};
+use super::{BoolOpt, CliOptions, TlsVersion, commands, duration, get_version, secret};
 use super::{CliOptionsError, ErrorFormat, HttpVersion, IpResolve, Output, variables};
 use super::{OutputType, Verbosity};
 
@@ -95,6 +95,7 @@ where
         .arg(commands::proxy_header())
         .arg(commands::resolve())
         .arg(commands::ssl_no_revoke())
+        .arg(commands::tls_max())
         .arg(commands::unix_socket())
         .arg(commands::user())
         .arg(commands::user_agent())
@@ -250,6 +251,7 @@ fn parse_arg_matches(
     let tap_file = tap_file(arg_matches, default_options.tap_file);
     let test = test(arg_matches, default_options.test);
     let timeout = timeout(arg_matches, default_options.timeout)?;
+    let tls_max = tls_max(arg_matches, default_options.tls_max);
     let to_entry = to_entry(arg_matches, default_options.to_entry);
     let unix_socket = unix_socket(arg_matches, default_options.unix_socket);
     let user = user(arg_matches, default_options.user);
@@ -319,6 +321,7 @@ fn parse_arg_matches(
         tap_file,
         test,
         timeout,
+        tls_max,
         to_entry,
         unix_socket,
         user,
@@ -957,6 +960,16 @@ fn timeout(arg_matches: &ArgMatches, default_value: Duration) -> Result<Duration
     match get::<String>(arg_matches, "max_time") {
         Some(s) => duration::duration_from_str(&s, DurationUnit::Second),
         None => Ok(default_value),
+    }
+}
+
+fn tls_max(arg_matches: &ArgMatches, default_value: Option<TlsVersion>) -> Option<TlsVersion> {
+    match get::<String>(arg_matches, "tls_max") {
+        Some(version) => {
+            // We can unwrap here because the option parsing has been configured with only the possible values.
+            Some(TlsVersion::from_str(&version).unwrap())
+        }
+        None => default_value,
     }
 }
 
