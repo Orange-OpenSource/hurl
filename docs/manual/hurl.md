@@ -392,6 +392,8 @@ default   Use up to the recommended TLS version.
 1.2       Use up to TLSv1.2.
 1.3       Use up to TLSv1.3.
 
+Environment variables: HURL_TLS_MAX
+
 #### --unix-socket <PATH> {#unix-socket}
 
 (HTTP) Connect through this Unix domain socket, instead of using the network.

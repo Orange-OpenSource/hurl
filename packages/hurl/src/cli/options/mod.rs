@@ -619,7 +619,7 @@ impl CliOptions {
 
 #[cfg(test)]
 mod tests {
-    use crate::cli::options::{EnvVars, HttpVersion, RunContext};
+    use crate::cli::options::{EnvVars, HttpVersion, RunContext, TlsVersion};
     use crate::cli::{OutputType, options};
     use hurl::pretty::PrettyMode;
     use std::collections::HashMap;
@@ -871,5 +871,22 @@ mod tests {
         let opts = options::parse(args, &ctx, &env_vars).unwrap();
         assert!(!opts.color_stdout.get());
         assert!(!opts.color_stderr.get());
+    }
+
+    #[test]
+    fn respect_tls_max_env_var() {
+        let stdin_term = true;
+        let stdout_term = true;
+        let stderr_term = true;
+        let file = tmp_hurl_file("foo.hurl");
+
+        let env_vars = HashMap::from([("HURL_TLS_MAX".to_string(), "1.2".to_string())]);
+        let env_vars = EnvVars::new(env_vars);
+        let args = ["hurl", &file];
+        let args = args_from(&args);
+        let ctx = RunContext::new(&env_vars, stdin_term, stdout_term, stderr_term);
+
+        let opts = options::parse(args, &ctx, &env_vars).unwrap();
+        assert_eq!(opts.tls_max, Some(TlsVersion::Tls12));
     }
 }

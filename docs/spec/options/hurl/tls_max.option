@@ -4,6 +4,7 @@ value: VERSION
 value_parser: ["1.0", "1.1", "1.2", "1.3"]
 help: Set the maximum allowed TLS version
 help_heading: HTTP options
+env_var: HURL_TLS_MAX
 ---
 Set the maximum allowed TLS version. If the connection is done without TLS, this option has no effect. This includes QUIC-using (HTTP/3) transfers.
 

@@ -27,7 +27,7 @@ use hurl_core::types::{BytesPerSec, Count, DurationUnit};
 use super::variables::TypeKind;
 use super::{
     BoolOpt, CliOptions, CliOptionsError, ErrorFormat, HttpVersion, IpResolve, OutputType,
-    Verbosity, duration, secret, variables,
+    TlsVersion, Verbosity, duration, secret, variables,
 };
 
 /// Contains all env vars at the start of the execution of the program.
@@ -80,6 +80,7 @@ const HURL_RETRY: &str = "HURL_RETRY";
 const HURL_RETRY_INTERVAL: &str = "HURL_RETRY_INTERVAL";
 const HURL_SECRET_PREFIX: &str = "HURL_SECRET_";
 const HURL_TEST: &str = "HURL_TEST";
+const HURL_TLS_MAX: &str = "HURL_TLS_MAX";
 const HURL_USER: &str = "HURL_USER";
 const HURL_USER_AGENT: &str = "HURL_USER_AGENT";
 const HURL_VARIABLE_PREFIX: &str = "HURL_VARIABLE_";
@@ -343,10 +344,15 @@ impl EnvVars {
         }
     }
 
-    /// Returns `Some(true)` if test mode is set through env, `Some(false)` if test mode is disable through env,
+    /// Returns `Some(true)` if test mode is set through env, `Some(false)` if test mode is disabled through env,
     /// `None` otherwise.
     pub fn test(&self) -> Option<bool> {
         self.get_bool(HURL_TEST)
+    }
+
+    /// Returns the env var for maximum TLS version allowed.
+    pub fn tls_max(&self) -> Option<&str> {
+        self.hurl_env_vars.get(HURL_TLS_MAX).map(|v| v.as_str())
     }
 
     /// Returns the map of Hurl variables injected by environment variables.
@@ -725,6 +731,18 @@ fn timeout(env_vars: &EnvVars, default_value: Duration) -> Result<Duration, CliO
     }
 }
 
+fn tls_max(
+    env_vars: &EnvVars,
+    default_value: Option<TlsVersion>,
+) -> Result<Option<TlsVersion>, CliOptionsError> {
+    match env_vars.tls_max() {
+        Some(version) => TlsVersion::from_str(version)
+            .map_err(|e| err_from(e, HURL_TLS_MAX))
+            .map(Some),
+        None => Ok(default_value),
+    }
+}
+
 fn user(env_vars: &EnvVars, default_value: Option<String>) -> Option<String> {
     env_vars.user().map(|s| s.to_string()).or(default_value)
 }
@@ -791,6 +809,7 @@ pub fn parse_env_vars(
     let retry_interval = retry_interval(env_vars, default_options.retry_interval)?;
     let secrets = secrets(env_vars, default_options.secrets)?;
     let timeout = timeout(env_vars, default_options.timeout)?;
+    let tls_max = tls_max(env_vars, default_options.tls_max)?;
     let user = user(env_vars, default_options.user);
     let user_agent = user_agent(env_vars, default_options.user_agent);
     let variables = variables(env_vars, default_options.variables)?;
@@ -830,6 +849,7 @@ pub fn parse_env_vars(
         secrets,
         test,
         timeout,
+        tls_max,
         user,
         user_agent,
         variables,
