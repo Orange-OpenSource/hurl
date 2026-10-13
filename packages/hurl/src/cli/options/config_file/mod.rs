@@ -17,25 +17,24 @@
  */
 mod primitives;
 
-use std::path::Path;
-
 use hurl::pretty::PrettyMode;
 use hurl_core::reader::{CharPos, Pos, Reader};
 use hurl_core::types::DurationUnit;
 use hurl_core::types::{BytesPerSec, Count};
+use std::path::Path;
+use std::str::FromStr;
 
-use crate::cli::options::HttpVersion;
-use crate::cli::options::config_file::primitives::{
-    expect_no_value, parse_value, parse_value_separator,
-};
 use crate::cli::options::duration;
 use crate::cli::options::secret;
 use crate::cli::options::variables;
 use crate::cli::options::variables::TypeKind;
 use crate::cli::options::{BoolOpt, ErrorFormat};
+use crate::cli::options::{HttpVersion, TlsVersion};
 
 use super::{CliOptions, CliOptionsError, IpResolve, OutputType, Verbosity};
-use primitives::skip_whitespace_and_comments;
+use primitives::{
+    expect_no_value, parse_value, parse_value_separator, skip_whitespace_and_comments,
+};
 
 #[derive(Debug, PartialEq, Eq)]
 struct ConfigFileError {
@@ -155,6 +154,7 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
         "retry-interval" => parse_option_retry_interval(reader, options),
         "secret" => parse_option_secret(reader, options),
         "test" => parse_option_test(reader, options),
+        "tls-max" => parse_option_tls_max(reader, options),
         "user" => parse_option_user(reader, options, option_pos),
         "user-agent" => parse_option_user_agent(reader, options),
         "variable" => parse_option_variable(reader, options),
@@ -601,6 +601,23 @@ fn parse_option_secret(
 fn parse_option_test(reader: &mut Reader, options: &mut CliOptions) -> Result<(), ConfigFileError> {
     expect_no_value(reader)?;
     options.test = true;
+    Ok(())
+}
+
+fn parse_option_tls_max(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    parse_value_separator(reader)?;
+    let value_pos = reader.cursor().pos;
+    let value = parse_value(reader)?;
+    let version = TlsVersion::from_str(&value)
+        .map_err(|err| {
+            let msg = format!("Option --tls-max has an invalid value, {}", err);
+            ConfigFileError::new(value_pos, &msg)
+        })
+        .map(Some)?;
+    options.tls_max = version;
     Ok(())
 }
 
