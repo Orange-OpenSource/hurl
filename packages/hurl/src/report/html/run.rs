@@ -88,8 +88,13 @@ fn get_entry_html(entry: &EntryResult, entry_index: usize, secrets: &[&str]) -> 
         let mut values = entry
             .captures
             .iter()
-            .map(|c| (&c.name, c.value.to_string().redact(secrets).html_escape()))
-            .collect::<Vec<(&String, String)>>();
+            .map(|c| {
+                (
+                    c.name.html_escape(),
+                    c.value.to_string().redact(secrets).html_escape(),
+                )
+            })
+            .collect::<Vec<_>>();
         values.sort_by_key(|a| a.0.to_lowercase());
         let table = new_table("Captures", &values);
         text.push_str(&table);
