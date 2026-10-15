@@ -1,7 +1,6 @@
 [8.1.0 (TBD)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#8.1.0)
 ========================================================================================================================
 
-Thanks to
 [@BillyLiou](https://github.com/BillyLiou),
 [@Thomasdezeeuw](https://github.com/Thomasdezeeuw),
 [@eyupcanakman](https://github.com/eyupcanakman),
@@ -23,6 +22,7 @@ Enhancements:
 * Add --http2-prior-knowledge command line option to use HTTP/2 without HTTP/1.1 Upgrade [#5126](https://github.com/Orange-OpenSource/hurl/issues/5126)
 * Re-export Input struct from hurl_core to hurl [#5128](https://github.com/Orange-OpenSource/hurl/issues/5128)
 * Add Sublime Text syntax highlighting [#5298](https://github.com/Orange-OpenSource/hurl/issues/5298)
+* Add --tls-max option [#3713](https://github.com/Orange-OpenSource/hurl/issues/3713)
 
 
 Bugs Fixed:
@@ -41,6 +41,7 @@ Security Issues Fixed:
 * Fix symlinks escaping file root [#5289](https://github.com/Orange-OpenSource/hurl/issues/5289)
 * Fix credentials leaking using --header and following redirection [#5310](https://github.com/Orange-OpenSource/hurl/issues/5310)
 * Add explicit nesting limit to JSON Body parsing [#5317](https://github.com/Orange-OpenSource/hurl/issues/5317)
+* Fix parsing exponent in JSONPath expr [#5342](https://github.com/Orange-OpenSource/hurl/issues/5342)
 
 
 [8.0.1 (2026-04-28)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#8.0.1)
