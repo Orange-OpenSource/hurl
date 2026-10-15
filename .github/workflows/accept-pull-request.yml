@@ -1,7 +1,7 @@
 name: accept-pull-request
 
 on:
-  issue_comment:
+  issue_comment: # zizmor: ignore[dangerous-triggers] because Admin permissiosn are already checked before privileged operations
     types:
       - created
 
