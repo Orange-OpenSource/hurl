@@ -97,3 +97,12 @@ error: Invalid JSONPath
    |          ^^^^^^^^^^^^^^^^ JSONPath expression '$[?@ == 1e999]' is not valid
    |
 
+error: Invalid JSONPath
+  --> tests_failed/invalid_jsonpath/invalid_jsonpath.hurl:19:10
+   |
+   | GET http://localhost:8000/error-invalid-jsonpath
+   | ...
+19 | jsonpath "$[?@ == 1e9999999999]" == 1
+   |          ^^^^^^^^^^^^^^^^^^^^^^^ JSONPath expression '$[?@ == 1e9999999999]' is not valid
+   |
+

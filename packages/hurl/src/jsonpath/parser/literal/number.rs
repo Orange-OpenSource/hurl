@@ -136,6 +136,8 @@ fn try_fraction(reader: &mut Reader) -> ParseResult<Option<f64>> {
 }
 
 fn try_exponent(reader: &mut Reader) -> ParseResult<Option<i32>> {
+    const MAX_EXPONENT_DIGITS: usize = 9;
+
     if match_str("e", reader) || match_str("E", reader) {
         let mut exp_string = String::new();
         if match_str("+", reader) {
@@ -148,8 +150,18 @@ fn try_exponent(reader: &mut Reader) -> ParseResult<Option<i32>> {
             let kind = ParseErrorKind::Expecting("digit in exponent".to_string());
             return Err(ParseError::new(reader.cursor().pos, kind));
         }
+        if digits.len() > MAX_EXPONENT_DIGITS {
+            let kind = ParseErrorKind::Expecting("at most 9 digits in exponent".to_string());
+            return Err(ParseError::new(reader.cursor().pos, kind));
+        }
         exp_string.push_str(&digits);
-        Ok(Some(exp_string.parse::<i32>().unwrap()))
+        let exponent = exp_string.parse::<i32>().map_err(|e| {
+            ParseError::new(
+                reader.cursor().pos,
+                ParseErrorKind::Expecting(e.to_string()),
+            )
+        })?;
+        Ok(Some(exponent))
     } else {
         Ok(None)
     }
@@ -313,6 +325,20 @@ mod tests {
         let mut reader = Reader::new("E+2");
         assert_eq!(try_exponent(&mut reader).unwrap().unwrap(), 2);
         assert_eq!(reader.cursor().index, CharPos(3));
+
+        let mut reader = Reader::new("e999999999");
+        assert_eq!(try_exponent(&mut reader).unwrap().unwrap(), 999999999);
+        assert_eq!(reader.cursor().index, CharPos(10));
+
+        let mut reader = Reader::new("e9999999999");
+        assert_eq!(
+            try_exponent(&mut reader).unwrap_err(),
+            ParseError::new(
+                Pos::new(1, 12),
+                ParseErrorKind::Expecting("at most 9 digits in exponent".to_string())
+            )
+        );
+        assert_eq!(reader.cursor().index, CharPos(11));
 
         let mut reader = Reader::new("]");
         assert!(try_exponent(&mut reader).unwrap().is_none());
