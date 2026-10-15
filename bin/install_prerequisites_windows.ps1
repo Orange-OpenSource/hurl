@@ -48,8 +48,10 @@ vcpkg upgrade --no-dry-run
 if ($LASTEXITCODE) { Throw }
 
 # install libxml and libcurl
-vcpkg install --recurse curl[core,sspi,http2,non-http,ssl]:x64-windows
+vcpkg install --recurse curl[core,sspi,http2,ssl]:x64-windows
+if ($LASTEXITCODE) { Throw "curl installation failed" }
 vcpkg install --recurse libxml2[core,iconv]:x64-windows
+if ($LASTEXITCODE) { Throw "libxml2 installation failed" }
 
 vcpkg integrate install
 if ($LASTEXITCODE) { Throw }
