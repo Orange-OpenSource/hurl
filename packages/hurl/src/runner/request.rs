@@ -172,11 +172,9 @@ fn eval_url(url_template: &Template, variables: &VariableSet) -> Result<Url, Run
 pub fn get_cmd_cookie_storage_set(request: &Request) -> Option<String> {
     for line_terminator in request.line_terminators.iter() {
         if let Some(s) = &line_terminator.comment
-            && s.value.contains("@cookie_storage_set:")
+            && let Some(s) = s.value.trim_start().strip_prefix("@cookie_storage_set:")
         {
-            let index = "#@cookie_storage_set:".to_string().len();
-            let value = &s.value[index..s.value.len()].to_string().trim().to_string();
-            return Some(value.to_string());
+            return Some(s.trim().to_string());
         }
     }
     None
@@ -188,7 +186,7 @@ pub fn get_cmd_cookie_storage_set(request: &Request) -> Option<String> {
 pub fn get_cmd_cookie_storage_clear(request: &Request) -> bool {
     for line_terminator in request.line_terminators.iter() {
         if let Some(s) = &line_terminator.comment
-            && s.value.contains("@cookie_storage_clear")
+            && s.value.trim_start().starts_with("@cookie_storage_clear")
         {
             return true;
         }
