@@ -394,6 +394,18 @@ default   Use up to the recommended TLS version.
 
 Environment variables: HURL_TLS_MAX
 
+#### --tls-min <VERSION> {#tls-min}
+
+Set the minimum allowed TLS version. If the connection is done without TLS, this option has no effect. This includes QUIC-using (HTTP/3) transfers.
+
+default   Use down to the recommended TLS version.
+1.0       Use down to TLSv1.0.
+1.1       Use down to TLSv1.1.
+1.2       Use down to TLSv1.2.
+1.3       Use down to TLSv1.3.
+
+Environment variables: HURL_TLS_MIN
+
 #### --unix-socket <PATH> {#unix-socket}
 
 (HTTP) Connect through this Unix domain socket, instead of using the network.

@@ -51,6 +51,7 @@ retry-interval: 1000ms
 retry-interval: 1s
 skip: false
 tls-max: 1.2
+tls-min: 1.0
 unix-socket: build/unix_socket.sock
 user: bob:secret
 variable: user=null
@@ -104,6 +105,7 @@ retry: {{retry}}
 retry-interval: {{retry-interval}}
 skip: {{skip}}
 tls-max: {{tls-max}}
+tls-min: {{tls-min}}
 unix-socket: {{socket-file}}
 user: {{user}}
 #variable: {{variable}}     NOT SUPPORTED YET

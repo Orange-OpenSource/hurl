@@ -312,6 +312,21 @@ pub fn get_entry_options(
                     )
                 })?;
             }
+            OptionKind::TlsMin(value) => {
+                let source_info = value.source_info;
+                let value = eval_template(value, variables)?;
+                entry_options.tls_min = value.parse().map_err(|err: &str| {
+                    RunnerError::new(
+                        source_info,
+                        RunnerErrorKind::InvalidOptionValue {
+                            name: "tls-min".to_string(),
+                            value: value.clone(),
+                            message: err.to_string(),
+                        },
+                        false,
+                    )
+                })?;
+            }
             OptionKind::UnixSocket(value) => {
                 let value = eval_template(value, variables)?;
                 entry_options.unix_socket = Some(value);

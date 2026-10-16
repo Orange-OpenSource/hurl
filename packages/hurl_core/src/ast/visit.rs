@@ -401,6 +401,7 @@ pub fn walk_entry_option<V: Visitor>(visitor: &mut V, option: &EntryOption) {
         OptionKind::RetryInterval(value) => visitor.visit_duration_option(value),
         OptionKind::Skip(value) => visitor.visit_bool_option(value),
         OptionKind::TlsMax(value) => visitor.visit_template(value),
+        OptionKind::TlsMin(value) => visitor.visit_template(value),
         OptionKind::UnixSocket(value) => visitor.visit_filename(value),
         OptionKind::User(value) => visitor.visit_template(value),
         OptionKind::Variable(value) => visitor.visit_variable_def(value),

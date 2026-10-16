@@ -86,6 +86,7 @@ _hurl() {
     '--ssl-no-revoke[(Windows) Tell Hurl to disable certificate revocation checks]' \
     '--test[Activate test mode (use parallel execution)]' \
     '--tls-max[Set the maximum allowed TLS version]: :' \
+    '--tls-min[Set the minimum allowed TLS version]: :' \
     '--to-entry[Execute Hurl file to ENTRY_NUMBER (starting at 1)]: :' \
     '--unix-socket[(HTTP) Connect through this Unix domain socket, instead of using the network]: :_files' \
     '(-u --user)'{-u,--user}'[Add basic Authentication header to each request]: :' \

@@ -225,6 +225,7 @@ retry: 10                  # number of retry if HTTP/asserts errors
 retry-interval: 500ms      # interval between retry
 skip: false                # skip this request
 tls-max: 1.2               # maximum TLS version
+tls-min: 1.0               # minimum TLS version
 unix-socket: sock          # use Unix socket for transfer
 user: bob:secret           # use basic authentication
 proxy: my.proxy:8012       # define proxy (host:port where host can be an IP address)
