@@ -677,6 +677,16 @@ pub fn tls_max() -> clap::Arg {
         .num_args(1)
 }
 
+pub fn tls_min() -> clap::Arg {
+    clap::Arg::new("tls_min")
+        .long("tls-min")
+        .value_name("VERSION")
+        .value_parser(["1.0", "1.1", "1.2", "1.3"])
+        .help("Set the minimum allowed TLS version")
+        .help_heading("HTTP options")
+        .num_args(1)
+}
+
 pub fn to_entry() -> clap::Arg {
     clap::Arg::new("to_entry")
         .long("to-entry")

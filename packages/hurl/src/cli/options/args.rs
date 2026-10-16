@@ -96,6 +96,7 @@ where
         .arg(commands::resolve())
         .arg(commands::ssl_no_revoke())
         .arg(commands::tls_max())
+        .arg(commands::tls_min())
         .arg(commands::unix_socket())
         .arg(commands::user())
         .arg(commands::user_agent())
@@ -252,6 +253,7 @@ fn parse_arg_matches(
     let test = test(arg_matches, default_options.test);
     let timeout = timeout(arg_matches, default_options.timeout)?;
     let tls_max = tls_max(arg_matches, default_options.tls_max);
+    let tls_min = tls_min(arg_matches, default_options.tls_min);
     let to_entry = to_entry(arg_matches, default_options.to_entry);
     let unix_socket = unix_socket(arg_matches, default_options.unix_socket);
     let user = user(arg_matches, default_options.user);
@@ -322,6 +324,7 @@ fn parse_arg_matches(
         test,
         timeout,
         tls_max,
+        tls_min,
         to_entry,
         unix_socket,
         user,
@@ -965,6 +968,16 @@ fn timeout(arg_matches: &ArgMatches, default_value: Duration) -> Result<Duration
 
 fn tls_max(arg_matches: &ArgMatches, default_value: Option<TlsVersion>) -> Option<TlsVersion> {
     match get::<String>(arg_matches, "tls_max") {
+        Some(version) => {
+            // We can unwrap here because the option parsing has been configured with only the possible values.
+            Some(TlsVersion::from_str(&version).unwrap())
+        }
+        None => default_value,
+    }
+}
+
+fn tls_min(arg_matches: &ArgMatches, default_value: Option<TlsVersion>) -> Option<TlsVersion> {
+    match get::<String>(arg_matches, "tls_min") {
         Some(version) => {
             // We can unwrap here because the option parsing has been configured with only the possible values.
             Some(TlsVersion::from_str(&version).unwrap())

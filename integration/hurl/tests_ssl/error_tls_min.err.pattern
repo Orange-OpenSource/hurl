@@ -1,0 +1,7 @@
+error: HTTP connection
+  --> tests_ssl/error_tls_min.hurl:1:5
+   |
+ 1 | GET https://localhost:8001/hello
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ (35) <<<.*?>>>
+   |
+

@@ -87,6 +87,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {
         "retry-interval" => option_retry_interval(reader)?,
         "skip" => option_skip(reader)?,
         "tls-max" => option_tls_max(reader)?,
+        "tls-min" => option_tls_min(reader)?,
         "unix-socket" => option_unix_socket(reader)?,
         "user" => option_user(reader)?,
         "variable" => option_variable(reader)?,
@@ -316,6 +317,11 @@ fn option_skip(reader: &mut Reader) -> ParseResult<OptionKind> {
 fn option_tls_max(reader: &mut Reader) -> ParseResult<OptionKind> {
     let value = unquoted_template(reader)?;
     Ok(OptionKind::TlsMax(value))
+}
+
+fn option_tls_min(reader: &mut Reader) -> ParseResult<OptionKind> {
+    let value = unquoted_template(reader)?;
+    Ok(OptionKind::TlsMin(value))
 }
 
 fn option_user(reader: &mut Reader) -> ParseResult<OptionKind> {

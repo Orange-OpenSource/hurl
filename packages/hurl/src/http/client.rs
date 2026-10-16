@@ -430,7 +430,7 @@ impl Client {
         self.handle.forbid_reuse(!options.allow_reuse)?;
         self.handle.http_version(options.http_version.into())?;
         self.handle
-            .ssl_min_max_version(SslVersion::Default, options.tls_max.into())?;
+            .ssl_min_max_version(options.tls_min.into(), options.tls_max.into())?;
         self.handle.ip_resolve(options.ip_resolve.into())?;
 
         // Activates the access of certificates info chain after a transfer has been executed.

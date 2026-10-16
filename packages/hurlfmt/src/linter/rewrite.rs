@@ -504,6 +504,7 @@ impl Lint for OptionKind {
             }
             OptionKind::Skip(value) => value.lint(),
             OptionKind::TlsMax(value) => value.lint(),
+            OptionKind::TlsMin(value) => value.lint(),
             OptionKind::UnixSocket(value) => value.lint(),
             OptionKind::User(value) => value.lint(),
             OptionKind::Variable(value) => value.lint(),

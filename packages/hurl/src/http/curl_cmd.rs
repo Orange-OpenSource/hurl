@@ -514,6 +514,13 @@ impl ClientOptions {
             args.push("--max-time".to_string());
             args.push(self.timeout.as_secs().to_string());
         }
+        match self.tls_min {
+            TlsVersion::Default => {}
+            version => {
+                args.push("--tls-min".to_string());
+                args.push(version.to_string());
+            }
+        }
         match self.tls_max {
             TlsVersion::Default => {}
             version => {
@@ -768,6 +775,7 @@ mod tests {
             ssl_no_revoke: false,
             timeout: Duration::from_secs(10),
             tls_max: TlsVersion::Tls12,
+            tls_min: TlsVersion::Tls10,
             unix_socket: Some("/var/run/example.sock".to_string()),
             use_cookie_store: true,
             user: Some("user:password".to_string()),
@@ -793,6 +801,7 @@ mod tests {
         --limit-rate 8000 \
         --max-redirs 10 \
         --max-time 10 \
+        --tls-min 1.0 \
         --tls-max 1.2 \
         --negotiate \
         --netrc-file '/var/run/netrc' \

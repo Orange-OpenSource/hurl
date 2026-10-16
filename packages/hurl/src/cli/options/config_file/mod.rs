@@ -155,6 +155,7 @@ fn parse_option(reader: &mut Reader, options: &mut CliOptions) -> Result<(), Con
         "secret" => parse_option_secret(reader, options),
         "test" => parse_option_test(reader, options),
         "tls-max" => parse_option_tls_max(reader, options),
+        "tls-min" => parse_option_tls_min(reader, options),
         "user" => parse_option_user(reader, options, option_pos),
         "user-agent" => parse_option_user_agent(reader, options),
         "variable" => parse_option_variable(reader, options),
@@ -618,6 +619,23 @@ fn parse_option_tls_max(
         })
         .map(Some)?;
     options.tls_max = version;
+    Ok(())
+}
+
+fn parse_option_tls_min(
+    reader: &mut Reader,
+    options: &mut CliOptions,
+) -> Result<(), ConfigFileError> {
+    parse_value_separator(reader)?;
+    let value_pos = reader.cursor().pos;
+    let value = parse_value(reader)?;
+    let version = TlsVersion::from_str(&value)
+        .map_err(|err| {
+            let msg = format!("Option --tls-min has an invalid value, {}", err);
+            ConfigFileError::new(value_pos, &msg)
+        })
+        .map(Some)?;
+    options.tls_min = version;
     Ok(())
 }
 

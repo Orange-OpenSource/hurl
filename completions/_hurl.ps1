@@ -91,6 +91,7 @@ Register-ArgumentCompleter -Native -CommandName 'hurl' -ScriptBlock {
             [CompletionResult]::new('--ssl-no-revoke', 'ssl-no-revoke', [CompletionResultType]::ParameterName, '(Windows) Tell Hurl to disable certificate revocation checks')
             [CompletionResult]::new('--test', 'test', [CompletionResultType]::ParameterName, 'Activate test mode (use parallel execution)')
             [CompletionResult]::new('--tls-max', 'tls-max', [CompletionResultType]::ParameterName, 'Set the maximum allowed TLS version')
+            [CompletionResult]::new('--tls-min', 'tls-min', [CompletionResultType]::ParameterName, 'Set the minimum allowed TLS version')
             [CompletionResult]::new('--to-entry', 'to-entry', [CompletionResultType]::ParameterName, 'Execute Hurl file to ENTRY_NUMBER (starting at 1)')
             [CompletionResult]::new('--unix-socket', 'unix-socket', [CompletionResultType]::ParameterName, '(HTTP) Connect through this Unix domain socket, instead of using the network')
             [CompletionResult]::new('--user', 'user', [CompletionResultType]::ParameterName, 'Add basic Authentication header to each request')

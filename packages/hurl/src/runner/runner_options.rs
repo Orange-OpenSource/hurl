@@ -74,6 +74,7 @@ pub struct RunnerOptionsBuilder {
     ssl_no_revoke: bool,
     timeout: Duration,
     tls_max: TlsVersion,
+    tls_min: TlsVersion,
     to_entry: Option<usize>,
     unix_socket: Option<String>,
     use_cookie_store: bool,
@@ -132,6 +133,7 @@ impl Default for RunnerOptionsBuilder {
             ssl_no_revoke: false,
             timeout: Duration::from_secs(300),
             tls_max: TlsVersion::default(),
+            tls_min: TlsVersion::default(),
             to_entry: None,
             unix_socket: None,
             use_cookie_store: true,
@@ -471,6 +473,12 @@ impl RunnerOptionsBuilder {
         self
     }
 
+    /// Sets the minimum TLS version.
+    pub fn tls_min(&mut self, tls_min: TlsVersion) -> &mut Self {
+        self.tls_min = tls_min;
+        self
+    }
+
     /// Executes Hurl file to `to_entry` (starting at 1), ignores the remaining of the file.
     pub fn to_entry(&mut self, to_entry: Option<usize>) -> &mut Self {
         self.to_entry = to_entry;
@@ -556,6 +564,7 @@ impl RunnerOptionsBuilder {
             ssl_no_revoke: self.ssl_no_revoke,
             timeout: self.timeout,
             tls_max: self.tls_max,
+            tls_min: self.tls_min,
             to_entry: self.to_entry,
             unix_socket: self.unix_socket.clone(),
             use_cookie_store: self.use_cookie_store,
@@ -667,6 +676,8 @@ pub struct RunnerOptions {
     pub(crate) timeout: Duration,
     /// Sets met the maximum allowed TLS version.
     pub(crate) tls_max: TlsVersion,
+    /// Sets the minimum allowed TLS version.
+    pub(crate) tls_min: TlsVersion,
     /// Executes Hurl file to to_entry (starting at 1), ignores the remaining of the file.
     pub(crate) to_entry: Option<usize>,
     /// Sets the specified unix domain socket to connect through, instead of using the network.

@@ -114,6 +114,7 @@ pub struct CliOptions {
     pub test: bool,
     pub timeout: Duration,
     pub tls_max: Option<TlsVersion>,
+    pub tls_min: Option<TlsVersion>,
     pub to_entry: Option<usize>,
     pub unix_socket: Option<String>,
     pub user: Option<String>,
@@ -424,6 +425,7 @@ impl Default for CliOptions {
             test: false,
             timeout: Duration::from_secs(300),
             tls_max: None,
+            tls_min: None,
             to_entry: None,
             unix_socket: None,
             user: None,
@@ -542,6 +544,10 @@ impl CliOptions {
             Some(version) => version.into(),
             None => http::TlsVersion::default(),
         };
+        let tls_min = match self.tls_min {
+            Some(version) => version.into(),
+            None => http::TlsVersion::default(),
+        };
         let to_entry = self.to_entry;
         let unix_socket = self.unix_socket.clone();
         let use_cookie_store = !self.no_cookie_store;
@@ -594,6 +600,7 @@ impl CliOptions {
             .ssl_no_revoke(ssl_no_revoke)
             .timeout(timeout)
             .tls_max(tls_max)
+            .tls_min(tls_min)
             .to_entry(to_entry)
             .unix_socket(unix_socket)
             .use_cookie_store(use_cookie_store)
@@ -888,5 +895,22 @@ mod tests {
 
         let opts = options::parse(args, &ctx, &env_vars).unwrap();
         assert_eq!(opts.tls_max, Some(TlsVersion::Tls12));
+    }
+
+    #[test]
+    fn respect_tls_min_env_var() {
+        let stdin_term = true;
+        let stdout_term = true;
+        let stderr_term = true;
+        let file = tmp_hurl_file("foo.hurl");
+
+        let env_vars = HashMap::from([("HURL_TLS_MIN".to_string(), "1.2".to_string())]);
+        let env_vars = EnvVars::new(env_vars);
+        let args = ["hurl", &file];
+        let args = args_from(&args);
+        let ctx = RunContext::new(&env_vars, stdin_term, stdout_term, stderr_term);
+
+        let opts = options::parse(args, &ctx, &env_vars).unwrap();
+        assert_eq!(opts.tls_min, Some(TlsVersion::Tls12));
     }
 }
