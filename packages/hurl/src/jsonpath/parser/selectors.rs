@@ -28,10 +28,10 @@ use hurl_core::reader::Reader;
 
 use super::ParseResult;
 
-pub fn parse(reader: &mut Reader) -> ParseResult<Vec<Selector>> {
+pub fn parse(reader: &mut Reader, depth: usize) -> ParseResult<Vec<Selector>> {
     let mut selectors = vec![];
     loop {
-        let selector = selector(reader)?;
+        let selector = selector(reader, depth)?;
         selectors.push(selector);
         skip_whitespace(reader);
         if !match_str(",", reader) {
@@ -42,7 +42,7 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Vec<Selector>> {
     Ok(selectors)
 }
 
-pub fn selector(reader: &mut Reader) -> ParseResult<Selector> {
+pub fn selector(reader: &mut Reader, depth: usize) -> ParseResult<Selector> {
     let initial_state = reader.cursor();
     if let Some(name_selector) = try_name_selector(reader)? {
         return Ok(Selector::Name(name_selector));
@@ -52,7 +52,7 @@ pub fn selector(reader: &mut Reader) -> ParseResult<Selector> {
         return Ok(Selector::ArraySlice(array_slice_selector));
     } else if let Some(index_selector) = try_index_selector(reader)? {
         return Ok(Selector::Index(index_selector));
-    } else if let Some(filter_selector) = try_filter_selector(reader)? {
+    } else if let Some(filter_selector) = try_filter_selector(reader, depth)? {
         return Ok(Selector::Filter(filter_selector));
     }
 
@@ -116,10 +116,10 @@ fn try_array_slice_selector(reader: &mut Reader) -> ParseResult<Option<ArraySlic
 }
 
 /// Try to parse a filter selector
-fn try_filter_selector(reader: &mut Reader) -> ParseResult<Option<FilterSelector>> {
+fn try_filter_selector(reader: &mut Reader, depth: usize) -> ParseResult<Option<FilterSelector>> {
     if match_str("?", reader) {
         skip_whitespace(reader);
-        let expr = logical_or_expr(reader)?;
+        let expr = logical_or_expr(reader, depth)?;
         Ok(Some(FilterSelector::new(expr)))
     } else {
         Ok(None)
@@ -143,7 +143,7 @@ mod tests {
     pub fn test_parse() {
         let mut reader = Reader::new("'store',0");
         assert_eq!(
-            parse(&mut reader).unwrap(),
+            parse(&mut reader, 0).unwrap(),
             vec![
                 Selector::Name(NameSelector::new("store".to_string())),
                 Selector::Index(IndexSelector::new(0))
@@ -153,7 +153,7 @@ mod tests {
 
         let mut reader = Reader::new("1,5:7");
         assert_eq!(
-            parse(&mut reader).unwrap(),
+            parse(&mut reader, 0).unwrap(),
             vec![
                 Selector::Index(IndexSelector::new(1)),
                 Selector::ArraySlice(ArraySliceSelector::new(Some(5), Some(7), 1))
@@ -166,7 +166,7 @@ mod tests {
     pub fn test_selector() {
         let mut reader = Reader::new("'store'");
         assert_eq!(
-            selector(&mut reader).unwrap(),
+            selector(&mut reader, 0).unwrap(),
             Selector::Name(NameSelector::new("store".to_string()))
         );
         assert_eq!(reader.cursor().index, CharPos(7));
@@ -265,7 +265,7 @@ mod tests {
     pub fn test_filter_selector() {
         let mut reader = Reader::new("?@['isbn']");
         assert_eq!(
-            try_filter_selector(&mut reader).unwrap().unwrap(),
+            try_filter_selector(&mut reader, 0).unwrap().unwrap(),
             FilterSelector::new(LogicalExpr::Test(TestExpr::new(
                 false,
                 TestExprKind::FilterQuery(Query::RelativeQuery(RelativeQuery::new(vec![
@@ -279,7 +279,7 @@ mod tests {
 
         let mut reader = Reader::new("?@>3]");
         assert_eq!(
-            try_filter_selector(&mut reader).unwrap().unwrap(),
+            try_filter_selector(&mut reader, 0).unwrap().unwrap(),
             FilterSelector::new(LogicalExpr::Comparison(ComparisonExpr::new(
                 Comparable::SingularQuery(SingularQuery::Relative(RelativeSingularQuery::new(
                     vec![]

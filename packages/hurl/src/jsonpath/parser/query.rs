@@ -24,7 +24,7 @@ use crate::jsonpath::parser::{ParseError, ParseErrorKind, ParseResult, segments}
 
 pub fn parse(reader: &mut Reader) -> ParseResult<AbsoluteQuery> {
     expect_str("$", reader)?;
-    let segments = segments::parse(reader)?;
+    let segments = segments::parse(reader, 0)?;
     if reader.is_eof() {
         Ok(AbsoluteQuery::new(segments))
     } else {
@@ -35,28 +35,28 @@ pub fn parse(reader: &mut Reader) -> ParseResult<AbsoluteQuery> {
     }
 }
 
-pub fn try_filter_query(reader: &mut Reader) -> ParseResult<Option<Query>> {
-    if let Some(relative_query) = try_relative_query(reader)? {
+pub fn try_filter_query(reader: &mut Reader, depth: usize) -> ParseResult<Option<Query>> {
+    if let Some(relative_query) = try_relative_query(reader, depth)? {
         Ok(Some(Query::RelativeQuery(relative_query)))
-    } else if let Some(absolute_query) = try_absolute_query(reader)? {
+    } else if let Some(absolute_query) = try_absolute_query(reader, depth)? {
         Ok(Some(Query::AbsoluteQuery(absolute_query)))
     } else {
         Ok(None)
     }
 }
 
-pub fn try_relative_query(reader: &mut Reader) -> ParseResult<Option<RelativeQuery>> {
+pub fn try_relative_query(reader: &mut Reader, depth: usize) -> ParseResult<Option<RelativeQuery>> {
     if match_str("@", reader) {
-        let segments = segments::parse(reader)?;
+        let segments = segments::parse(reader, depth)?;
         Ok(Some(RelativeQuery::new(segments)))
     } else {
         Ok(None)
     }
 }
 
-pub fn try_absolute_query(reader: &mut Reader) -> ParseResult<Option<AbsoluteQuery>> {
+pub fn try_absolute_query(reader: &mut Reader, depth: usize) -> ParseResult<Option<AbsoluteQuery>> {
     if match_str("$", reader) {
-        let segments = segments::parse(reader)?;
+        let segments = segments::parse(reader, depth)?;
         Ok(Some(AbsoluteQuery::new(segments)))
     } else {
         Ok(None)
@@ -148,11 +148,47 @@ mod tests {
     pub fn test_relative_query() {
         let mut reader = Reader::new("@['isbn']");
         assert_eq!(
-            try_relative_query(&mut reader).unwrap().unwrap(),
+            try_relative_query(&mut reader, 0).unwrap().unwrap(),
             RelativeQuery::new(vec![Segment::Child(ChildSegment::new(vec![
                 Selector::Name(NameSelector::new("isbn".to_string()))
             ]))])
         );
         assert_eq!(reader.cursor().index, CharPos(9));
+    }
+
+    #[test]
+    fn test_nested_function_depth() {
+        use crate::jsonpath::parser::expr::MAX_NESTING_DEPTH;
+
+        let valid = format!(
+            "$[?{}0{} == 0]",
+            "length(".repeat(MAX_NESTING_DEPTH),
+            ")".repeat(MAX_NESTING_DEPTH)
+        );
+        assert!(parse(&mut Reader::new(&valid)).is_ok());
+
+        let too_deep = format!(
+            "$[?{}0{} == 0]",
+            "length(".repeat(MAX_NESTING_DEPTH + 1),
+            ")".repeat(MAX_NESTING_DEPTH + 1)
+        );
+        let mut reader = Reader::new(&too_deep);
+        assert_eq!(
+            parse(&mut reader).unwrap_err(),
+            ParseError::new(
+                reader.cursor().pos,
+                ParseErrorKind::MaxDepthExceeded {
+                    max_depth: MAX_NESTING_DEPTH
+                }
+            )
+        );
+    }
+
+    #[test]
+    fn test_sibling_filters_do_not_accumulate_depth() {
+        use crate::jsonpath::parser::expr::MAX_NESTING_DEPTH;
+
+        let query = format!("${}", "[?@]".repeat(MAX_NESTING_DEPTH + 1));
+        assert!(parse(&mut Reader::new(&query)).is_ok());
     }
 }

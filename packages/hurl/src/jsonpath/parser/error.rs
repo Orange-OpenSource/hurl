@@ -35,4 +35,5 @@ pub enum ParseErrorKind {
     InvalidCharacter(char),
     InvalidEscapeSequence(String),
     InvalidUnicodeEscape(String),
+    MaxDepthExceeded { max_depth: usize },
 }

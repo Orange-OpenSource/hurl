@@ -29,12 +29,12 @@ use hurl_core::reader::Reader;
 use regex::Regex;
 
 /// Parse an argument with ValueType
-pub fn value_type(reader: &mut Reader) -> ParseResult<ValueTypeArgument> {
+pub fn value_type(reader: &mut Reader, depth: usize) -> ParseResult<ValueTypeArgument> {
     if let Some(v) = literal::try_parse(reader)? {
         Ok(ValueTypeArgument::Literal(v))
     } else if let Some(query) = singular_query::try_parse(reader)? {
         Ok(ValueTypeArgument::SingularQuery(query))
-    } else if let Some(function) = functions::try_value_type_function(reader)? {
+    } else if let Some(function) = functions::try_value_type_function(reader, depth)? {
         Ok(ValueTypeArgument::Function(Box::new(function)))
     } else {
         Err(ParseError::new(
@@ -45,12 +45,12 @@ pub fn value_type(reader: &mut Reader) -> ParseResult<ValueTypeArgument> {
 }
 
 /// Parse an argument with regex ValueType
-pub fn regex_value_type(reader: &mut Reader) -> ParseResult<RegexValueTypeArgument> {
+pub fn regex_value_type(reader: &mut Reader, depth: usize) -> ParseResult<RegexValueTypeArgument> {
     if let Some(v) = try_regex(reader)? {
         Ok(RegexValueTypeArgument::Literal(v))
     } else if let Some(query) = singular_query::try_parse(reader)? {
         Ok(RegexValueTypeArgument::SingularQuery(query))
-    } else if let Some(function) = functions::try_value_type_function(reader)? {
+    } else if let Some(function) = functions::try_value_type_function(reader, depth)? {
         Ok(RegexValueTypeArgument::Function(Box::new(function)))
     } else {
         Err(ParseError::new(
@@ -78,8 +78,8 @@ fn try_regex(reader: &mut Reader) -> ParseResult<Option<Regex>> {
 }
 
 /// Parse an argument with NodeType
-pub fn nodes_type(reader: &mut Reader) -> ParseResult<NodesTypeArgument> {
-    if let Some(filter_query) = try_filter_query(reader)? {
+pub fn nodes_type(reader: &mut Reader, depth: usize) -> ParseResult<NodesTypeArgument> {
+    if let Some(filter_query) = try_filter_query(reader, depth)? {
         Ok(NodesTypeArgument::FilterQuery(filter_query))
     } else {
         Err(ParseError::new(
@@ -103,7 +103,7 @@ mod tests {
     pub fn test_value_type() {
         let mut reader = Reader::new("42");
         assert_eq!(
-            value_type(&mut reader).unwrap(),
+            value_type(&mut reader, 0).unwrap(),
             ValueTypeArgument::Literal(Literal::Number(Number::Integer(42)))
         );
         assert_eq!(reader.cursor().index, CharPos(2));
@@ -113,7 +113,7 @@ mod tests {
     pub fn test_regex_value_type() {
         let mut reader = Reader::new("42");
         assert_eq!(
-            regex_value_type(&mut reader).unwrap_err(),
+            regex_value_type(&mut reader, 0).unwrap_err(),
             ParseError::new(
                 Pos::new(1, 1),
                 ParseErrorKind::Expecting("a RegexValueType argument".to_string())
@@ -122,7 +122,7 @@ mod tests {
 
         let mut reader = Reader::new("[]");
         assert_eq!(
-            regex_value_type(&mut reader).unwrap_err(),
+            regex_value_type(&mut reader, 0).unwrap_err(),
             ParseError::new(
                 Pos::new(1, 1),
                 ParseErrorKind::Expecting("a RegexValueType argument".to_string())
@@ -131,7 +131,7 @@ mod tests {
 
         let mut reader = Reader::new("\"[Bb]ob\"");
         assert_eq!(
-            regex_value_type(&mut reader).unwrap(),
+            regex_value_type(&mut reader, 0).unwrap(),
             RegexValueTypeArgument::Literal(Regex::new("[Bb]ob").unwrap())
         );
     }
@@ -140,7 +140,7 @@ mod tests {
     pub fn test_nodes_type() {
         let mut reader = Reader::new("@.*.author");
         assert_eq!(
-            nodes_type(&mut reader).unwrap(),
+            nodes_type(&mut reader, 0).unwrap(),
             NodesTypeArgument::FilterQuery(Query::RelativeQuery(RelativeQuery::new(vec![
                 Segment::Child(ChildSegment::new(vec![Selector::Wildcard(
                     WildcardSelector

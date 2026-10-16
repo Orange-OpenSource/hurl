@@ -26,21 +26,21 @@ use crate::jsonpath::parser::{ParseError, ParseErrorKind, selectors};
 use hurl_core::reader::Reader;
 
 /// Parse segments
-pub fn parse(reader: &mut Reader) -> ParseResult<Vec<Segment>> {
+pub fn parse(reader: &mut Reader, depth: usize) -> ParseResult<Vec<Segment>> {
     let mut segments = vec![];
-    while let Some(segment) = try_segment(reader)? {
+    while let Some(segment) = try_segment(reader, depth)? {
         segments.push(segment);
     }
     Ok(segments)
 }
 
 ///  Try to parse a segment
-fn try_segment(reader: &mut Reader) -> ParseResult<Option<Segment>> {
+fn try_segment(reader: &mut Reader, depth: usize) -> ParseResult<Option<Segment>> {
     let save = reader.cursor();
     skip_whitespace(reader);
-    if let Some(descendant_segment) = try_descendant_segment(reader)? {
+    if let Some(descendant_segment) = try_descendant_segment(reader, depth)? {
         return Ok(Some(Segment::Descendant(descendant_segment)));
-    } else if let Some(child_segment) = try_child_segment(reader)? {
+    } else if let Some(child_segment) = try_child_segment(reader, depth)? {
         return Ok(Some(Segment::Child(child_segment)));
     }
     reader.seek(save);
@@ -48,8 +48,8 @@ fn try_segment(reader: &mut Reader) -> ParseResult<Option<Segment>> {
 }
 
 /// Try to parse a child segment
-fn try_child_segment(reader: &mut Reader) -> ParseResult<Option<ChildSegment>> {
-    if let Some(selectors) = try_bracketed_selection(reader)? {
+fn try_child_segment(reader: &mut Reader, depth: usize) -> ParseResult<Option<ChildSegment>> {
+    if let Some(selectors) = try_bracketed_selection(reader, depth)? {
         Ok(Some(ChildSegment::new(selectors)))
     } else if match_str(".", reader) {
         let save_state = reader.cursor();
@@ -75,10 +75,13 @@ fn try_child_segment(reader: &mut Reader) -> ParseResult<Option<ChildSegment>> {
 }
 
 // Try to parse a descendant segment
-fn try_descendant_segment(reader: &mut Reader) -> ParseResult<Option<DescendantSegment>> {
+fn try_descendant_segment(
+    reader: &mut Reader,
+    depth: usize,
+) -> ParseResult<Option<DescendantSegment>> {
     if match_str("..", reader) {
         let save_state = reader.cursor();
-        if let Some(selectors) = try_bracketed_selection(reader)? {
+        if let Some(selectors) = try_bracketed_selection(reader, depth)? {
             Ok(Some(DescendantSegment::new(selectors)))
         } else if match_str("*", reader) {
             Ok(Some(DescendantSegment::new(vec![Selector::Wildcard(
@@ -101,10 +104,13 @@ fn try_descendant_segment(reader: &mut Reader) -> ParseResult<Option<DescendantS
     }
 }
 
-fn try_bracketed_selection(reader: &mut Reader) -> ParseResult<Option<Vec<Selector>>> {
+fn try_bracketed_selection(
+    reader: &mut Reader,
+    depth: usize,
+) -> ParseResult<Option<Vec<Selector>>> {
     if match_str("[", reader) {
         skip_whitespace(reader);
-        let selectors = selectors::parse(reader)?;
+        let selectors = selectors::parse(reader, depth)?;
         skip_whitespace(reader);
         expect_str("]", reader)?;
         Ok(Some(selectors))
@@ -179,7 +185,7 @@ mod tests {
         let mut reader = Reader::new("['isbn']]");
 
         assert_eq!(
-            parse(&mut reader).unwrap(),
+            parse(&mut reader, 0).unwrap(),
             vec![Segment::Child(ChildSegment::new(vec![Selector::Name(
                 NameSelector::new("isbn".to_string())
             )]))]
@@ -191,7 +197,7 @@ mod tests {
     pub fn test_segment() {
         let mut reader = Reader::new("['store']");
         assert_eq!(
-            try_segment(&mut reader).unwrap().unwrap(),
+            try_segment(&mut reader, 0).unwrap().unwrap(),
             Segment::Child(ChildSegment::new(vec![Selector::Name(NameSelector::new(
                 "store".to_string()
             ))]))
@@ -203,7 +209,7 @@ mod tests {
     pub fn test_child_segment() {
         let mut reader = Reader::new("['store']");
         assert_eq!(
-            try_child_segment(&mut reader).unwrap().unwrap(),
+            try_child_segment(&mut reader, 0).unwrap().unwrap(),
             ChildSegment::new(vec![Selector::Name(NameSelector::new("store".to_string()))])
         );
         assert_eq!(reader.cursor().index, CharPos(9));
@@ -213,7 +219,7 @@ mod tests {
     pub fn test_child_segment_error() {
         let mut reader = Reader::new(".1");
         assert_eq!(
-            try_child_segment(&mut reader).unwrap_err(),
+            try_child_segment(&mut reader, 0).unwrap_err(),
             ParseError::new(
                 Pos::new(1, 2),
                 ParseErrorKind::Expecting(
@@ -227,14 +233,14 @@ mod tests {
     pub fn test_descendant_segment() {
         let mut reader = Reader::new("..[1]");
         assert_eq!(
-            try_descendant_segment(&mut reader).unwrap().unwrap(),
+            try_descendant_segment(&mut reader, 0).unwrap().unwrap(),
             DescendantSegment::new(vec![Selector::Index(IndexSelector::new(1))])
         );
         assert_eq!(reader.cursor().index, CharPos(5));
 
         let mut reader = Reader::new("..[1]");
         assert_eq!(
-            try_segment(&mut reader).unwrap().unwrap(),
+            try_segment(&mut reader, 0).unwrap().unwrap(),
             Segment::Descendant(DescendantSegment::new(vec![Selector::Index(
                 IndexSelector::new(1)
             )]))
@@ -246,7 +252,7 @@ mod tests {
     pub fn test_descendant_segment_error() {
         let mut reader = Reader::new("..1");
         assert_eq!(
-            try_descendant_segment(&mut reader).unwrap_err(),
+            try_descendant_segment(&mut reader, 0).unwrap_err(),
             ParseError::new(
                 Pos::new(1, 3),
                 ParseErrorKind::Expecting(
@@ -260,7 +266,7 @@ mod tests {
     pub fn test_bracketed_selection() {
         let mut reader = Reader::new("[1,'store']");
         assert_eq!(
-            try_bracketed_selection(&mut reader).unwrap().unwrap(),
+            try_bracketed_selection(&mut reader, 0).unwrap().unwrap(),
             vec![
                 Selector::Index(IndexSelector::new(1)),
                 Selector::Name(NameSelector::new("store".to_string()))
@@ -273,7 +279,7 @@ mod tests {
     pub fn test_shorthand_notation() {
         let mut reader = Reader::new(".book");
         assert_eq!(
-            try_segment(&mut reader).unwrap().unwrap(),
+            try_segment(&mut reader, 0).unwrap().unwrap(),
             Segment::Child(ChildSegment::new(vec![Selector::Name(NameSelector::new(
                 "book".to_string()
             ))]))
@@ -282,7 +288,7 @@ mod tests {
 
         let mut reader = Reader::new(".☺");
         assert_eq!(
-            try_segment(&mut reader).unwrap().unwrap(),
+            try_segment(&mut reader, 0).unwrap().unwrap(),
             Segment::Child(ChildSegment::new(vec![Selector::Name(NameSelector::new(
                 "☺".to_string()
             ))]))
@@ -291,7 +297,7 @@ mod tests {
 
         let mut reader = Reader::new("..book");
         assert_eq!(
-            try_segment(&mut reader).unwrap().unwrap(),
+            try_segment(&mut reader, 0).unwrap().unwrap(),
             Segment::Descendant(DescendantSegment::new(vec![Selector::Name(
                 NameSelector::new("book".to_string())
             )]))
@@ -300,7 +306,7 @@ mod tests {
 
         let mut reader = Reader::new(".*");
         assert_eq!(
-            try_segment(&mut reader).unwrap().unwrap(),
+            try_segment(&mut reader, 0).unwrap().unwrap(),
             Segment::Child(ChildSegment::new(vec![Selector::Wildcard(
                 WildcardSelector
             )]))
@@ -309,7 +315,7 @@ mod tests {
 
         let mut reader = Reader::new("..*");
         assert_eq!(
-            try_segment(&mut reader).unwrap().unwrap(),
+            try_segment(&mut reader, 0).unwrap().unwrap(),
             Segment::Descendant(DescendantSegment::new(vec![Selector::Wildcard(
                 WildcardSelector
             )]))

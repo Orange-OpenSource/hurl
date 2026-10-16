@@ -19,30 +19,37 @@
 use super::argument;
 use crate::jsonpath::ast::function::functions::{LogicalTypeFunction, ValueTypeFunction};
 use crate::jsonpath::parser::ParseResult;
+use crate::jsonpath::parser::expr::check_depth;
 use crate::jsonpath::parser::primitives::{expect_str, match_str, skip_whitespace};
 use hurl_core::reader::Reader;
 
 /// Try to parse a function return a ValueType
-pub fn try_value_type_function(reader: &mut Reader) -> ParseResult<Option<ValueTypeFunction>> {
+pub fn try_value_type_function(
+    reader: &mut Reader,
+    depth: usize,
+) -> ParseResult<Option<ValueTypeFunction>> {
     //let initial_state = reader.cursor();
     if match_str("length", reader) {
+        check_depth(reader, depth)?;
         expect_str("(", reader)?;
         skip_whitespace(reader);
-        let argument = argument::value_type(reader)?;
+        let argument = argument::value_type(reader, depth + 1)?;
         skip_whitespace(reader);
         expect_str(")", reader)?;
         Ok(Some(ValueTypeFunction::Length(argument)))
     } else if match_str("value", reader) {
+        check_depth(reader, depth)?;
         expect_str("(", reader)?;
         skip_whitespace(reader);
-        let argument = argument::nodes_type(reader)?;
+        let argument = argument::nodes_type(reader, depth + 1)?;
         skip_whitespace(reader);
         expect_str(")", reader)?;
         Ok(Some(ValueTypeFunction::Value(argument)))
     } else if match_str("count", reader) {
+        check_depth(reader, depth)?;
         expect_str("(", reader)?;
         skip_whitespace(reader);
-        let argument = argument::nodes_type(reader)?;
+        let argument = argument::nodes_type(reader, depth + 1)?;
         skip_whitespace(reader);
         expect_str(")", reader)?;
         Ok(Some(ValueTypeFunction::Count(argument)))
@@ -52,27 +59,32 @@ pub fn try_value_type_function(reader: &mut Reader) -> ParseResult<Option<ValueT
 }
 
 /// Try to parse a function return a LogicalType
-pub fn try_logical_type_function(reader: &mut Reader) -> ParseResult<Option<LogicalTypeFunction>> {
+pub fn try_logical_type_function(
+    reader: &mut Reader,
+    depth: usize,
+) -> ParseResult<Option<LogicalTypeFunction>> {
     //let initial_state = reader.cursor();
     if match_str("match", reader) {
+        check_depth(reader, depth)?;
         expect_str("(", reader)?;
         skip_whitespace(reader);
-        let argument1 = argument::value_type(reader)?;
+        let argument1 = argument::value_type(reader, depth + 1)?;
         skip_whitespace(reader);
         expect_str(",", reader)?;
         skip_whitespace(reader);
-        let argument2 = argument::regex_value_type(reader)?;
+        let argument2 = argument::regex_value_type(reader, depth + 1)?;
         skip_whitespace(reader);
         expect_str(")", reader)?;
         Ok(Some(LogicalTypeFunction::Match(argument1, argument2)))
     } else if match_str("search", reader) {
+        check_depth(reader, depth)?;
         expect_str("(", reader)?;
         skip_whitespace(reader);
-        let argument1 = argument::value_type(reader)?;
+        let argument1 = argument::value_type(reader, depth + 1)?;
         skip_whitespace(reader);
         expect_str(",", reader)?;
         skip_whitespace(reader);
-        let argument2 = argument::regex_value_type(reader)?;
+        let argument2 = argument::regex_value_type(reader, depth + 1)?;
         skip_whitespace(reader);
         expect_str(")", reader)?;
         Ok(Some(LogicalTypeFunction::Search(argument1, argument2)))
@@ -103,7 +115,7 @@ mod tests {
     pub fn test_length_function() {
         let mut reader = Reader::new("length(\"abc\")");
         assert_eq!(
-            try_value_type_function(&mut reader).unwrap().unwrap(),
+            try_value_type_function(&mut reader, 0).unwrap().unwrap(),
             ValueTypeFunction::Length(ValueTypeArgument::Literal(Literal::String(
                 "abc".to_string()
             )))
@@ -112,7 +124,7 @@ mod tests {
 
         let mut reader = Reader::new("length(value($..c))");
         assert_eq!(
-            try_value_type_function(&mut reader).unwrap().unwrap(),
+            try_value_type_function(&mut reader, 0).unwrap().unwrap(),
             ValueTypeFunction::Length(ValueTypeArgument::Function(Box::new(
                 ValueTypeFunction::Value(NodesTypeArgument::FilterQuery(Query::AbsoluteQuery(
                     AbsoluteQuery::new(vec![Segment::Descendant(DescendantSegment::new(vec![
@@ -129,7 +141,7 @@ mod tests {
         // not well-typed since @.* is a non-singular query
         let mut reader = Reader::new("length(@.*)");
         assert_eq!(
-            try_value_type_function(&mut reader).unwrap_err(),
+            try_value_type_function(&mut reader, 0).unwrap_err(),
             ParseError::new(Pos::new(1, 9), ParseErrorKind::Expecting(")".to_string()))
         );
     }
@@ -138,7 +150,7 @@ mod tests {
     pub fn test_count_function() {
         let mut reader = Reader::new("count(@.*.author)");
         assert_eq!(
-            try_value_type_function(&mut reader).unwrap().unwrap(),
+            try_value_type_function(&mut reader, 0).unwrap().unwrap(),
             ValueTypeFunction::Count(NodesTypeArgument::FilterQuery(Query::RelativeQuery(
                 RelativeQuery::new(vec![
                     Segment::Child(ChildSegment::new(vec![Selector::Wildcard(
@@ -158,7 +170,7 @@ mod tests {
         // not well-typed since 1 is not a query or function expression
         let mut reader = Reader::new("count(1)");
         assert_eq!(
-            try_value_type_function(&mut reader).unwrap_err(),
+            try_value_type_function(&mut reader, 0).unwrap_err(),
             ParseError::new(
                 Pos::new(1, 7),
                 ParseErrorKind::Expecting("a NodesType argument".to_string())
@@ -170,7 +182,7 @@ mod tests {
     pub fn test_match_function() {
         let mut reader = Reader::new("match(@.date, \"1974-05-01\")");
         assert_eq!(
-            try_logical_type_function(&mut reader).unwrap().unwrap(),
+            try_logical_type_function(&mut reader, 0).unwrap().unwrap(),
             LogicalTypeFunction::Match(
                 ValueTypeArgument::SingularQuery(SingularQuery::Relative(
                     RelativeSingularQuery::new(vec![SingularQuerySegment::Name(
@@ -187,7 +199,7 @@ mod tests {
     pub fn test_search_function() {
         let mut reader = Reader::new("search(@.author, \"[BR]ob\")");
         assert_eq!(
-            try_logical_type_function(&mut reader).unwrap().unwrap(),
+            try_logical_type_function(&mut reader, 0).unwrap().unwrap(),
             LogicalTypeFunction::Search(
                 ValueTypeArgument::SingularQuery(SingularQuery::Relative(
                     RelativeSingularQuery::new(vec![SingularQuerySegment::Name(
@@ -204,7 +216,7 @@ mod tests {
     pub fn test_value_function() {
         let mut reader = Reader::new("value(@..color)");
         assert_eq!(
-            try_value_type_function(&mut reader).unwrap().unwrap(),
+            try_value_type_function(&mut reader, 0).unwrap().unwrap(),
             ValueTypeFunction::Value(NodesTypeArgument::FilterQuery(Query::RelativeQuery(
                 RelativeQuery::new(vec![Segment::Descendant(DescendantSegment::new(vec![
                     Selector::Name(NameSelector::new("color".to_string()))

@@ -29,9 +29,9 @@ use crate::jsonpath::parser::{ParseError, ParseErrorKind};
 use hurl_core::reader::Reader;
 
 /// Try to parse a comparison expression.
-pub fn try_parse(reader: &mut Reader) -> ParseResult<Option<ComparisonExpr>> {
+pub fn try_parse(reader: &mut Reader, depth: usize) -> ParseResult<Option<ComparisonExpr>> {
     let save = reader.cursor();
-    let left = if let Some(value) = try_comparable(reader)? {
+    let left = if let Some(value) = try_comparable(reader, depth)? {
         value
     } else {
         return Ok(None);
@@ -44,13 +44,13 @@ pub fn try_parse(reader: &mut Reader) -> ParseResult<Option<ComparisonExpr>> {
         return Ok(None);
     };
     skip_whitespace(reader);
-    let right = comparable(reader)?;
+    let right = comparable(reader, depth)?;
     Ok(Some(ComparisonExpr::new(left, right, operator)))
 }
 
 /// Parse a comparable.
-fn comparable(reader: &mut Reader) -> ParseResult<Comparable> {
-    if let Some(value) = try_comparable(reader)? {
+fn comparable(reader: &mut Reader, depth: usize) -> ParseResult<Comparable> {
+    if let Some(value) = try_comparable(reader, depth)? {
         Ok(value)
     } else {
         Err(ParseError::new(
@@ -61,12 +61,12 @@ fn comparable(reader: &mut Reader) -> ParseResult<Comparable> {
 }
 
 /// Try to parse a comparable.
-fn try_comparable(reader: &mut Reader) -> ParseResult<Option<Comparable>> {
+fn try_comparable(reader: &mut Reader, depth: usize) -> ParseResult<Option<Comparable>> {
     if let Some(literal) = literal::try_parse(reader)? {
         Ok(Some(Comparable::Literal(literal)))
     } else if let Some(singular_query) = try_singular_query(reader)? {
         Ok(Some(Comparable::SingularQuery(singular_query)))
-    } else if let Some(function) = try_value_type_function(reader)? {
+    } else if let Some(function) = try_value_type_function(reader, depth)? {
         Ok(Some(Comparable::Function(function)))
     } else {
         Ok(None)
@@ -108,7 +108,7 @@ mod tests {
     pub fn test_comparison_expr() {
         let mut reader = Reader::new("1<=2");
         assert_eq!(
-            try_parse(&mut reader).unwrap().unwrap(),
+            try_parse(&mut reader, 0).unwrap().unwrap(),
             ComparisonExpr::new(
                 Comparable::Literal(Literal::Number(Number::Integer(1))),
                 Comparable::Literal(Literal::Number(Number::Integer(2))),
@@ -119,7 +119,7 @@ mod tests {
 
         let mut reader = Reader::new("@.a == 1");
         assert_eq!(
-            try_parse(&mut reader).unwrap().unwrap(),
+            try_parse(&mut reader, 0).unwrap().unwrap(),
             ComparisonExpr::new(
                 Comparable::SingularQuery(SingularQuery::Relative(RelativeSingularQuery::new(
                     vec![SingularQuerySegment::Name(NameSelector::new(
@@ -137,7 +137,7 @@ mod tests {
     pub fn test_comparison_expr_error() {
         let mut reader = Reader::new("@ == 1e999");
         assert_eq!(
-            try_parse(&mut reader).unwrap_err(),
+            try_parse(&mut reader, 0).unwrap_err(),
             ParseError::new(
                 Pos::new(1, 6),
                 ParseErrorKind::Expecting("Number is too big".to_string())
@@ -150,12 +150,12 @@ mod tests {
     pub fn test_comparison_expr_none() {
         // This is a test expression, not a comparison expression
         let mut reader = Reader::new("@.b]");
-        assert!(try_parse(&mut reader).unwrap().is_none());
+        assert!(try_parse(&mut reader, 0).unwrap().is_none());
         assert_eq!(reader.cursor().index, CharPos(0));
 
         // This is a test expression, not a comparison expression
         let mut reader = Reader::new("$.*.a]");
-        assert!(try_parse(&mut reader).unwrap().is_none());
+        assert!(try_parse(&mut reader, 0).unwrap().is_none());
         assert_eq!(reader.cursor().index, CharPos(0));
     }
 
@@ -163,7 +163,7 @@ mod tests {
     pub fn test_comparable() {
         let mut reader = Reader::new("1");
         assert_eq!(
-            comparable(&mut reader).unwrap(),
+            comparable(&mut reader, 0).unwrap(),
             Comparable::Literal(Literal::Number(Number::Integer(1)))
         );
         assert_eq!(reader.cursor().index, CharPos(1));
@@ -173,7 +173,7 @@ mod tests {
     pub fn test_comparable_error() {
         let mut reader = Reader::new("1e999");
         assert_eq!(
-            try_comparable(&mut reader).unwrap_err(),
+            try_comparable(&mut reader, 0).unwrap_err(),
             ParseError::new(
                 Pos::new(1, 1),
                 ParseErrorKind::Expecting("Number is too big".to_string())

@@ -23,10 +23,15 @@ use crate::jsonpath::parser::query::try_filter_query;
 use crate::jsonpath::parser::{ParseError, ParseErrorKind, ParseResult};
 use hurl_core::reader::Reader;
 
-pub fn logical_or_expr(reader: &mut Reader) -> ParseResult<LogicalExpr> {
+pub(super) const MAX_NESTING_DEPTH: usize = 64;
+
+/// Parse a logical expression using the depth shared with nested filters and functions.
+pub fn logical_or_expr(reader: &mut Reader, depth: usize) -> ParseResult<LogicalExpr> {
+    check_depth(reader, depth)?;
+
     let mut operands = vec![];
 
-    operands.push(logical_and_expr(reader)?);
+    operands.push(logical_and_expr(reader, depth)?);
 
     // Parse additional operands separated by "||"
     loop {
@@ -35,7 +40,7 @@ pub fn logical_or_expr(reader: &mut Reader) -> ParseResult<LogicalExpr> {
             break;
         }
         skip_whitespace(reader);
-        operands.push(logical_or_expr(reader)?);
+        operands.push(logical_or_expr(reader, depth + 1)?);
     }
 
     // If we only have one operand, return it directly
@@ -46,10 +51,23 @@ pub fn logical_or_expr(reader: &mut Reader) -> ParseResult<LogicalExpr> {
     }
 }
 
-fn logical_and_expr(reader: &mut Reader) -> ParseResult<LogicalExpr> {
+pub(super) fn check_depth(reader: &Reader, depth: usize) -> ParseResult<()> {
+    if depth >= MAX_NESTING_DEPTH {
+        return Err(ParseError::new(
+            reader.cursor().pos,
+            ParseErrorKind::MaxDepthExceeded {
+                max_depth: MAX_NESTING_DEPTH,
+            },
+        ));
+    }
+
+    Ok(())
+}
+
+fn logical_and_expr(reader: &mut Reader, depth: usize) -> ParseResult<LogicalExpr> {
     let mut operands = vec![];
 
-    operands.push(basic_expr(reader)?);
+    operands.push(basic_expr(reader, depth)?);
 
     // Parse additional operands separated by "&&"
     loop {
@@ -58,7 +76,7 @@ fn logical_and_expr(reader: &mut Reader) -> ParseResult<LogicalExpr> {
             break;
         }
         skip_whitespace(reader);
-        operands.push(basic_expr(reader)?);
+        operands.push(basic_expr(reader, depth)?);
     }
 
     // If we only have one operand, return it directly
@@ -69,13 +87,13 @@ fn logical_and_expr(reader: &mut Reader) -> ParseResult<LogicalExpr> {
     }
 }
 
-fn basic_expr(reader: &mut Reader) -> ParseResult<LogicalExpr> {
+fn basic_expr(reader: &mut Reader, depth: usize) -> ParseResult<LogicalExpr> {
     let save = reader.cursor();
-    if let Some(expr) = try_paren_expr(reader)? {
+    if let Some(expr) = try_paren_expr(reader, depth)? {
         Ok(expr)
-    } else if let Some(comparison_expr) = try_comparison(reader)? {
+    } else if let Some(comparison_expr) = try_comparison(reader, depth)? {
         Ok(LogicalExpr::Comparison(comparison_expr))
-    } else if let Some(test_expr) = try_test_expr(reader)? {
+    } else if let Some(test_expr) = try_test_expr(reader, depth)? {
         Ok(LogicalExpr::Test(test_expr))
     } else {
         Err(ParseError::new(
@@ -85,12 +103,12 @@ fn basic_expr(reader: &mut Reader) -> ParseResult<LogicalExpr> {
     }
 }
 
-fn try_paren_expr(reader: &mut Reader) -> ParseResult<Option<LogicalExpr>> {
+fn try_paren_expr(reader: &mut Reader, depth: usize) -> ParseResult<Option<LogicalExpr>> {
     let save = reader.cursor();
     let not = match_str("!", reader);
     skip_whitespace(reader);
     if match_str("(", reader) {
-        let expr = logical_or_expr(reader)?;
+        let expr = logical_or_expr(reader, depth + 1)?;
         if match_str(")", reader) {
             let logical_expr = if not {
                 LogicalExpr::Not(NotExpr::new(expr))
@@ -110,13 +128,14 @@ fn try_paren_expr(reader: &mut Reader) -> ParseResult<Option<LogicalExpr>> {
     }
 }
 
-fn try_test_expr(reader: &mut Reader) -> ParseResult<Option<TestExpr>> {
+fn try_test_expr(reader: &mut Reader, depth: usize) -> ParseResult<Option<TestExpr>> {
     let not = match_str("!", reader);
     skip_whitespace(reader);
-    if let Some(query) = try_filter_query(reader)? {
+    if let Some(query) = try_filter_query(reader, depth + 1)? {
         let kind = TestExprKind::FilterQuery(query);
         Ok(Some(TestExpr::new(not, kind)))
-    } else if let Some(logical_type_function) = functions::try_logical_type_function(reader)? {
+    } else if let Some(logical_type_function) = functions::try_logical_type_function(reader, depth)?
+    {
         let kind = TestExprKind::LogicalTypeFunction(Box::new(logical_type_function));
         Ok(Some(TestExpr::new(not, kind)))
     } else {
@@ -147,7 +166,7 @@ mod tests {
     fn test_parse_logical_or_expr() {
         let mut reader = Reader::new("@.b");
         assert_eq!(
-            logical_or_expr(&mut reader).unwrap(),
+            logical_or_expr(&mut reader, 0).unwrap(),
             LogicalExpr::Test(TestExpr::new(
                 false,
                 TestExprKind::FilterQuery(Query::RelativeQuery(RelativeQuery::new(vec![
@@ -164,7 +183,7 @@ mod tests {
     fn test_parse_or_expression() {
         let mut reader = Reader::new("@<2 || @>4");
         assert_eq!(
-            logical_or_expr(&mut reader).unwrap(),
+            logical_or_expr(&mut reader, 0).unwrap(),
             LogicalExpr::Or(OrExpr::new(vec![
                 LogicalExpr::Comparison(ComparisonExpr::new(
                     Comparable::SingularQuery(SingularQuery::Relative(RelativeSingularQuery::new(
@@ -186,10 +205,51 @@ mod tests {
     }
 
     #[test]
+    fn test_max_nesting_depth() {
+        let valid_or = vec!["@"; MAX_NESTING_DEPTH].join(" || ");
+        assert!(logical_or_expr(&mut Reader::new(&valid_or), 0).is_ok());
+
+        let too_deep_or = vec!["@"; MAX_NESTING_DEPTH + 1].join(" || ");
+        let mut reader = Reader::new(&too_deep_or);
+        assert_eq!(
+            logical_or_expr(&mut reader, 0).unwrap_err(),
+            ParseError::new(
+                reader.cursor().pos,
+                ParseErrorKind::MaxDepthExceeded {
+                    max_depth: MAX_NESTING_DEPTH
+                }
+            )
+        );
+
+        let valid_parentheses = format!(
+            "{}@{}",
+            "(".repeat(MAX_NESTING_DEPTH - 1),
+            ")".repeat(MAX_NESTING_DEPTH - 1)
+        );
+        assert!(logical_or_expr(&mut Reader::new(&valid_parentheses), 0).is_ok());
+
+        let too_deep_parentheses = format!(
+            "{}@{}",
+            "(".repeat(MAX_NESTING_DEPTH),
+            ")".repeat(MAX_NESTING_DEPTH)
+        );
+        let mut reader = Reader::new(&too_deep_parentheses);
+        assert_eq!(
+            logical_or_expr(&mut reader, 0).unwrap_err(),
+            ParseError::new(
+                reader.cursor().pos,
+                ParseErrorKind::MaxDepthExceeded {
+                    max_depth: MAX_NESTING_DEPTH
+                }
+            )
+        );
+    }
+
+    #[test]
     fn test_parse_and_expression() {
         let mut reader = Reader::new("@>1&&@<4");
         assert_eq!(
-            logical_and_expr(&mut reader).unwrap(),
+            logical_and_expr(&mut reader, 0).unwrap(),
             LogicalExpr::And(AndExpr::new(vec![
                 LogicalExpr::Comparison(ComparisonExpr::new(
                     Comparable::SingularQuery(SingularQuery::Relative(RelativeSingularQuery::new(
@@ -213,7 +273,7 @@ mod tests {
     fn test_parse_paren_expression() {
         let mut reader = Reader::new("!(@.b)");
         assert_eq!(
-            try_paren_expr(&mut reader).unwrap().unwrap(),
+            try_paren_expr(&mut reader, 0).unwrap().unwrap(),
             LogicalExpr::Not(NotExpr::new(LogicalExpr::Test(TestExpr::new(
                 false,
                 TestExprKind::FilterQuery(Query::RelativeQuery(RelativeQuery::new(vec![
@@ -229,7 +289,7 @@ mod tests {
     #[test]
     fn test_parse_paren_expression_none() {
         let mut reader = Reader::new("!@.b");
-        assert!(try_paren_expr(&mut reader).unwrap().is_none());
+        assert!(try_paren_expr(&mut reader, 0).unwrap().is_none());
         assert_eq!(reader.cursor().index, hurl_core::reader::CharPos(0));
     }
 
@@ -237,7 +297,7 @@ mod tests {
     fn test_parse_test_expr() {
         let mut reader = Reader::new("@.b");
         assert_eq!(
-            try_test_expr(&mut reader).unwrap().unwrap(),
+            try_test_expr(&mut reader, 0).unwrap().unwrap(),
             TestExpr::new(
                 false,
                 TestExprKind::FilterQuery(Query::RelativeQuery(RelativeQuery::new(vec![
@@ -251,7 +311,7 @@ mod tests {
 
         let mut reader = Reader::new("$");
         assert_eq!(
-            try_test_expr(&mut reader).unwrap().unwrap(),
+            try_test_expr(&mut reader, 0).unwrap().unwrap(),
             TestExpr::new(
                 false,
                 TestExprKind::FilterQuery(Query::AbsoluteQuery(AbsoluteQuery::new(vec![])))
@@ -261,7 +321,7 @@ mod tests {
 
         let mut reader = Reader::new("$.*.a]");
         assert_eq!(
-            try_test_expr(&mut reader).unwrap().unwrap(),
+            try_test_expr(&mut reader, 0).unwrap().unwrap(),
             TestExpr::new(
                 false,
                 TestExprKind::FilterQuery(Query::AbsoluteQuery(AbsoluteQuery::new(vec![
@@ -278,7 +338,7 @@ mod tests {
 
         let mut reader = Reader::new("!@.a");
         assert_eq!(
-            try_test_expr(&mut reader).unwrap().unwrap(),
+            try_test_expr(&mut reader, 0).unwrap().unwrap(),
             TestExpr::new(
                 true,
                 TestExprKind::FilterQuery(Query::RelativeQuery(RelativeQuery::new(vec![
@@ -292,7 +352,7 @@ mod tests {
 
         let mut reader = Reader::new("match(@.a, 'a.*')");
         assert_eq!(
-            try_test_expr(&mut reader).unwrap().unwrap(),
+            try_test_expr(&mut reader, 0).unwrap().unwrap(),
             TestExpr::new(
                 false,
                 TestExprKind::LogicalTypeFunction(Box::new(LogicalTypeFunction::Match(
