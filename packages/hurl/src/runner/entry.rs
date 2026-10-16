@@ -111,7 +111,9 @@ pub fn run(
         logger,
     );
 
-    log_request(http_client, &curl_cmd, &http_request, logger);
+    if !logger.is_low_verbosity() {
+        log_request(http_client, &curl_cmd, &http_request, logger);
+    }
 
     // Run the HTTP requests (optionally follow redirection)
     let calls = match http_client.execute_with_redirect(&http_request, &client_options, logger) {

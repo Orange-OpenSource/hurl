@@ -146,11 +146,17 @@ impl Logger {
         s.push(cmd);
         self.eprintln(&s.to_string(fmt));
     }
+
+    /// Returns `true` if this logger has no verbosity or a low verbosity (debug messages are not displayed).
+    pub fn is_low_verbosity(&self) -> bool {
+        matches!(self.verbosity, None | Some(Verbosity::LowVerbose))
+    }
+
     /// Prints a given debug message to this logger [`Stderr`] instance, in verbose and very verbose mode.
     ///
     /// Displayed debug messages start with `*`.
     pub fn debug(&mut self, message: &str) {
-        if self.verbosity.is_none() || self.verbosity == Some(Verbosity::LowVerbose) {
+        if self.is_low_verbosity() {
             return;
         }
         let fmt = self.format();
@@ -167,7 +173,7 @@ impl Logger {
     ///
     /// Displayed debug messages start with `*`.
     pub fn debug_important(&mut self, message: &str) {
-        if self.verbosity.is_none() || self.verbosity == Some(Verbosity::LowVerbose) {
+        if self.is_low_verbosity() {
             return;
         }
         let fmt = self.format();
@@ -184,7 +190,7 @@ impl Logger {
     ///
     /// Displayed libcurl debug messages start with `**`.
     pub fn debug_curl(&mut self, message: &str) {
-        if self.verbosity.is_none() || self.verbosity == Some(Verbosity::LowVerbose) {
+        if self.is_low_verbosity() {
             return;
         }
         let fmt = self.format();
@@ -329,7 +335,7 @@ impl Logger {
 
     /// Prints a capture to this logger [`Stderr`] instance, in verbose and very verbose mode.
     pub fn capture(&mut self, name: &str, value: &Value) {
-        if self.verbosity.is_none() || self.verbosity == Some(Verbosity::LowVerbose) {
+        if self.is_low_verbosity() {
             return;
         }
         let value = value.to_string();

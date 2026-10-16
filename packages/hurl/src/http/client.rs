@@ -824,8 +824,15 @@ impl Client {
         };
 
         for cookie in list.iter() {
-            let line = str::from_utf8(cookie).unwrap();
-            if cookie_store.add_cookie(line).is_err() {
+            let line = match str::from_utf8(cookie) {
+                Ok(line) => line.to_string(),
+                Err(_) => {
+                    let line = String::from_utf8_lossy(cookie).to_string();
+                    logger.warning(&format!("Cookie <{line}> can not be parsed as UTF-8"));
+                    line
+                }
+            };
+            if cookie_store.add_cookie(&line).is_err() {
                 logger.warning(&format!("Line <{line}> can not be parsed as cookie"));
             }
         }

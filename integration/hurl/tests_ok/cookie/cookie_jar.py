@@ -36,6 +36,8 @@ def set_cookie_jar():
         expires="Thu, 13 Jan 2068 10:10:01 GMT",
         httponly=False,
     )
+    # Non UTF-8 cookie value: header value is encoded as latin-1, so "\xff" is sent as the raw byte 0xFF.
+    resp.headers.add("Set-Cookie", "bad=\xff; Path=/cookie-jar/non-utf8")
     return resp
 
 

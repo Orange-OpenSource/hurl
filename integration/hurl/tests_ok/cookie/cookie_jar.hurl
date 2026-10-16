@@ -8,7 +8,7 @@ Set-Cookie: LSID=DQAAAKEaem_vYg; Expires=Thu, 13 Jan 2078 22:23:01 GMT; HttpOnly
 Set-Cookie: HSID=AYQEVnDKrdst; Domain=localhost; Expires=Thu, 13 Jan 2078 22:23:01 GMT; HttpOnly; Path=/
 Set-Cookie: SSID=Ap4PGTEq; Domain=localhost; Expires=Thu, 13 Jan 2078 22:23:01 GMT; HttpOnly; Path=/
 [Asserts]
-header "Set-Cookie" count == 4
+header "Set-Cookie" count == 5
 cookie "LSID" == "DQAAAKEaem_vYg"
 cookie "LSID[Value]" == "DQAAAKEaem_vYg"
 cookie "LSID[Expires]" exists
