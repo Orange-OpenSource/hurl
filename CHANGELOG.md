@@ -11,6 +11,7 @@ Thanks to
 [@brenordv](https://github.com/brenordv),
 [@linkdd](https://github.com/linkdd),
 [@jkellz-dev](https://github.com/jkellz-dev),
+[@josh-coderpad](https://github.com/josh-coderpad),
 [@qrn12580](https://github.com/qrn12580),
 [@1diot9](https://github.com/1diot9),
 
@@ -23,6 +24,7 @@ Enhancements:
 * Add --http2-prior-knowledge command line option to use HTTP/2 without HTTP/1.1 Upgrade [#5126](https://github.com/Orange-OpenSource/hurl/issues/5126)
 * Re-export Input struct from hurl_core to hurl [#5128](https://github.com/Orange-OpenSource/hurl/issues/5128)
 * Add Sublime Text syntax highlighting [#5298](https://github.com/Orange-OpenSource/hurl/issues/5298)
+* Add --tls-max option [#3713](https://github.com/Orange-OpenSource/hurl/issues/3713)
 
 
 Bugs Fixed:
@@ -32,6 +34,11 @@ Bugs Fixed:
 * Fix recorded headers when connecting to proxy with CONNECT [#5091](https://github.com/Orange-OpenSource/hurl/issues/5091)
 * Fix Hurl debug curl command when request binary body contains NUL char [#5141](https://github.com/Orange-OpenSource/hurl/issues/5141)
 * Don't fail build on Windows if file icon is not reachable [#5207](https://github.com/Orange-OpenSource/hurl/issues/5207)
+* Fix parsing exponent in JSONPath expr [#5342](https://github.com/Orange-OpenSource/hurl/issues/5342)
+* Add explicit nesting limit to JSONPath expression parsing [#5350](https://github.com/Orange-OpenSource/hurl/issues/5350)
+* Fix crash when receiving non UTF-8 server cookie [#5356](https://github.com/Orange-OpenSource/hurl/issues/5356)
+* Fix crash for bad `@cookie_storage_set` comment (experimental feature) [#5348](https://github.com/Orange-OpenSource/hurl/issues/5348)
+* Parse finite float in JSONPath [#5330](https://github.com/Orange-OpenSource/hurl/issues/5330)
 
 
 Security Issues Fixed:
@@ -41,6 +48,7 @@ Security Issues Fixed:
 * Fix symlinks escaping file root [#5289](https://github.com/Orange-OpenSource/hurl/issues/5289)
 * Fix credentials leaking using --header and following redirection [#5310](https://github.com/Orange-OpenSource/hurl/issues/5310)
 * Add explicit nesting limit to JSON Body parsing [#5317](https://github.com/Orange-OpenSource/hurl/issues/5317)
+* Fix escaping capture name in HTML report [#5346](https://github.com/Orange-OpenSource/hurl/issues/5346)
 
 
 [8.0.1 (2026-04-28)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#8.0.1)
