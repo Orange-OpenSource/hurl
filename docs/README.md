@@ -62,12 +62,12 @@ docs/*.md => packages/hurl/README.md
 4. generate crates.io README
 
 ```bash
-$ cd ..
+$ version="$(bin/release/get_version.sh)"
 $ python3 bin/docs/build_man.py docs/manual/hurl.md > docs/manual/hurl.1
 $ python3 bin/docs/build_man.py docs/manual/hurlfmt.md > docs/manual/hurlfmt.1
 $ python3 bin/docs/build_man_md.py docs/manual/hurl.md > docs/manual.md
-$ python3 bin/docs/build_readme.py github > README.md
-$ python3 bin/docs/build_readme.py crates > packages/hurl/README.md
+$ python3 bin/docs/build_readme.py github "$version" > README.md
+$ python3 bin/docs/build_readme.py crates "$version" > packages/hurl/README.md
 ```
 
 

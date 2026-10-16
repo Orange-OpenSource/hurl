@@ -138,19 +138,21 @@ def replace(text: str, dest: str, version: str) -> str:
 </picture>
 """,
         ),
+        # Finally, do some patch on final text
         (
             f"[HTML]: /docs/standalone/hurl-{version}.html",
-            f"[HTML]: /docs/standalone/hurl-{version}.html",
+            f"[HTML]: https://hurl.dev/assets/docs/hurl-{version}.html.gz",
             f"[HTML]: https://hurl.dev/assets/docs/hurl-{version}.html.gz",
         ),
         (
             f"[PDF]: /docs/standalone/hurl-{version}.pdf",
-            f"[PDF]: /docs/standalone/hurl-{version}.pdf",
+            f"[PDF]: https://hurl.dev/assets/docs/hurl-{version}.pdf.gz",
             f"[PDF]: https://hurl.dev/assets/docs/hurl-{version}.pdf.gz",
         ),
+        # Markdown link has been processed by the canonical links
         (
             f"[Markdown]: https://hurl.dev/docs/standalone/hurl-{version}.html",
-            f"[Markdown]: /docs/standalone/hurl-{version}.md",
+            f"[Markdown]: https://hurl.dev/assets/docs/hurl-{version}.md.gz",
             f"[Markdown]: https://hurl.dev/assets/docs/hurl-{version}.md.gz",
         ),
     ]
@@ -163,7 +165,7 @@ def replace(text: str, dest: str, version: str) -> str:
     return text
 
 
-def main(dest: str) -> int:
+def main(dest: str, version: str) -> int:
     if dest not in ["github", "crates"]:
         sys.stderr.write("build_readme.py [github, crates]\n")
         return os.EX_USAGE
@@ -194,8 +196,6 @@ def main(dest: str) -> int:
     readme_md.extend(toc_md)
     readme_md.extend(body_md)
     readme = readme_md.to_text()
-    # TODO: extract version here
-    version = "8.0.0"
     readme = replace(text=readme, dest=dest, version=version)
 
     print(readme)
@@ -203,4 +203,4 @@ def main(dest: str) -> int:
 
 
 if __name__ == "__main__":
-    main(dest=sys.argv[1])
+    main(dest=sys.argv[1], version=sys.argv[2])

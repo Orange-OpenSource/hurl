@@ -230,7 +230,6 @@ user: bob:secret           # use basic authentication
 proxy: my.proxy:8012       # define proxy (host:port where host can be an IP address)
 variable: country=Italy    # define variable country
 variable: planet=Earth     # define variable planet
-variables-file: vars.env   # define variables from a properties file
 verbose: true              # allow verbose output
 very-verbose: true         # allow more verbose output    
 ```
