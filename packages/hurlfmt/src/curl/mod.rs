@@ -88,7 +88,7 @@ fn parse_line(s: &str) -> Result<String, String> {
     };
 
     let method = matches::method(&arg_matches);
-    let url = matches::url(&arg_matches);
+    let url = matches::url(&arg_matches)?;
     let headers = matches::headers(&arg_matches);
     let cookies = matches::cookies(&arg_matches);
     let options = matches::options(&arg_matches);
@@ -160,6 +160,27 @@ fn additional_asserts(options: &[HurlOption]) -> Vec<String> {
 #[cfg(test)]
 mod test {
     use crate::curl::*;
+
+    #[test]
+    fn test_missing_url() {
+        for input in ["curl", "curl -X POST", "curl -H 'Accept: application/json'"] {
+            assert_eq!(
+                parse(input).unwrap_err(),
+                "Can not parse curl command at line 1: URL is missing"
+            );
+        }
+    }
+
+    #[test]
+    fn test_url_forms() {
+        for input in [
+            "curl https://example.com",
+            "curl --url https://example.com",
+            "curl example.com",
+        ] {
+            assert_eq!(parse_line(input).unwrap(), "GET https://example.com\n");
+        }
+    }
 
     #[test]
     fn test_parse() {

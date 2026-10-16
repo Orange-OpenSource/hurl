@@ -186,7 +186,7 @@ fn process_export_command(
                     } => {
                         logger.error_parsing(content, input_file, error);
                     }
-                    ExportError::Curl(s) => logger.error(&format!("error curl {s} d")),
+                    ExportError::Curl(s) => logger.error(s),
                 }
             }
         }

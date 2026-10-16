@@ -44,16 +44,16 @@ pub fn method(arg_matches: &ArgMatches) -> String {
     }
 }
 
-pub fn url(arg_matches: &ArgMatches) -> String {
+pub fn url(arg_matches: &ArgMatches) -> Result<String, String> {
     let s = if let Some(value) = get_string(arg_matches, "url") {
         value
     } else {
-        get_string(arg_matches, "url_param").unwrap()
+        get_string(arg_matches, "url_param").ok_or_else(|| "URL is missing".to_string())?
     };
     if !s.starts_with("http") {
-        format!("https://{s}")
+        Ok(format!("https://{s}"))
     } else {
-        s
+        Ok(s)
     }
 }
 
