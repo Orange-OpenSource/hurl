@@ -305,6 +305,10 @@ fn did_you_mean(valid_values: &[&str], actual: &str, default: &str) -> String {
 }
 
 fn suggestion(valid_values: &[&str], actual: &str) -> Option<String> {
+    const SUGGESTION_MAX_LENGTH: usize = 256;
+    if actual.len() > SUGGESTION_MAX_LENGTH {
+        return None;
+    }
     for value in valid_values {
         if levenshtein_distance(
             value.to_lowercase().as_str(),
