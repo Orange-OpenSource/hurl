@@ -25,6 +25,7 @@ Enhancements:
 * Re-export Input struct from hurl_core to hurl [#5128](https://github.com/Orange-OpenSource/hurl/issues/5128)
 * Add Sublime Text syntax highlighting [#5298](https://github.com/Orange-OpenSource/hurl/issues/5298)
 * Add --tls-max option [#3713](https://github.com/Orange-OpenSource/hurl/issues/3713)
+* Skip suggestion fo very long keyword [#5360](https://github.com/Orange-OpenSource/hurl/issues/5360)
 
 
 Bugs Fixed:
@@ -36,6 +37,7 @@ Bugs Fixed:
 * Don't fail build on Windows if file icon is not reachable [#5207](https://github.com/Orange-OpenSource/hurl/issues/5207)
 * Fix parsing exponent in JSONPath expr [#5342](https://github.com/Orange-OpenSource/hurl/issues/5342)
 * Add explicit nesting limit to JSONPath expression parsing [#5350](https://github.com/Orange-OpenSource/hurl/issues/5350)
+* Fix hurlfmt panic when importing curl commands without a URL [#5354](https://github.com/Orange-OpenSource/hurl/issues/5354)
 * Fix crash when receiving non UTF-8 server cookie [#5356](https://github.com/Orange-OpenSource/hurl/issues/5356)
 * Fix crash for bad `@cookie_storage_set` comment (experimental feature) [#5348](https://github.com/Orange-OpenSource/hurl/issues/5348)
 * Parse finite float in JSONPath [#5330](https://github.com/Orange-OpenSource/hurl/issues/5330)
