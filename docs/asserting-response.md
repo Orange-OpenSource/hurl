@@ -799,7 +799,7 @@ curl -v http://httpbin.org/json
 }
 ```
 
-With Hurl, we can write multiple JSONPath asserts describing the DOM content:
+With Hurl, we can write multiple JSONPath asserts describing response structure:
 
 ```hurl
 GET http://httpbin.org/json
@@ -812,8 +812,7 @@ jsonpath "$.slideshow.date" != null
 jsonpath "$.slideshow.slides[*].title" contains "Mind Blowing!"
 ```
 
-> Explain that the value selected by the JSONPath is coerced to a string when only
-> one node is selected.
+> By default, Hurl applies [coercion to the JSONPath] query results.
 
 In `matches` predicates, metacharacters beginning with a backslash (like `\d`, `\s`) must be escaped. Alternatively, 
 `matches` predicate support [JavaScript-like Regular expression syntax] to enhance the readability:
@@ -831,6 +830,48 @@ jsonpath "$.name" matches "Hello [a-zA-Z]+!"
 jsonpath "$.date" matches /^\d{4}-\d{2}-\d{2}$/
 jsonpath "$.name" matches /Hello [a-zA-Z]+!/
 ```
+
+#### JSONPath coercion
+
+Hurl's JSONPath implementation respects [RFC 9535: JSONPATH: Query Expression for JSON] specification. In RFC 9535, every
+query result always returns a list. To facilitate JSONPath query usage, Hurl coerces lists that return a single value to this value.
+
+Let's say with have this JSON:
+
+```json
+{
+  "fruits": [
+    "Apple", "Lemon", "Strawberry"
+  ]
+}
+```
+
+By the spec, the JSONPath query `$.fruits[0]` should return a list of one element `["Apple"]`. As the result list has only
+one single element, Hurl JSONPath query returns the string "Apple". So we're able to write this Hurl file:
+
+```hurl
+GET https://example.org/captures-json
+HTTP 200
+[Asserts]
+jsonpath "$.fruits[0]" isString
+jsonpath "$.fruits[0]" == "Apple"
+```
+
+If you don't want JSONPath coercion applied to query results, you can use [`--no-jsonpath-coercion` option], either in
+[Hurl configuration file], in Hurl command line or using the env variable `HURL_NO_JSONPATH_COERCION=true`. This way, JSONPath
+query always returns list:
+
+```hurl
+GET https://example.org/captures-json
+[Options]
+no-jsonpath-coercion: true
+HTTP 200
+[Asserts]
+jsonpath "$.fruits[0]" isList
+jsonpath "$.fruits[0]" count == 1
+jsonpath "$.fruits[0]" nth 0 == "Apple"
+```
+
 
 ### Regex assert
 
@@ -1026,3 +1067,7 @@ certificate "Value" startsWith "-----BEGIN CERTIFICATE-----"
 [`body` assert]: #body-assert
 [`location` filter]: /docs/filters.md#location
 [UUID v4]: https://en.wikipedia.org/wiki/Universally_unique_identifier
+[coercion to the JSONPATH]: /docs/asserting-response.md#jsonpath-coercion
+[`--no-jsonpath-coercion` option]: /docs/manual.md#no-jsonpath-coercion
+[Hurl configuration file]: /docs/manual.md#configuration
+[RFC 9535: JSONPATH: Query Expression for JSON]: https://www.rfc-editor.org/info/rfc9535/

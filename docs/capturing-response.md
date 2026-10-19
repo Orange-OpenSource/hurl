@@ -256,7 +256,7 @@ HTTP 200
 contact-id: jsonpath "$['id']"
 ```
 
-> Explain that the value selected by the JSONPath is coerced to a string when only one node is selected.
+> By default, Hurl applies [coercion to the JSONPath] query results.
 
 As with [XPath captures], JSONPath captures can be anything from string, number, to object and collections.
 For instance, if we have a JSON endpoint that returns the following JSON:
@@ -294,6 +294,49 @@ a_bool:     jsonpath "$['a_bool']"
 a_string:   jsonpath "$['a_string']"
 all:        jsonpath "$"
 ```
+
+#### JSONPath coercion
+
+Hurl's JSONPath implementation respects [RFC 9535: JSONPATH: Query Expression for JSON] specification. In RFC 9535, every
+query result always returns a list. To facilitate JSONPath query usage, Hurl coerces lists that return a single value to this value.
+
+Let's say with have this JSON:
+
+```json
+{
+  "fruits": [
+    "Apple", "Lemon", "Strawberry"
+  ]
+}
+```
+
+By the spec, the JSONPath query `$.fruits[0]` should return a list of one element `["Apple"]`. As the result list has only 
+one single element, Hurl JSONPath query returns the string "Apple". So we're able to write this Hurl file:
+
+```hurl
+GET https://example.org/captures-json
+HTTP 200
+[Captures]
+# an_apple is a string due to Hurl's coercion
+an_apple: jsonpath "$.fruits[0]"
+```
+
+If you don't want JSONPath coercion applied to query results, you can use [`--no-jsonpath-coercion` option], either in
+[Hurl configuration file], in Hurl command line or using the env variable `HURL_NO_JSONPATH_COERCION=true`. This way, JSONPath
+query always returns list:
+
+```hurl
+GET https://example.org/captures-json
+[Options]
+no-jsonpath-coercion: true
+HTTP 200
+[Captures]
+# an_apple_list is a list
+an_apple_list: jsonpath "$.fruits[0]"
+# We can still get our element
+an_apple: jsonpath "$.fruits[0]" nth 0
+```
+
 
 ### Regex capture
 
@@ -460,7 +503,7 @@ pass: header "token" redact
 [injected into the session]: /docs/templates.md#injecting-variables
 [`Set-Cookie`]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie
 [XPath]: https://en.wikipedia.org/wiki/XPath
-[JSONPath]: https://goessner.net/articles/JsonPath/
+[JSONPath]: https://www.rfc-editor.org/info/rfc9535/
 [XPath captures]: #xpath-capture
 [JavaScript-like Regular expression syntax]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
 [options]: /docs/request.md#options
@@ -473,3 +516,7 @@ pass: header "token" redact
 [SHA-256]: https://en.wikipedia.org/wiki/SHA-2
 [content-encoding]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding
 [`Content-Type` header]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type
+[RFC 9535: JSONPATH: Query Expression for JSON]: https://www.rfc-editor.org/info/rfc9535/
+[coercion to the JSONPATH]: /docs/capturing-response.md#jsonpath-coercion
+[`--no-jsonpath-coercion` option]: /docs/manual.md#no-jsonpath-coercion
+[Hurl configuration file]: /docs/manual.md#configuration
