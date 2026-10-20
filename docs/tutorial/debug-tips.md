@@ -353,7 +353,7 @@ GET https://foo.com/success
 HTTP 200
 ```
 
-- use [`--output`] per-request and [`--ignore-asserts`]: `--ignore-asserts` will disable any check, while `--output` can
+- use [`--output`] per-request and [`--no-assert`]: `--no-assert` will disable any check, while `--output` can
 be used to output any particular response body. With this file, the response of `https://foo.com/failure` will be outputted
 on standard output:
 
@@ -369,6 +369,37 @@ HTTP 200
 
 GET https://foo.com/success
 HTTP 200
+```
+
+- use [`--fail-with-body` option]: this option changes the Hurl's default behavior when there are errors and output
+HTTP response regardless of asserts / HTTP runtime errors. Like many other options, this option can be use as a command
+line option (`hurl --fail-with-body foo.hurl`), with environment variable (`export HURL_FAIL_WITH_BODY=true`), with [Hurl 
+configuration file], or per request with `[Options]` section.
+
+```shell
+$ hurl --fail-with-body foo.hurl
+[1;39m{[0m
+  [1;34m"slideshow"[0m[1;39m:[0m [1;39m{[0m
+    [1;34m"author"[0m[1;39m:[0m [0;32m"Yours Truly"[0m[1;39m,[0m
+    [1;34m"date"[0m[1;39m:[0m [0;32m"date of publication"[0m[1;39m,[0m
+    [1;34m"slides"[0m[1;39m:[0m [1;39m[[0m
+      [1;39m{[0m
+        [1;34m"title"[0m[1;39m:[0m [0;32m"Wake up to WonderWidgets!"[0m[1;39m,[0m
+        [1;34m"type"[0m[1;39m:[0m [0;32m"all"[0m
+      [1;39m}[0m
+    [1;39m][0m[1;39m,[0m
+    [1;34m"title"[0m[1;39m:[0m [0;32m"Sample Slide Show"[0m
+  [1;39m}[0m
+[1;39m}[0m
+[1;31merror[0m: [1mAssert failure[0m
+  [1;34m-->[0m foo.hurl:4:0
+[1;34m   |[0m
+[1;34m   |[0m [90mGET https://httpbin.org/json[0m
+[1;34m   |[0m[90m ...[0m
+[1;34m 4 |[0m jsonpath "$.slideshow.author" == "Someone"
+[1;34m   |[0m[1;31m   actual:   string <Yours Truly>[0m
+[1;34m   |[0m[1;31m   expected: string <Someone>[0m
+[1;34m   |[0m
 ```
 
 To get more information, one can also used a JSON report with [`--report-json`]. This option produces a structured export
@@ -467,7 +498,9 @@ the returned response to Hurl.
 [`--error-format`]: /docs/manual.md#error-format
 [`libcurl`]: https://curl.se/libcurl/
 [response timings]: /docs/response.md#timings
-[`--ignore-asserts`]: /docs/manual.md#ignore-asserts
+[`--no-assert`]: /docs/manual.md#no-assert
 [`--output`]: /docs/manual.md#output
 [`--curl`]: /docs/manual.md#curl
 [`--report-json`]: /docs/manual.md#report-json
+[`--fail-with-body` option]: /docs/manual.md#fail-with-body
+[Hurl configuration file]: /docs/manual.md#configuration
