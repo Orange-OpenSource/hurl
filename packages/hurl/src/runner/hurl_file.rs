@@ -621,7 +621,7 @@ fn log_errors(
     if logger.error_format == ErrorFormat::Long
         && let Some(Call { response, .. }) = entry_result.calls.last()
     {
-        logger.info_curl_cmd(&entry_result.curl_cmd.to_string());
+        logger.info_curl_cmd(&entry_result.curl_cmd);
         logger.info("");
 
         response.log_info_all(logger);

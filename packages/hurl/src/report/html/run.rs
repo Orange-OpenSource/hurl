@@ -80,7 +80,7 @@ fn get_entry_html(entry: &EntryResult, entry_index: usize, secrets: &[&str]) -> 
     let mut text = String::new();
     text.push_str(&format!("<summary>Entry {entry_index}</summary>"));
 
-    let cmd = entry.curl_cmd.to_string().redact(secrets).html_escape();
+    let cmd = entry.curl_cmd.to_redacted_string(secrets).html_escape();
     let table = new_table("Debug", &[("Command", &cmd)]);
     text.push_str(&table);
 

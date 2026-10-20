@@ -263,7 +263,7 @@ impl EntryResultJson {
             captures,
             asserts,
             time: entry.transfer_duration.as_millis() as u64,
-            curl_cmd: entry.curl_cmd.to_string().redact(secrets),
+            curl_cmd: entry.curl_cmd.to_redacted_string(secrets),
         })
     }
 }

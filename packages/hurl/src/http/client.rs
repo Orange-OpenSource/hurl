@@ -1215,6 +1215,7 @@ mod tests {
 
     #[test]
     fn command_line_args() {
+        let secrets: &[&str] = &[];
         let mut client = Client::new();
         let request = RequestSpec {
             method: Method("GET".to_string()),
@@ -1247,7 +1248,7 @@ mod tests {
 
         let cmd = client.curl_command_line(&request, &context_dir, output, &options, &mut logger);
         assert_eq!(
-            cmd.to_string(),
+            cmd.to_redacted_string(secrets),
             "curl \
          --aws-sigv4 aws:amz:sts \
          --cacert /etc/cert.pem \

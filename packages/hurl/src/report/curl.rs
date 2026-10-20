@@ -22,7 +22,6 @@ use std::path::Path;
 use crate::report::ReportError;
 use crate::runner::HurlResult;
 use crate::util::path::create_dir_all;
-use crate::util::redacted::Redact;
 
 /// Creates a curl export from a list of `hurl_results`.
 ///
@@ -46,7 +45,7 @@ pub fn write_curl(
     let mut cmds = hurl_results
         .iter()
         .flat_map(|h| &h.entries)
-        .map(|e| e.curl_cmd.to_string().redact(secrets))
+        .map(|e| e.curl_cmd.to_redacted_string(secrets))
         .collect::<Vec<_>>()
         .join("\n");
     cmds.push('\n');

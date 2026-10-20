@@ -21,6 +21,7 @@ use hurl_core::error::{DisplaySourceError, OutputFormat};
 use hurl_core::input::Input;
 use hurl_core::text::{Format, Style, StyledString};
 
+use crate::http::CurlCmd;
 use crate::runner::Value;
 use crate::util::redacted::Redact;
 use crate::util::term::{Stderr, WriteMode};
@@ -135,7 +136,8 @@ impl Logger {
     /// Prints curl cmd to this logger [`Stderr`] instance, no matter what is the verbosity.
     ///
     /// Displayed debug messages start with `*`.
-    pub fn info_curl_cmd(&mut self, cmd: &str) {
+    pub fn info_curl_cmd(&mut self, cmd: &CurlCmd) {
+        let cmd = cmd.to_redacted_string(&self.secrets);
         let fmt = self.format();
         let mut s = StyledString::new();
         s.push_with("*", Style::new().blue().bold());
@@ -143,7 +145,7 @@ impl Logger {
         s.push("Request can be run with the following curl command:\n");
         s.push_with("*", Style::new().blue().bold());
         s.push(" ");
-        s.push(cmd);
+        s.push(&cmd);
         self.eprintln(&s.to_string(fmt));
     }
 
@@ -167,6 +169,17 @@ impl Logger {
             s.push(message);
         }
         self.eprintln(&s.to_string(fmt));
+    }
+
+    /// Prints a curl command `cmd` to this logger [`Stderr`] instance, if verbosity is high.
+    ///
+    /// Secrets are redacted before shell encoding the command.
+    pub fn debug_curl_cmd(&mut self, cmd: &CurlCmd) {
+        let cmd = cmd.to_redacted_string(&self.secrets);
+        self.debug("");
+        self.debug("Request can be run with the following curl command:");
+        self.debug(&cmd);
+        self.debug("");
     }
 
     /// Prints a given debug message in bold to this logger [`Stderr`] instance, in verbose and very verbose mode.

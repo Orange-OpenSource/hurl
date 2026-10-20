@@ -352,10 +352,7 @@ fn log_request(
             logger.debug(&cookie.to_string());
         }
     }
-    logger.debug("");
-    logger.debug("Request can be run with the following curl command:");
-    logger.debug(&curl_cmd.to_string());
-    logger.debug("");
+    logger.debug_curl_cmd(curl_cmd);
 }
 
 /// Logs the `captures` from the entry HTTP response.

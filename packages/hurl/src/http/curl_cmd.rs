@@ -15,13 +15,12 @@
  * limitations under the License.
  *
  */
-use core::fmt;
-use std::collections::HashMap;
 use std::path::Path;
 
 use crate::http::TlsVersion;
 use crate::runner::Output;
 use crate::util::path::ContextDir;
+use crate::util::redacted::Redact;
 use hurl_core::types::Count;
 
 use super::cookie_store::CookieStore;
@@ -35,18 +34,47 @@ use super::request_spec::{Body, FileParam, Method, MultipartParam, RequestSpec};
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CurlCmd {
     /// The args of this command.
-    args: Vec<String>,
-    /// An optional command feeding the request body to curl's stdin
-    /// (used when the body contains a NUL byte, which can not be
-    /// embedded in a shell string).
-    stdin: Option<String>,
+    args: Vec<Arg>,
+    /// An optional command feeding the request body to curl's stdin (used when the body contains
+    /// a NUL byte, which can not be embedded in a shell string).
+    stdin: Option<Vec<u8>>,
 }
 
-impl fmt::Display for CurlCmd {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match &self.stdin {
-            Some(stdin) => write!(f, "{} | {}", stdin, self.args.join(" ")),
-            None => write!(f, "{}", self.args.join(" ")),
+/// A curl command argument.
+///
+/// Arguments are stored unencoded: shell encoding is only done when the command is rendered, so
+/// any value (URL, headers, file paths etc...) is always safely escaped.
+#[derive(Clone, Debug, PartialEq, Eq)]
+enum Arg {
+    /// An argument rendered as-is if it only contains shell safe characters, quoted otherwise
+    /// (option names, file paths, `host:port` values etc...).
+    Plain(String),
+    /// An argument always rendered quoted (URL, headers, data etc...).
+    Quoted(String),
+    /// Raw bytes, rendered as `$'\x..'` (binary body).
+    Bytes(Vec<u8>),
+}
+
+impl Arg {
+    /// Constructs a plain curl arg (maybe quoted or not).
+    fn plain(s: &str) -> Self {
+        Arg::Plain(s.to_string())
+    }
+
+    /// Constructs a quoted curl arg (always quoted).
+    fn quoted(s: &str) -> Self {
+        Arg::Quoted(s.to_string())
+    }
+
+    /// Returns the shell encoded string of this argument, with `secrets` redacted.
+    fn encode(&self, secrets: &[impl AsRef<str>]) -> String {
+        match self {
+            Arg::Plain(s) => {
+                let s = s.redact(secrets);
+                if is_shell_safe(&s) { s } else { quote(&s) }
+            }
+            Arg::Quoted(s) => quote(&s.redact(secrets)),
+            Arg::Bytes(bytes) => format!("$'{}'", encode_bytes(bytes)),
         }
     }
 }
@@ -54,7 +82,7 @@ impl fmt::Display for CurlCmd {
 impl Default for CurlCmd {
     fn default() -> Self {
         CurlCmd {
-            args: vec!["curl".to_string()],
+            args: vec![Arg::plain("curl")],
             stdin: None,
         }
     }
@@ -70,7 +98,7 @@ impl CurlCmd {
         output: Option<&Output>,
         options: &ClientOptions,
     ) -> Self {
-        let mut args = vec!["curl".to_string()];
+        let mut args = vec![Arg::plain("curl")];
 
         let mut params = method_params(request_spec, options.follow_location);
         args.append(&mut params);
@@ -103,10 +131,27 @@ impl CurlCmd {
 
         CurlCmd { args, stdin }
     }
+
+    /// Returns the shell command line of this curl command, with `secrets` redacted.
+    ///
+    /// Secrets are redacted on the unencoded arguments, before shell encoding, so a secret is
+    /// redacted even if its encoded value is different (for instance, if it contains a quote).
+    pub fn to_redacted_string(&self, secrets: &[impl AsRef<str>]) -> String {
+        let args = self
+            .args
+            .iter()
+            .map(|arg| arg.encode(secrets))
+            .collect::<Vec<_>>()
+            .join(" ");
+        match &self.stdin {
+            Some(bytes) => format!("printf '{}' | {args}", encode_bytes(bytes)),
+            None => args,
+        }
+    }
 }
 
 /// Returns the curl args corresponding to the HTTP method, from a request spec.
-fn method_params(request_spec: &RequestSpec, follow_location: FollowLocation) -> Vec<String> {
+fn method_params(request_spec: &RequestSpec, follow_location: FollowLocation) -> Vec<Arg> {
     let has_body = !request_spec.multipart.is_empty()
         || !request_spec.form.is_empty()
         || !request_spec.body.bytes().is_empty();
@@ -119,7 +164,7 @@ fn headers_params(
     headers: &HeaderVec,
     implicit_content_type: Option<&str>,
     body: &Body,
-) -> Vec<String> {
+) -> Vec<Arg> {
     let mut args = vec![];
 
     for header in headers.iter() {
@@ -135,34 +180,26 @@ fn headers_params(
         if content_type != "application/x-www-form-urlencoded"
             && content_type != "multipart/form-data"
         {
-            args.push("--header".to_string());
-            args.push(format!("'{CONTENT_TYPE}: {content_type}'"));
+            args.push(Arg::plain("--header"));
+            args.push(Arg::quoted(&format!("{CONTENT_TYPE}: {content_type}")));
         }
     } else if !body.bytes().is_empty() {
-        match body {
-            Body::Text(_) => {
-                args.push("--header".to_string());
-                args.push(format!("'{CONTENT_TYPE}:'"));
-            }
-            Body::Binary(_) => {
-                args.push("--header".to_string());
-                args.push(format!("'{CONTENT_TYPE}: application/octet-stream'"));
-            }
-            Body::File(_, _) => {
-                args.push("--header".to_string());
-                args.push(format!("'{CONTENT_TYPE}:'"));
-            }
-        }
+        let content_type = match body {
+            Body::Text(_) | Body::File(_, _) => "",
+            Body::Binary(_) => " application/octet-stream",
+        };
+        args.push(Arg::plain("--header"));
+        args.push(Arg::quoted(&format!("{CONTENT_TYPE}:{content_type}")));
     }
     args
 }
 
 /// Returns the curl args corresponding to removing some request headers.
-fn no_headers_params(no_headers: &[String]) -> Vec<String> {
+fn no_headers_params(no_headers: &[String]) -> Vec<Arg> {
     let mut args = vec![];
     no_headers.iter().for_each(|name| {
-        args.push("--header".to_string());
-        args.push(encode_shell_string(&format!("{name}:")));
+        args.push(Arg::plain("--header"));
+        args.push(Arg::quoted(&format!("{name}:")));
     });
     args
 }
@@ -171,16 +208,16 @@ fn no_headers_params(no_headers: &[String]) -> Vec<String> {
 fn body_params(
     request_spec: &RequestSpec,
     context_dir: &ContextDir,
-) -> (Vec<String>, Option<String>) {
+) -> (Vec<Arg>, Option<Vec<u8>>) {
     let mut args = vec![];
 
     for param in request_spec.form.iter() {
-        args.push("--data".to_string());
-        args.push(format!("'{}'", param.curl_arg_escape()));
+        args.push(Arg::plain("--data"));
+        args.push(Arg::quoted(&param.curl_arg_escape()));
     }
     for param in request_spec.multipart.iter() {
-        args.push("--form".to_string());
-        args.push(format!("'{}'", param.curl_arg(context_dir)));
+        args.push(Arg::plain("--form"));
+        args.push(Arg::quoted(&param.curl_arg(context_dir)));
     }
 
     if request_spec.body.bytes().is_empty() {
@@ -192,11 +229,9 @@ fn body_params(
     // case, we pipe the body to curl's stdin instead
     // (https://github.com/Orange-OpenSource/hurl/issues/5141).
     if !matches!(request_spec.body, Body::File(_, _)) && request_spec.body.bytes().contains(&0) {
-        args.push("--data-binary".to_string());
-        args.push("@-".to_string());
-        let bytes = request_spec.body.bytes();
-        let stdin = format!("printf '{}'", encode_bytes(&bytes));
-        return (args, Some(stdin));
+        args.push(Arg::plain("--data-binary"));
+        args.push(Arg::plain("@-"));
+        return (args, Some(request_spec.body.bytes().to_vec()));
     }
 
     // See <https://curl.se/docs/manpage.html#-d> and <https://curl.se/docs/manpage.html#--data-binary>:
@@ -220,14 +255,14 @@ fn body_params(
         Body::File(_, _) => "--data-binary",
         _ => "--data",
     };
-    args.push(param.to_string());
+    args.push(Arg::plain(param));
     args.push(request_spec.body.curl_arg(context_dir));
 
     (args, None)
 }
 
 /// Returns the curl args corresponding to a list of cookies.
-fn cookies_params(request_spec: &RequestSpec, cookie_store: &CookieStore) -> Vec<String> {
+fn cookies_params(request_spec: &RequestSpec, cookie_store: &CookieStore) -> Vec<Arg> {
     // Constructs cookies values from current request
     let mut cookies_from_req = request_spec
         .cookies
@@ -250,15 +285,12 @@ fn cookies_params(request_spec: &RequestSpec, cookie_store: &CookieStore) -> Vec
         return vec![];
     }
 
-    let mut args = vec![];
-    args.push("--cookie".to_string());
     let value = all_cookies
         .iter()
         .map(|(name, value)| format!("{name}={value}"))
         .collect::<Vec<String>>()
         .join("; ");
-    args.push(encode_shell_string(&value));
-    args
+    vec![Arg::plain("--cookie"), Arg::quoted(&value)]
 }
 
 /// Returns the curl args corresponding to run options.
@@ -266,19 +298,19 @@ fn other_options_params(
     context_dir: &ContextDir,
     output: Option<&Output>,
     options: &ClientOptions,
-) -> Vec<String> {
+) -> Vec<Arg> {
     let mut args = options.curl_args();
 
     // --output is not an option of the HTTP client, we deal with it here:
     match output {
         Some(Output::File(filename)) => {
             let filename = context_dir.resolved_path(filename);
-            args.push("--output".to_string());
-            args.push(filename.to_string_lossy().to_string());
+            args.push(Arg::plain("--output"));
+            args.push(Arg::plain(&filename.to_string_lossy()));
         }
         Some(Output::Stdout) => {
-            args.push("--output".to_string());
-            args.push("-".to_string());
+            args.push(Arg::plain("--output"));
+            args.push(Arg::plain("-"));
         }
         None => {}
     }
@@ -286,7 +318,7 @@ fn other_options_params(
 }
 
 /// Returns the curl args corresponding to the URL, from a request spec.
-fn url_param(request_spec: &RequestSpec) -> Vec<String> {
+fn url_param(request_spec: &RequestSpec) -> Vec<Arg> {
     let mut args = vec![];
 
     let querystring = if request_spec.querystring.is_empty() {
@@ -306,7 +338,6 @@ fn url_param(request_spec: &RequestSpec) -> Vec<String> {
     } else {
         format!("{}?{}", request_spec.url.raw(), querystring)
     };
-    let url = format!("'{url}'");
 
     // curl support "globbing" <https://everything.curl.dev/cmdline/urls/globbing.html>
     // {,},[,] have special meaning to curl, in order to support templating.
@@ -314,10 +345,10 @@ fn url_param(request_spec: &RequestSpec) -> Vec<String> {
     // - either we encode {,},[,] to %7b,%7d,%5b,%%5d
     // - or we let the url "as-it" and use curl [`--globoff`](https://curl.se/docs/manpage.html#-g) option.
     // We're going with the second one!
-    if url.contains('{') || url.contains('}') || url.contains('[') || url.contains(']') {
-        args.push("--globoff".to_string());
+    if url.contains(['{', '}', '[', ']']) {
+        args.push(Arg::plain("--globoff"));
     }
-    args.push(url);
+    args.push(Arg::quoted(&url));
     args
 }
 
@@ -332,16 +363,16 @@ fn encode_bytes(bytes: &[u8]) -> String {
 
 impl Method {
     /// Returns the curl args for HTTP method, given the request has a body or not.
-    fn curl_args(&self, has_body: bool, follow_location: FollowLocation) -> Vec<String> {
+    fn curl_args(&self, has_body: bool, follow_location: FollowLocation) -> Vec<Arg> {
         match self.0.as_str() {
             "GET" => {
                 if has_body {
-                    vec!["--request".to_string(), "GET".to_string()]
+                    vec![Arg::plain("--request"), Arg::plain("GET")]
                 } else {
                     vec![]
                 }
             }
-            "HEAD" => vec!["--head".to_string()],
+            "HEAD" => vec![Arg::plain("--head")],
             "POST" => {
                 // In <https://curl.se/docs/manpage.html#-X>, `--location` and `--request/-X` does not well play together:
                 //
@@ -356,28 +387,26 @@ impl Method {
                 if has_body {
                     vec![]
                 } else if matches!(follow_location, FollowLocation::Follow(_)) {
-                    vec!["--data".to_string(), "''".to_string()]
+                    vec![Arg::plain("--data"), Arg::quoted("")]
                 } else {
-                    vec!["--request".to_string(), "POST".to_string()]
+                    vec![Arg::plain("--request"), Arg::plain("POST")]
                 }
             }
-            s => vec!["--request".to_string(), s.to_string()],
+            s => vec![Arg::plain("--request"), Arg::plain(s)],
         }
     }
 }
 
 impl Header {
-    fn curl_args(&self, option: &'static str) -> Vec<String> {
+    fn curl_args(&self, option: &'static str) -> Vec<Arg> {
         let name = &self.name;
         let value = &self.value;
-        vec![
-            option.to_string(),
-            if self.value.is_empty() {
-                encode_shell_string(&format!("{name};"))
-            } else {
-                encode_shell_string(&format!("{name}: {value}"))
-            },
-        ]
+        let header = if value.is_empty() {
+            format!("{name};")
+        } else {
+            format!("{name}: {value}")
+        };
+        vec![Arg::plain(option), Arg::quoted(&header)]
     }
 }
 
@@ -414,13 +443,13 @@ impl MultipartParam {
 }
 
 impl Body {
-    fn curl_arg(&self, context_dir: &ContextDir) -> String {
+    fn curl_arg(&self, context_dir: &ContextDir) -> Arg {
         match self {
-            Body::Text(s) => encode_shell_string(s),
-            Body::Binary(bytes) => format!("$'{}'", encode_bytes(bytes)),
+            Body::Text(s) => Arg::quoted(s.as_str()),
+            Body::Binary(bytes) => Arg::Bytes(bytes.clone()),
             Body::File(_, filename) => {
                 let path = context_dir.resolved_path(Path::new(filename));
-                format!("'@{}'", path.to_string_lossy())
+                Arg::quoted(&format!("@{}", path.to_string_lossy()))
             }
         }
     }
@@ -428,77 +457,77 @@ impl Body {
 
 impl ClientOptions {
     /// Returns the list of options for the curl command line equivalent to this [`ClientOptions`].
-    fn curl_args(&self) -> Vec<String> {
+    fn curl_args(&self) -> Vec<Arg> {
         let mut args = vec![];
 
         if let Some(ref aws_sigv4) = self.aws_sigv4 {
-            args.push("--aws-sigv4".to_string());
-            args.push(aws_sigv4.clone());
+            args.push(Arg::plain("--aws-sigv4"));
+            args.push(Arg::plain(aws_sigv4));
         }
         if let Some(ref cacert_file) = self.cacert_file {
-            args.push("--cacert".to_string());
-            args.push(cacert_file.clone());
+            args.push(Arg::plain("--cacert"));
+            args.push(Arg::plain(cacert_file));
         }
         if let Some(ref client_cert_file) = self.client_cert_file {
-            args.push("--cert".to_string());
-            args.push(client_cert_file.clone());
+            args.push(Arg::plain("--cert"));
+            args.push(Arg::plain(client_cert_file));
         }
         if let Some(ref client_key_file) = self.client_key_file {
-            args.push("--key".to_string());
-            args.push(client_key_file.clone());
+            args.push(Arg::plain("--key"));
+            args.push(Arg::plain(client_key_file));
         }
         if self.compressed {
-            args.push("--compressed".to_string());
+            args.push(Arg::plain("--compressed"));
         }
         if self.connect_timeout != ClientOptions::default().connect_timeout {
-            args.push("--connect-timeout".to_string());
-            args.push(self.connect_timeout.as_secs().to_string());
+            args.push(Arg::plain("--connect-timeout"));
+            args.push(Arg::plain(&self.connect_timeout.as_secs().to_string()));
         }
         for connect in self.connects_to.iter() {
-            args.push("--connect-to".to_string());
-            args.push(connect.clone());
+            args.push(Arg::plain("--connect-to"));
+            args.push(Arg::plain(connect));
         }
         if let Some(ref cookie_file) = self.cookie_input_file {
-            args.push("--cookie".to_string());
-            args.push(cookie_file.clone());
+            args.push(Arg::plain("--cookie"));
+            args.push(Arg::plain(cookie_file));
         }
         if self.digest {
-            args.push("--digest".to_string());
+            args.push(Arg::plain("--digest"));
         }
         match self.http_version {
             RequestedHttpVersion::Default => {}
-            RequestedHttpVersion::Http10 => args.push("--http1.0".to_string()),
-            RequestedHttpVersion::Http11 => args.push("--http1.1".to_string()),
-            RequestedHttpVersion::Http2 => args.push("--http2".to_string()),
+            RequestedHttpVersion::Http10 => args.push(Arg::plain("--http1.0")),
+            RequestedHttpVersion::Http11 => args.push(Arg::plain("--http1.1")),
+            RequestedHttpVersion::Http2 => args.push(Arg::plain("--http2")),
             RequestedHttpVersion::Http2PriorKnowledge => {
-                args.push("--http2-prior-knowledge".to_string());
+                args.push(Arg::plain("--http2-prior-knowledge"));
             }
-            RequestedHttpVersion::Http3 => args.push("--http3".to_string()),
+            RequestedHttpVersion::Http3 => args.push(Arg::plain("--http3")),
         }
         if self.insecure {
-            args.push("--insecure".to_string());
+            args.push(Arg::plain("--insecure"));
         }
         match self.ip_resolve {
             IpResolve::Default => {}
-            IpResolve::IpV4 => args.push("--ipv4".to_string()),
-            IpResolve::IpV6 => args.push("--ipv6".to_string()),
+            IpResolve::IpV4 => args.push(Arg::plain("--ipv4")),
+            IpResolve::IpV6 => args.push(Arg::plain("--ipv6")),
         }
         match self.follow_location {
             FollowLocation::Follow(CredentialForwarding::OnlyInitialHost) => {
-                args.push("--location".to_string());
+                args.push(Arg::plain("--location"));
             }
             FollowLocation::Follow(CredentialForwarding::AllHosts) => {
-                args.push("--location-trusted".to_string());
+                args.push(Arg::plain("--location-trusted"));
             }
             FollowLocation::No => {}
         }
         if let Some(max_filesize) = self.max_filesize {
-            args.push("--max-filesize".to_string());
-            args.push(max_filesize.to_string());
+            args.push(Arg::plain("--max-filesize"));
+            args.push(Arg::plain(&max_filesize.to_string()));
         }
         if let Some(max_speed) = self.max_recv_speed {
-            args.push("--limit-rate".to_string());
-            args.push(max_speed.to_string());
+            args.push(Arg::plain("--limit-rate"));
+            args.push(Arg::plain(&max_speed.to_string()));
         }
         // We don't implement --limit-rate for self.max_send_speed as curl limit-rate seems
         // to limit both upload and download speed. There is no distinct option..
@@ -507,76 +536,76 @@ impl ClientOptions {
                 Count::Finite(n) => n as i32,
                 Count::Infinite => -1,
             };
-            args.push("--max-redirs".to_string());
-            args.push(max_redirect.to_string());
+            args.push(Arg::plain("--max-redirs"));
+            args.push(Arg::plain(&max_redirect.to_string()));
         }
         if self.timeout != ClientOptions::default().timeout {
-            args.push("--max-time".to_string());
-            args.push(self.timeout.as_secs().to_string());
+            args.push(Arg::plain("--max-time"));
+            args.push(Arg::plain(&self.timeout.as_secs().to_string()));
         }
         match self.tls_min {
             TlsVersion::Default => {}
             version => {
                 // curl has no --tls-min option, minimum TLS version is
                 // set with --tlsv1.X options.
-                args.push(format!("--tlsv{version}"));
+                args.push(Arg::plain(&format!("--tlsv{version}")));
             }
         }
         match self.tls_max {
             TlsVersion::Default => {}
             version => {
-                args.push("--tls-max".to_string());
-                args.push(version.to_string());
+                args.push(Arg::plain("--tls-max"));
+                args.push(Arg::plain(&version.to_string()));
             }
         }
         if self.negotiate {
-            args.push("--negotiate".to_string());
+            args.push(Arg::plain("--negotiate"));
         }
         if let Some(filename) = &self.netrc_file {
-            args.push("--netrc-file".to_string());
-            args.push(format!("'{filename}'"));
+            args.push(Arg::plain("--netrc-file"));
+            args.push(Arg::quoted(filename));
         }
         if self.netrc_optional {
-            args.push("--netrc-optional".to_string());
+            args.push(Arg::plain("--netrc-optional"));
         }
         if self.netrc {
-            args.push("--netrc".to_string());
+            args.push(Arg::plain("--netrc"));
         }
         if self.ntlm {
-            args.push("--ntlm".to_string());
+            args.push(Arg::plain("--ntlm"));
         }
         if self.path_as_is {
-            args.push("--path-as-is".to_string());
+            args.push(Arg::plain("--path-as-is"));
         }
         if let Some(ref pinned_pub_key) = self.pinned_pub_key {
-            args.push("--pinnedpubkey".to_string());
-            args.push(pinned_pub_key.clone());
+            args.push(Arg::plain("--pinnedpubkey"));
+            args.push(Arg::plain(pinned_pub_key));
         }
         if let Some(ref proxy) = self.proxy {
-            args.push("--proxy".to_string());
-            args.push(format!("'{proxy}'"));
+            args.push(Arg::plain("--proxy"));
+            args.push(Arg::quoted(proxy));
         }
         for header in self.proxy_headers.iter() {
             args.append(&mut header.curl_args("--proxy-header"));
         }
         for resolve in self.resolves.iter() {
-            args.push("--resolve".to_string());
-            args.push(resolve.clone());
+            args.push(Arg::plain("--resolve"));
+            args.push(Arg::plain(resolve));
         }
         if self.ssl_no_revoke {
-            args.push("--ssl-no-revoke".to_string());
+            args.push(Arg::plain("--ssl-no-revoke"));
         }
         if let Some(ref unix_socket) = self.unix_socket {
-            args.push("--unix-socket".to_string());
-            args.push(format!("'{unix_socket}'"));
+            args.push(Arg::plain("--unix-socket"));
+            args.push(Arg::quoted(unix_socket));
         }
         if let Some(ref user) = self.user {
-            args.push("--user".to_string());
-            args.push(format!("'{user}'"));
+            args.push(Arg::plain("--user"));
+            args.push(Arg::quoted(user));
         }
         if let Some(ref user_agent) = self.user_agent {
-            args.push("--user-agent".to_string());
-            args.push(format!("'{user_agent}'"));
+            args.push(Arg::plain("--user-agent"));
+            args.push(Arg::quoted(user_agent));
         }
         args
     }
@@ -586,42 +615,32 @@ fn escape_url(s: &str) -> String {
     percent_encoding::percent_encode(s.as_bytes(), percent_encoding::NON_ALPHANUMERIC).to_string()
 }
 
-fn encode_shell_string(s: &str) -> String {
-    // $'...' form will be used to encode escaped sequence
-    if escape_mode(s) {
-        let escaped = escape_string(s);
-        format!("$'{escaped}'")
-    } else {
-        format!("'{s}'")
-    }
+/// Returns `true` if `s` can be used unquoted as a shell argument.
+fn is_shell_safe(s: &str) -> bool {
+    !s.is_empty()
+        && s.chars()
+            .all(|c| c.is_ascii_alphanumeric() || "-_./:=@,+%".contains(c))
 }
 
-// the shell string must be in escaped mode ($'...')
-// if it contains \n, \t or '
-fn escape_mode(s: &str) -> bool {
-    for c in s.chars() {
-        if c == '\n' || c == '\t' || c == '\'' {
-            return true;
-        }
+/// Quotes `s` as a single shell argument.
+///
+/// A plain '...' string is used, except if `s` contains `'`, `\n` or `\t`: in this case, the
+/// $'...' form is used, with escaped sequences.
+fn quote(s: &str) -> String {
+    if !s.contains(['\'', '\n', '\t']) {
+        return format!("'{s}'");
     }
-    false
-}
-
-fn escape_string(s: &str) -> String {
-    let mut escaped_sequences = HashMap::new();
-    escaped_sequences.insert('\n', "\\n");
-    escaped_sequences.insert('\t', "\\t");
-    escaped_sequences.insert('\'', "\\'");
-    escaped_sequences.insert('\\', "\\\\");
-
     let mut escaped = String::new();
     for c in s.chars() {
-        match escaped_sequences.get(&c) {
-            None => escaped.push(c),
-            Some(escaped_seq) => escaped.push_str(escaped_seq),
+        match c {
+            '\n' => escaped.push_str("\\n"),
+            '\t' => escaped.push_str("\\t"),
+            '\'' => escaped.push_str("\\'"),
+            '\\' => escaped.push_str("\\\\"),
+            c => escaped.push(c),
         }
     }
-    escaped
+    format!("$'{escaped}'")
 }
 
 #[cfg(test)]
@@ -637,6 +656,7 @@ mod tests {
 
     #[test]
     fn hello_request_with_default_options() {
+        let secrets: &[&str] = &[];
         let mut request = RequestSpec {
             method: Method("GET".to_string()),
             url: Url::from_str("http://localhost:8000/hello").unwrap(),
@@ -655,7 +675,10 @@ mod tests {
             output.as_ref(),
             &options,
         );
-        assert_eq!(cmd.to_string(), "curl 'http://localhost:8000/hello'");
+        assert_eq!(
+            cmd.to_redacted_string(secrets),
+            "curl 'http://localhost:8000/hello'"
+        );
 
         // Same requests with some output:
         let output = Some(Output::new("foo.out"));
@@ -667,7 +690,7 @@ mod tests {
             &options,
         );
         assert_eq!(
-            cmd.to_string(),
+            cmd.to_redacted_string(secrets),
             "curl \
             --output foo.out \
             'http://localhost:8000/hello'"
@@ -686,7 +709,7 @@ mod tests {
             &options,
         );
         assert_eq!(
-            cmd.to_string(),
+            cmd.to_redacted_string(secrets),
             "curl \
             --header 'User-Agent: iPhone' \
             --header 'Foo: Bar' \
@@ -710,7 +733,7 @@ mod tests {
             &options,
         );
         assert_eq!(
-            cmd.to_string(),
+            cmd.to_redacted_string(secrets),
             "curl \
             --header 'User-Agent: iPhone' \
             --header 'Foo: Bar' \
@@ -722,6 +745,7 @@ mod tests {
 
     #[test]
     fn hello_request_with_options() {
+        let secrets: &[&str] = &[];
         let request = RequestSpec {
             method: Method("GET".to_string()),
             url: Url::from_str("http://localhost:8000/hello").unwrap(),
@@ -786,7 +810,7 @@ mod tests {
 
         let cmd = CurlCmd::new(&request, &cookie_store, &context_dir, None, &options);
         assert_eq!(
-            cmd.to_string(),
+            cmd.to_redacted_string(secrets),
             "curl \
         --header 'Test-Header-1: content-1' \
         --header 'Test-Header-2: content-2' \
@@ -822,6 +846,7 @@ mod tests {
 
     #[test]
     fn url_with_dot() {
+        let secrets: &[&str] = &[];
         let request = RequestSpec {
             method: Method("GET".to_string()),
             url: Url::from_str("https://example.org/hello/../to/../your/../file").unwrap(),
@@ -835,13 +860,14 @@ mod tests {
 
         let cmd = CurlCmd::new(&request, &cookies, &context_dir, output.as_ref(), &options);
         assert_eq!(
-            cmd.to_string(),
+            cmd.to_redacted_string(secrets),
             "curl 'https://example.org/hello/../to/../your/../file'"
         );
     }
 
     #[test]
     fn url_with_curl_glob() {
+        let secrets: &[&str] = &[];
         let request = RequestSpec {
             method: Method("GET".to_string()),
             url: Url::from_str("http://foo.com?param1=value1&param2={bar}").unwrap(),
@@ -861,7 +887,7 @@ mod tests {
             &options,
         );
         assert_eq!(
-            cmd.to_string(),
+            cmd.to_redacted_string(secrets),
             "curl \
              --globoff \
             'http://foo.com?param1=value1&param2={bar}'"
@@ -869,7 +895,35 @@ mod tests {
     }
 
     #[test]
+    fn url_with_single_quote() {
+        let secrets: &[&str] = &[];
+        let request = RequestSpec {
+            method: Method("GET".to_string()),
+            url: Url::from_str("http://127.0.0.1:8000/x'; touch POC_A_MARKER; : '").unwrap(),
+            ..Default::default()
+        };
+
+        let context_dir = ContextDir::default();
+        let cookie_store = CookieStore::new();
+        let options = ClientOptions::default();
+        let output = None;
+
+        let cmd = CurlCmd::new(
+            &request,
+            &cookie_store,
+            &context_dir,
+            output.as_ref(),
+            &options,
+        );
+        assert_eq!(
+            cmd.to_redacted_string(secrets),
+            "curl $'http://127.0.0.1:8000/x\\'; touch POC_A_MARKER; : \\''"
+        );
+    }
+
+    #[test]
     fn query_request() {
+        let secrets: &[&str] = &[];
         let mut request = RequestSpec {
             method: Method("GET".to_string()),
             url: Url::from_str("http://localhost:8000/querystring-params").unwrap(),
@@ -899,7 +953,7 @@ mod tests {
             &options,
         );
         assert_eq!(
-            cmd.to_string(),
+            cmd.to_redacted_string(secrets),
             "curl 'http://localhost:8000/querystring-params?param1=value1&param2=a%20b'",
         );
 
@@ -915,13 +969,14 @@ mod tests {
             &options,
         );
         assert_eq!(
-            cmd.to_string(),
+            cmd.to_redacted_string(secrets),
             "curl 'http://localhost:8000/querystring-params?param3=foo&param4=bar&param1=value1&param2=a%20b'",
         );
     }
 
     #[test]
     fn form_request() {
+        let secrets: &[&str] = &[];
         let mut headers = HeaderVec::new();
         headers.push(Header::new(
             "Content-Type",
@@ -950,7 +1005,7 @@ mod tests {
             &options,
         );
         assert_eq!(
-            cmd.to_string(),
+            cmd.to_redacted_string(secrets),
             "curl \
             --header 'Content-Type: application/x-www-form-urlencoded' \
             --data 'param1=value1' \
@@ -961,6 +1016,7 @@ mod tests {
 
     #[test]
     fn json_request() {
+        let secrets: &[&str] = &[];
         let mut headers = HeaderVec::new();
         headers.push(Header::new("content-type", "application/vnd.api+json"));
         let mut request = RequestSpec {
@@ -985,7 +1041,7 @@ mod tests {
             &options,
         );
         assert_eq!(
-            cmd.to_string(),
+            cmd.to_redacted_string(secrets),
             "curl \
             --request POST \
             --header 'content-type: application/vnd.api+json' \
@@ -1002,7 +1058,7 @@ mod tests {
             &options,
         );
         assert_eq!(
-            cmd.to_string(),
+            cmd.to_redacted_string(secrets),
             "curl \
             --header 'content-type: application/vnd.api+json' \
             --data '{\"foo\":\"bar\"}' \
@@ -1019,7 +1075,7 @@ mod tests {
             &options,
         );
         assert_eq!(
-            cmd.to_string(),
+            cmd.to_redacted_string(secrets),
             "curl \
             --request PUT \
             --header 'content-type: application/vnd.api+json' \
@@ -1030,6 +1086,7 @@ mod tests {
 
     #[test]
     fn post_binary_file() {
+        let secrets: &[&str] = &[];
         let request = RequestSpec {
             method: Method("POST".to_string()),
             url: Url::from_str("http://localhost:8000/hello").unwrap(),
@@ -1050,7 +1107,7 @@ mod tests {
             &options,
         );
         assert_eq!(
-            cmd.to_string(),
+            cmd.to_redacted_string(secrets),
             "curl \
             --header 'Content-Type:' \
             --data-binary '@foo.bin' \
@@ -1060,6 +1117,7 @@ mod tests {
 
     #[test]
     fn post_binary_body_with_null_bytes() {
+        let secrets: &[&str] = &[];
         // https://github.com/Orange-OpenSource/hurl/issues/5141
         // A body containing a NUL byte can not be embedded in a shell string:
         // the curl command must read the body from stdin instead.
@@ -1086,7 +1144,7 @@ mod tests {
             &options,
         );
         assert_eq!(
-            cmd.to_string(),
+            cmd.to_redacted_string(secrets),
             "printf '\\x00\\x01\\x02\\x03' | \
             curl \
             --header 'Content-Type: application/octet-stream' \
@@ -1097,6 +1155,7 @@ mod tests {
 
     #[test]
     fn post_binary_body_without_null_bytes() {
+        let secrets: &[&str] = &[];
         // Control: without a NUL byte, the rendering is unchanged.
         let request = RequestSpec {
             method: Method("POST".to_string()),
@@ -1118,7 +1177,7 @@ mod tests {
             &options,
         );
         assert_eq!(
-            cmd.to_string(),
+            cmd.to_redacted_string(secrets),
             "curl \
             --header 'Content-Type: application/octet-stream' \
             --data $'\\x01\\x02\\x03' \
@@ -1136,13 +1195,13 @@ mod tests {
     fn header_curl_args() {
         assert_eq!(
             Header::new("Host", "example.com").curl_args("--header"),
-            vec!["--header".to_string(), "'Host: example.com'".to_string()]
+            vec![Arg::plain("--header"), Arg::quoted("Host: example.com")]
         );
         assert_eq!(
             Header::new("If-Match", "\"e0023aa4e\"").curl_args("--proxy-header"),
             vec![
-                "--proxy-header".to_string(),
-                "'If-Match: \"e0023aa4e\"'".to_string()
+                Arg::plain("--proxy-header"),
+                Arg::quoted("If-Match: \"e0023aa4e\"")
             ]
         );
     }
@@ -1190,50 +1249,105 @@ mod tests {
         let context_dir = ContextDir::new(current_dir, file_root);
         assert_eq!(
             Body::Text("hello".to_string()).curl_arg(&context_dir),
-            "'hello'".to_string()
+            Arg::quoted("hello")
         );
 
         if cfg!(unix) {
             assert_eq!(
                 Body::File(vec![], "filename".to_string()).curl_arg(&context_dir),
-                "'@/tmp/filename'".to_string()
+                Arg::quoted("@/tmp/filename")
             );
         }
 
         assert_eq!(
             Body::Binary(vec![1, 2, 3]).curl_arg(&context_dir),
-            "$'\\x01\\x02\\x03'".to_string()
+            Arg::Bytes(vec![1, 2, 3])
         );
     }
 
     #[test]
-    fn test_encode_shell_string() {
-        assert_eq!(encode_shell_string("hello"), "'hello'");
-        assert_eq!(encode_shell_string("\\n"), "'\\n'");
-        assert_eq!(encode_shell_string("'"), "$'\\''");
-        assert_eq!(encode_shell_string("\\'"), "$'\\\\\\''");
-        assert_eq!(encode_shell_string("\n"), "$'\\n'");
+    fn test_encode_arg() {
+        let secrets: &[&str] = &[];
+        let encode = |arg: Arg| arg.encode(secrets);
+
+        assert_eq!(encode(Arg::quoted("hello")), "'hello'");
+        assert_eq!(encode(Arg::quoted("")), "''");
+        assert_eq!(encode(Arg::quoted("\\n")), "'\\n'");
+        assert_eq!(encode(Arg::quoted("'")), "$'\\''");
+        assert_eq!(encode(Arg::quoted("\\'")), "$'\\\\\\''");
+        assert_eq!(encode(Arg::quoted("\n")), "$'\\n'");
+        assert_eq!(encode(Arg::quoted("\t")), "$'\\t'");
+
+        assert_eq!(
+            encode(Arg::plain("tests_ssl/certs/client/cert.pem:foobar")),
+            "tests_ssl/certs/client/cert.pem:foobar"
+        );
+        assert_eq!(
+            encode(Arg::plain("foo.com:80:localhost:8000")),
+            "foo.com:80:localhost:8000"
+        );
+        assert_eq!(encode(Arg::plain("-")), "-");
+        assert_eq!(encode(Arg::plain("")), "''");
+        assert_eq!(encode(Arg::plain("my file")), "'my file'");
+        assert_eq!(encode(Arg::plain("~/foo")), "'~/foo'");
+        assert_eq!(
+            encode(Arg::plain("foo.out; touch POC_A_MARKER")),
+            "'foo.out; touch POC_A_MARKER'"
+        );
+        assert_eq!(encode(Arg::plain("$(touch x)")), "'$(touch x)'");
+        assert_eq!(encode(Arg::plain("a'b")), "$'a\\'b'");
+
+        assert_eq!(encode(Arg::Bytes(vec![1, 2, 3])), "$'\\x01\\x02\\x03'");
     }
 
     #[test]
-    fn test_escape_string() {
-        assert_eq!(escape_string("hello"), "hello");
-        assert_eq!(escape_string("\\n"), "\\\\n");
-        assert_eq!(escape_string("'"), "\\'");
-        assert_eq!(escape_string("\\'"), "\\\\\\'");
-        assert_eq!(escape_string("\n"), "\\n");
+    fn test_encode_arg_with_secrets() {
+        let secrets = ["s3cr'et"];
+        assert_eq!(
+            Arg::quoted("Token: s3cr'et").encode(&secrets),
+            "'Token: ***'"
+        );
+        assert_eq!(Arg::plain("foo-s3cr'et").encode(&secrets), "'foo-***'");
+        assert_eq!(Arg::plain("--header").encode(&secrets), "--header");
     }
 
     #[test]
-    fn test_escape_mode() {
-        assert!(!escape_mode("hello"));
-        assert!(!escape_mode("\\"));
-        assert!(escape_mode("'"));
-        assert!(escape_mode("\n"));
+    fn redacted_curl_cmd() {
+        // A secret containing a quote is encoded in the command line, so it must be redacted
+        // before being encoded.
+        let mut headers = HeaderVec::new();
+        headers.push(Header::new("Authorization", "Bearer s3cr'et"));
+        let request = RequestSpec {
+            method: Method("GET".to_string()),
+            url: Url::from_str("http://localhost:8000/hello?token=s3cr'et").unwrap(),
+            headers,
+            ..Default::default()
+        };
+
+        let context_dir = ContextDir::default();
+        let cookie_store = CookieStore::new();
+        let options = ClientOptions::default();
+
+        let cmd = CurlCmd::new(&request, &cookie_store, &context_dir, None, &options);
+        let secrets: &[&str] = &[];
+        assert_eq!(
+            cmd.to_redacted_string(secrets),
+            "curl \
+            --header $'Authorization: Bearer s3cr\\'et' \
+            $'http://localhost:8000/hello?token=s3cr\\'et'"
+        );
+        let secrets = &["s3cr'et"];
+        assert_eq!(
+            cmd.to_redacted_string(secrets),
+            "curl \
+            --header 'Authorization: Bearer ***' \
+            'http://localhost:8000/hello?token=***'"
+        );
     }
 
     #[test]
     fn cookie_with_single_quote() {
+        let secrets: &[&str] = &[];
         let request = RequestSpec {
             method: Method("GET".to_string()),
             url: Url::from_str("http://localhost:8000/hello").unwrap(),
@@ -1257,7 +1371,7 @@ mod tests {
             &options,
         );
         assert_eq!(
-            cmd.to_string(),
+            cmd.to_redacted_string(secrets),
             "curl --cookie $'cookie1=value\\'with\\'quotes' 'http://localhost:8000/hello'"
         );
     }
