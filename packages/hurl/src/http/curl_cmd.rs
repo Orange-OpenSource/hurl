@@ -517,8 +517,9 @@ impl ClientOptions {
         match self.tls_min {
             TlsVersion::Default => {}
             version => {
-                args.push("--tls-min".to_string());
-                args.push(version.to_string());
+                // curl has no --tls-min option, minimum TLS version is
+                // set with --tlsv1.X options.
+                args.push(format!("--tlsv{version}"));
             }
         }
         match self.tls_max {
@@ -801,7 +802,7 @@ mod tests {
         --limit-rate 8000 \
         --max-redirs 10 \
         --max-time 10 \
-        --tls-min 1.0 \
+        --tlsv1.0 \
         --tls-max 1.2 \
         --negotiate \
         --netrc-file '/var/run/netrc' \

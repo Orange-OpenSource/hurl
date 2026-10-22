@@ -1,1 +1,1 @@
-curl --cacert tests_ssl/certs/server/cert.selfsigned.pem --tls-min 1.2 'https://localhost:8001/hello'
+curl --cacert tests_ssl/certs/server/cert.selfsigned.pem --tlsv1.2 'https://localhost:8001/hello'
