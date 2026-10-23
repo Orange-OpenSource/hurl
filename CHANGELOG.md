@@ -14,6 +14,7 @@ Thanks to
 [@josh-coderpad](https://github.com/josh-coderpad),
 [@qrn12580](https://github.com/qrn12580),
 [@1diot9](https://github.com/1diot9),
+[Hama1cco](https://github.com/Hama1cco),
 
 Enhancements:
 
@@ -22,11 +23,11 @@ Enhancements:
 * Add no jsonpath coercion option [#5077](https://github.com/Orange-OpenSource/hurl/issues/5077)
 * Add --proxy-header option to send header exclusively to a proxy [#3944](https://github.com/Orange-OpenSource/hurl/issues/3944)
 * Add --http2-prior-knowledge command line option to use HTTP/2 without HTTP/1.1 Upgrade [#5126](https://github.com/Orange-OpenSource/hurl/issues/5126)
-* Add --tls-min option to set the minimum allowed TLS version [#5335](https://github.com/Orange-OpenSource/hurl/issues/5335)
 * Re-export Input struct from hurl_core to hurl [#5128](https://github.com/Orange-OpenSource/hurl/issues/5128)
 * Add Sublime Text syntax highlighting [#5298](https://github.com/Orange-OpenSource/hurl/issues/5298)
 * Add --tls-max option [#3713](https://github.com/Orange-OpenSource/hurl/issues/3713)
 * Skip suggestion fo very long keyword [#5360](https://github.com/Orange-OpenSource/hurl/issues/5360)
+* Add --tls-min option to set the minimum allowed TLS version [#5335](https://github.com/Orange-OpenSource/hurl/issues/5335)
 
 
 Bugs Fixed:
@@ -42,6 +43,7 @@ Bugs Fixed:
 * Fix crash when receiving non UTF-8 server cookie [#5356](https://github.com/Orange-OpenSource/hurl/issues/5356)
 * Fix crash for bad `@cookie_storage_set` comment (experimental feature) [#5348](https://github.com/Orange-OpenSource/hurl/issues/5348)
 * Parse finite float in JSONPath [#5330](https://github.com/Orange-OpenSource/hurl/issues/5330)
+* Escape curl command from --curl option and --verbose log [#5374](https://github.com/Orange-OpenSource/hurl/issues/5374)
 
 
 Security Issues Fixed:
