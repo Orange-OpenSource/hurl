@@ -1,0 +1,18 @@
+* ------------------------------------------------------------------------------
+* Executing entry 1
+*
+* Cookie store:
+*
+* Request:
+* GET http://localhost:8000/x'; touch foo; : '
+*
+* Request can be run with the following curl command:
+* curl $'http://localhost:8000/x\'; touch foo; : \''
+*
+error: HTTP connection
+  --> tests_failed/curl_injection/curl_injection.hurl:1:5
+   |
+ 1 | GET http://localhost:8000/x'; touch foo; : '
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ (3) <<<.*>>>
+   |
+
