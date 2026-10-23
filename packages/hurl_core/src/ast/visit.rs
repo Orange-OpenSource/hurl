@@ -20,16 +20,25 @@
 //! to apply the default traversal algorithm, or prevent deeper traversal by doing nothing.
 //!
 //! Code heavily inspired from <https://github.com/rust-lang/rust/blob/master/compiler/rustc_ast/src/visit.rs>
-use crate::ast::{
-    Assert, Base64, Body, BooleanOption, Bytes, Capture, Comment, Cookie, CookiePath, CountOption,
-    Duration, DurationOption, Entry, EntryOption, File, FilenameParam, FilenameValue, Filter,
-    FilterValue, Hex, HurlFile, IntegerValue, JsonValue, KeyValue, LineTerminator, Method,
-    MultilineString, MultipartParam, NaturalOption, Number, OptionKind, Placeholder, Predicate,
-    PredicateFuncValue, PredicateValue, Query, QueryValue, Regex, RegexValue, Request, Response,
-    Section, SectionValue, StatusValue, Template, U64, VariableDefinition, VariableValue,
-    VerbosityOption, VersionValue, Whitespace,
-};
 use crate::types::{Count, DurationUnit, SourceString, ToSource};
+
+use super::core::{
+    Body, Entry, Filter, FilterValue, HurlFile, IntegerValue, Method, Request, Response,
+    StatusValue, VersionValue,
+};
+use super::json::JsonValue;
+use super::option::{
+    BooleanOption, CountOption, Duration, DurationOption, EntryOption, NaturalOption, OptionKind,
+    VariableDefinition, VariableValue, VerbosityOption,
+};
+use super::primitive::{
+    Base64, Bytes, Comment, File, Hex, KeyValue, LineTerminator, MultilineString, Number,
+    Placeholder, Regex, Template, U64, Whitespace,
+};
+use super::section::{
+    Assert, Capture, Cookie, CookiePath, FilenameParam, FilenameValue, MultipartParam, Predicate,
+    PredicateFuncValue, PredicateValue, Query, QueryValue, RegexValue, Section, SectionValue,
+};
 
 /// Each method of the `Visitor` trait is a hook to be potentially overridden. Each method's default
 /// implementation recursively visits the substructure of the input via the corresponding `walk` method;

@@ -17,9 +17,11 @@
  */
 use crate::ast::{CookieAttribute, CookieAttributeName, CookiePath};
 use crate::combinator::optional;
-use crate::parser::primitives::{literal, try_literal, zero_or_more_spaces};
-use crate::parser::{ParseError, ParseErrorKind, ParseResult, string};
 use crate::reader::Reader;
+
+use super::error::{ParseError, ParseErrorKind};
+use super::primitives::{literal, try_literal, zero_or_more_spaces};
+use super::{ParseResult, string};
 
 pub fn cookiepath(reader: &mut Reader) -> ParseResult<CookiePath> {
     let start = reader.cursor().pos;

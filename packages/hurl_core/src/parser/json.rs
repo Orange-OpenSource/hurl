@@ -15,13 +15,14 @@
  * limitations under the License.
  *
  */
-use super::placeholder;
 use crate::ast::{JsonListElement, JsonObjectElement, JsonValue, SourceInfo, Template};
 use crate::combinator::{ParseError as ParseErrorTrait, choice, non_recover};
-use crate::parser::primitives::{boolean, hex_digit, literal, try_literal};
-use crate::parser::template::EncodedString;
-use crate::parser::{JsonErrorVariant, ParseError, ParseErrorKind, ParseResult, templatize};
 use crate::reader::{Pos, Reader};
+
+use super::error::{JsonErrorVariant, ParseError, ParseErrorKind};
+use super::primitives::{boolean, hex_digit, literal, try_literal};
+use super::template::{EncodedString, templatize};
+use super::{ParseResult, placeholder};
 
 const MAX_NESTING_DEPTH: usize = 128;
 

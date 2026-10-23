@@ -17,11 +17,12 @@
  */
 use crate::ast::Bytes;
 use crate::combinator::choice;
-use crate::parser::json::parse as parse_json;
-use crate::parser::multiline::multiline_string;
-use crate::parser::string::backtick_template;
-use crate::parser::{ParseResult, primitives, xml};
 use crate::reader::Reader;
+
+use super::json::parse as parse_json;
+use super::multiline::multiline_string;
+use super::string::backtick_template;
+use super::{ParseResult, primitives, xml};
 
 pub fn bytes(reader: &mut Reader) -> ParseResult<Bytes> {
     choice(
@@ -74,11 +75,12 @@ fn string_bytes(reader: &mut Reader) -> ParseResult<Bytes> {
 
 #[cfg(test)]
 mod tests {
-    use super::super::error::*;
-    use super::*;
     use crate::ast::{JsonListElement, JsonValue, SourceInfo, Template, TemplateElement};
+    use crate::parser::ParseErrorKind;
     use crate::reader::{CharPos, Pos};
     use crate::types::ToSource;
+
+    use super::*;
 
     #[test]
     fn test_bytes_json() {

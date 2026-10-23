@@ -17,12 +17,14 @@
  */
 use crate::ast::{Filter, FilterValue, IntegerValue, SourceInfo, Whitespace};
 use crate::combinator::{ParseError as ParseErrorTrait, choice};
-use crate::parser::number::integer;
-use crate::parser::primitives::{one_or_more_spaces, try_literal, zero_or_more_spaces};
-use crate::parser::query::regex_value;
-use crate::parser::string::quoted_template;
-use crate::parser::{ParseError, ParseErrorKind, ParseResult, placeholder};
 use crate::reader::Reader;
+
+use super::error::{ParseError, ParseErrorKind};
+use super::number::integer;
+use super::primitives::{one_or_more_spaces, try_literal, zero_or_more_spaces};
+use super::query::regex_value;
+use super::string::quoted_template;
+use super::{ParseResult, placeholder};
 
 pub fn filters(reader: &mut Reader) -> ParseResult<Vec<(Whitespace, Filter)>> {
     let mut filters = vec![];
@@ -332,7 +334,6 @@ fn xpath_filter(reader: &mut Reader) -> ParseResult<FilterValue> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::parser::ParseErrorKind;
     use crate::reader::Pos;
 
     #[test]

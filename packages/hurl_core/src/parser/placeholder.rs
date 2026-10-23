@@ -15,10 +15,11 @@
  * limitations under the License.
  *
  */
-use super::{ParseResult, expr};
 use crate::ast::Placeholder;
-use crate::parser::primitives::{literal, try_literal, zero_or_more_spaces};
 use crate::reader::Reader;
+
+use super::primitives::{literal, try_literal, zero_or_more_spaces};
+use super::{ParseResult, expr};
 
 /// Parse a placeholder {{ expr }}
 pub fn parse(reader: &mut Reader) -> ParseResult<Placeholder> {
@@ -36,10 +37,11 @@ pub fn parse(reader: &mut Reader) -> ParseResult<Placeholder> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use crate::ast::{Expr, ExprKind, SourceInfo, Variable, Whitespace};
     use crate::parser::ParseErrorKind;
     use crate::reader::Pos;
+
+    use super::*;
 
     #[test]
     fn test_ok() {

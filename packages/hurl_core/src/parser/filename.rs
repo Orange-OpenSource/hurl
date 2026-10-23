@@ -15,12 +15,13 @@
  * limitations under the License.
  *
  */
-use super::placeholder;
 use crate::ast::{SourceInfo, Template, TemplateElement};
-use crate::parser::primitives::try_literal;
-use crate::parser::{ParseError, ParseErrorKind, ParseResult, string};
 use crate::reader::Reader;
 use crate::types::ToSource;
+
+use super::error::{ParseError, ParseErrorKind};
+use super::primitives::try_literal;
+use super::{ParseResult, placeholder, string};
 
 /// Parse a filename.
 ///

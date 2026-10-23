@@ -27,6 +27,10 @@ use curl::easy::{List, NetRc, SslOpt, SslVersion};
 use curl::{Error, Version, easy};
 use hurl_core::types::Count;
 
+use crate::runner::Output;
+use crate::util::logger::Logger;
+use crate::util::path::ContextDir;
+
 use super::call::Call;
 use super::certificate::Certificate;
 use super::cookie_store::{Cookie, CookieStore};
@@ -48,10 +52,6 @@ use super::request_spec::{Body, FileParam, Method, MultipartParam, RequestSpec};
 use super::response::{HttpVersion, Response};
 use super::timings::Timings;
 use super::url::Url;
-
-use crate::runner::Output;
-use crate::util::logger::Logger;
-use crate::util::path::ContextDir;
 
 /// Defines an HTTP client to execute HTTP requests.
 ///

@@ -15,15 +15,16 @@
  * limitations under the License.
  *
  */
-use super::placeholder;
 use crate::ast::PredicateValue;
 use crate::combinator::choice;
-use crate::parser::multiline::multiline_string;
-use crate::parser::number::number;
-use crate::parser::primitives::{base64, boolean, file, hex, null, regex};
-use crate::parser::string::{backtick_template, quoted_template};
-use crate::parser::{ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
+
+use super::error::{ParseError, ParseErrorKind};
+use super::multiline::multiline_string;
+use super::number::number;
+use super::primitives::{base64, boolean, file, hex, null, regex};
+use super::string::{backtick_template, quoted_template};
+use super::{ParseResult, placeholder};
 
 pub fn predicate_value(reader: &mut Reader) -> ParseResult<PredicateValue> {
     choice(
@@ -89,7 +90,6 @@ pub fn predicate_value(reader: &mut Reader) -> ParseResult<PredicateValue> {
 mod tests {
     use super::*;
     use crate::ast::{Float, I64, Number};
-    use crate::parser::ParseErrorKind;
     use crate::reader::Pos;
     use crate::types::ToSource;
 

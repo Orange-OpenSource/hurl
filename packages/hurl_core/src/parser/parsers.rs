@@ -21,15 +21,17 @@ use crate::ast::{
     Version, VersionValue,
 };
 use crate::combinator::{optional, zero_or_more};
-use crate::parser::bytes::bytes;
-use crate::parser::primitives::{
+use crate::reader::Reader;
+
+use super::ParseResult;
+use super::bytes::bytes;
+use super::error::{ParseError, ParseErrorKind};
+use super::primitives::{
     eof, key_value, line_terminator, one_or_more_spaces, optional_line_terminators, try_literal,
     zero_or_more_spaces,
 };
-use crate::parser::sections::{request_sections, response_sections};
-use crate::parser::string::unquoted_template;
-use crate::parser::{ParseError, ParseErrorKind, ParseResult};
-use crate::reader::Reader;
+use super::sections::{request_sections, response_sections};
+use super::string::unquoted_template;
 
 pub fn hurl_file(reader: &mut Reader) -> ParseResult<HurlFile> {
     let entries = zero_or_more(entry, reader)?;

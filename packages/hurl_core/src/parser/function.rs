@@ -16,8 +16,10 @@
  *
  */
 use crate::ast::Function;
-use crate::parser::{ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
+
+use super::ParseResult;
+use super::error::{ParseError, ParseErrorKind};
 
 /// Parse a function
 ///

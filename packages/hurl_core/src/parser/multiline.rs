@@ -20,11 +20,13 @@ use crate::ast::{
     TemplateElement, Whitespace,
 };
 use crate::combinator::{choice, optional, zero_or_more};
-use crate::parser::json::object_value;
-use crate::parser::primitives::{literal, newline, try_literal, zero_or_more_spaces};
-use crate::parser::{ParseError, ParseErrorKind, ParseResult, template};
 use crate::reader::Reader;
 use crate::typing::ToSource;
+
+use super::error::{ParseError, ParseErrorKind};
+use super::json::object_value;
+use super::primitives::{literal, newline, try_literal, zero_or_more_spaces};
+use super::{ParseResult, template};
 
 pub fn multiline_string(reader: &mut Reader) -> ParseResult<MultilineString> {
     try_literal("```", reader)?;

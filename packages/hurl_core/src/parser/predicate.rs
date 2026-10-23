@@ -19,10 +19,12 @@ use crate::ast::{
     Predicate, PredicateFunc, PredicateFuncValue, PredicateValue, SourceInfo, Whitespace,
 };
 use crate::combinator::choice;
-use crate::parser::predicate_value::predicate_value;
-use crate::parser::primitives::{one_or_more_spaces, try_literal, zero_or_more_spaces};
-use crate::parser::{ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
+
+use super::ParseResult;
+use super::error::{ParseError, ParseErrorKind};
+use super::predicate_value::predicate_value;
+use super::primitives::{one_or_more_spaces, try_literal, zero_or_more_spaces};
 
 pub fn predicate(reader: &mut Reader) -> ParseResult<Predicate> {
     let (not, space0) = predicate_not(reader);

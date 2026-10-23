@@ -17,11 +17,13 @@
  */
 use crate::ast::{CertificateAttributeName, Query, QueryValue, RegexValue, SourceInfo};
 use crate::combinator::{ParseError as ParseErrorTrait, choice};
-use crate::parser::cookiepath::cookiepath;
-use crate::parser::primitives::{literal, one_or_more_spaces, regex, try_literal};
-use crate::parser::string::{quoted_oneline_string, quoted_template};
-use crate::parser::{ParseError, ParseErrorKind, ParseResult};
 use crate::reader::{Pos, Reader};
+
+use super::ParseResult;
+use super::cookiepath::cookiepath;
+use super::error::{ParseError, ParseErrorKind};
+use super::primitives::{literal, one_or_more_spaces, regex, try_literal};
+use super::string::{quoted_oneline_string, quoted_template};
 
 pub fn query(reader: &mut Reader) -> ParseResult<Query> {
     let start = reader.cursor();
@@ -240,7 +242,6 @@ fn certificate_field(reader: &mut Reader) -> ParseResult<CertificateAttributeNam
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use crate::ast::{
         CookieAttribute, CookieAttributeName, CookiePath, Filter, FilterValue, Template,
         TemplateElement, Whitespace,
@@ -248,6 +249,8 @@ mod tests {
     use crate::parser::filter::filters;
     use crate::reader::{CharPos, Pos};
     use crate::types::ToSource;
+
+    use super::*;
 
     #[test]
     fn test_query() {

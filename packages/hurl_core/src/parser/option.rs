@@ -15,22 +15,23 @@
  * limitations under the License.
  *
  */
-use super::placeholder;
 use crate::ast::{
     BooleanOption, CountOption, DurationOption, EntryOption, NaturalOption, OptionKind, SourceInfo,
     VariableDefinition, VariableValue, VerbosityOption, is_variable_reserved,
 };
 use crate::combinator::{choice, non_recover};
-use crate::parser::duration::duration;
-use crate::parser::number::{integer, natural, number};
-use crate::parser::primitives::{
+use crate::reader::Reader;
+use crate::types::Count;
+
+use super::duration::duration;
+use super::error::{ParseError, ParseErrorKind};
+use super::number::{integer, natural, number};
+use super::primitives::{
     boolean, line_terminator, literal, null, optional_line_terminators, try_literal,
     zero_or_more_spaces,
 };
-use crate::parser::string::{quoted_template, unquoted_template};
-use crate::parser::{ParseError, ParseErrorKind, ParseResult, filename, filename_password};
-use crate::reader::Reader;
-use crate::types::Count;
+use super::string::{quoted_template, unquoted_template};
+use super::{ParseResult, filename, filename_password, placeholder};
 
 /// Parse an option in an `[Options]` section.
 pub fn parse(reader: &mut Reader) -> ParseResult<EntryOption> {

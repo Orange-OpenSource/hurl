@@ -16,10 +16,11 @@
  *
  */
 use crate::ast::{Placeholder, SourceInfo, TemplateElement};
-use crate::parser::primitives::zero_or_more_spaces;
-use crate::parser::{ParseResult, error, expr};
 use crate::reader::{Pos, Reader};
 use crate::types::SourceString;
+
+use super::primitives::zero_or_more_spaces;
+use super::{ParseResult, error, expr};
 
 pub struct EncodedString {
     pub source_info: SourceInfo,

@@ -22,8 +22,10 @@ use libxml::bindings::{
     xmlChar, xmlCreatePushParserCtxt, xmlFreeParserCtxt, xmlParseChunk, xmlSAXHandlerPtr,
 };
 
-use crate::parser::{ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
+
+use super::ParseResult;
+use super::error::{ParseError, ParseErrorKind};
 
 /// Parses a text buffer until a valid XML has been found.
 /// We're using a SAX XML parser because we need to stop the parsing at the byte position where

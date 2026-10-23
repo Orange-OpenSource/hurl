@@ -16,10 +16,12 @@
  *
  */
 use crate::ast::{Float, I64, Number, U64};
-use crate::parser::primitives::try_literal;
-use crate::parser::{ParseError, ParseErrorKind, ParseResult};
 use crate::reader::Reader;
 use crate::types::ToSource;
+
+use super::ParseResult;
+use super::error::{ParseError, ParseErrorKind};
+use super::primitives::try_literal;
 
 /// Parses a string to a `U64`.
 pub fn natural(reader: &mut Reader) -> ParseResult<U64> {

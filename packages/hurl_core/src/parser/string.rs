@@ -17,9 +17,11 @@
  */
 use crate::ast::{SourceInfo, Template};
 use crate::combinator::one_or_more;
-use crate::parser::primitives::{hex_digit, literal, try_literal};
-use crate::parser::{ParseError, ParseErrorKind, ParseResult, template};
 use crate::reader::Reader;
+
+use super::error::{ParseError, ParseErrorKind};
+use super::primitives::{hex_digit, literal, try_literal};
+use super::{ParseResult, template};
 
 /// Steps:
 /// 1- parse String until end of stream, end of line

@@ -19,10 +19,12 @@ use crate::ast::{
     Base64, Comment, File, Hex, KeyValue, LineTerminator, Regex, SourceInfo, Whitespace,
 };
 use crate::combinator::{one_or_more, optional, recover, zero_or_more};
-use crate::parser::string::unquoted_template;
-use crate::parser::{ParseError, ParseErrorKind, ParseResult, base64, filename, key_string};
 use crate::reader::Reader;
 use crate::types::{SourceString, ToSource};
+
+use super::error::{ParseError, ParseErrorKind};
+use super::string::unquoted_template;
+use super::{ParseResult, base64, filename, key_string};
 
 pub fn space(reader: &mut Reader) -> ParseResult<Whitespace> {
     let start = reader.cursor();
