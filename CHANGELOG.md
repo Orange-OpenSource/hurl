@@ -28,6 +28,7 @@ Enhancements:
 * Add --tls-max option [#3713](https://github.com/Orange-OpenSource/hurl/issues/3713)
 * Skip suggestion fo very long keyword [#5360](https://github.com/Orange-OpenSource/hurl/issues/5360)
 * Add --tls-min option to set the minimum allowed TLS version [#5335](https://github.com/Orange-OpenSource/hurl/issues/5335)
+* Add Hurl config file [#3629](https://github.com/Orange-OpenSource/hurl/issues/3629)
 
 
 Bugs Fixed:
