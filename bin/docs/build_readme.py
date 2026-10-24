@@ -155,6 +155,11 @@ def replace(text: str, dest: str, version: str) -> str:
             f"[Markdown]: https://hurl.dev/assets/docs/hurl-{version}.md.gz",
             f"[Markdown]: https://hurl.dev/assets/docs/hurl-{version}.md.gz",
         ),
+        (
+            f"[EPUB]: /docs/standalone/hurl-{version}.epub",
+            f"[EPUB]: https://hurl.dev/assets/docs/hurl-{version}.epub.gz",
+            f"[EPUB]: https://hurl.dev/assets/docs/hurl-{version}.epub.gz",
+        ),
     ]
     for old, new_for_github, new_for_crates in snippets:
         if dest == "github":

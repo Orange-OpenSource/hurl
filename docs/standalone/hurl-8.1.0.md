@@ -1,6 +1,6 @@
 # Hurl Documentation
 
-## Version 8.1.0 - 16-10-2026
+## Version 8.1.0 - 24-10-2026
 
 # Table of Contents
 
@@ -190,6 +190,7 @@
             * [RawBytes capture](#file-format-capturing-response-rawbytes-capture)
             * [XPath capture](#file-format-capturing-response-xpath-capture)
             * [JSONPath capture](#file-format-capturing-response-jsonpath-capture)
+                * [JSONPath coercion](#file-format-capturing-response-jsonpath-coercion)
             * [Regex capture](#file-format-capturing-response-regex-capture)
             * [SHA-256 capture](#file-format-capturing-response-sha-256-capture)
             * [MD5 capture](#file-format-capturing-response-md5-capture)
@@ -224,6 +225,7 @@
             * [RawBytes assert](#file-format-asserting-response-rawbytes-assert)
             * [XPath assert](#file-format-asserting-response-xpath-assert)
             * [JSONPath assert](#file-format-asserting-response-jsonpath-assert)
+                * [JSONPath coercion](#file-format-asserting-response-jsonpath-coercion)
             * [Regex assert](#file-format-asserting-response-regex-assert)
             * [SHA-256 assert](#file-format-asserting-response-sha-256-assert)
             * [MD5 assert](#file-format-asserting-response-md5-assert)
@@ -466,7 +468,7 @@ HTTP 200
 
 [Tutorial](https://hurl.dev/docs/tutorial/your-first-hurl-file.html)
 
-[Documentation](https://hurl.dev) 
+[Documentation](https://hurl.dev) (download [HTML](/docs/standalone/hurl-8.1.0.html), [PDF](/docs/standalone/hurl-8.1.0.pdf), [Markdown](/docs/standalone/hurl-8.1.0.md), [EPUB](/docs/standalone/hurl-8.1.0.epub)) 
 
 [GitHub](https://github.com/Orange-OpenSource/hurl)
 
@@ -896,6 +898,7 @@ to configure Hurl, there are four sources from the lowest priority (most easily 
 | <a href="#getting-started-manual-resolve" id="getting-started-manual-resolve"><code>--resolve &lt;HOST:PORT:ADDR&gt;</code></a>                                 | Provide a custom address for a specific host and port pair. Using this, you can make the Hurl requests(s) use a specified address and prevent the otherwise normally resolved address to be used. Consider it a sort of /etc/hosts alternative provided on the command line.<br>                                                                                                                                                                     |
 | <a href="#getting-started-manual-ssl-no-revoke" id="getting-started-manual-ssl-no-revoke"><code>--ssl-no-revoke</code></a>                                      | (Windows) This option tells Hurl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for exactly that.<br><br>This is a cli-only option.<br>                                                                                                                                                                                                                                     |
 | <a href="#getting-started-manual-tls-max" id="getting-started-manual-tls-max"><code>--tls-max &lt;VERSION&gt;</code></a>                                        | Set the maximum allowed TLS version. If the connection is done without TLS, this option has no effect. This includes QUIC-using (HTTP/3) transfers.<br><br>default   Use up to the recommended TLS version.<br>1.0       Use up to TLSv1.0.<br>1.1       Use up to TLSv1.1.<br>1.2       Use up to TLSv1.2.<br>1.3       Use up to TLSv1.3.<br><br>Environment variables: HURL_TLS_MAX<br>                                                           |
+| <a href="#getting-started-manual-tls-min" id="getting-started-manual-tls-min"><code>--tls-min &lt;VERSION&gt;</code></a>                                        | Set the minimum allowed TLS version. If the connection is done without TLS, this option has no effect. This includes QUIC-using (HTTP/3) transfers.<br><br>default   Use down to the recommended TLS version.<br>1.0       Use down to TLSv1.0.<br>1.1       Use down to TLSv1.1.<br>1.2       Use down to TLSv1.2.<br>1.3       Use down to TLSv1.3.<br><br>Environment variables: HURL_TLS_MIN<br>                                                 |
 | <a href="#getting-started-manual-unix-socket" id="getting-started-manual-unix-socket"><code>--unix-socket &lt;PATH&gt;</code></a>                               | (HTTP) Connect through this Unix domain socket, instead of using the network.<br>                                                                                                                                                                                                                                                                                                                                                                    |
 | <a href="#getting-started-manual-user" id="getting-started-manual-user"><code>-u, --user &lt;USER:PASSWORD&gt;</code></a>                                       | Add basic Authentication header to each request.<br><br>Environment variables: HURL_USER<br>                                                                                                                                                                                                                                                                                                                                                         |
 | <a href="#getting-started-manual-user-agent" id="getting-started-manual-user-agent"><code>-A, --user-agent &lt;NAME&gt;</code></a>                              | Specify the User-Agent string to send to the HTTP server.<br><br>Environment variables: HURL_USER_AGENT<br><br>This is a cli-only option.<br>                                                                                                                                                                                                                                                                                                        |
@@ -3159,6 +3162,7 @@ retry: 10                  # number of retry if HTTP/asserts errors
 retry-interval: 500ms      # interval between retry
 skip: false                # skip this request
 tls-max: 1.2               # maximum TLS version
+tls-min: 1.0               # minimum TLS version
 unix-socket: sock          # use Unix socket for transfer
 user: bob:secret           # use basic authentication
 proxy: my.proxy:8012       # define proxy (host:port where host can be an IP address)
@@ -4020,7 +4024,7 @@ pet-id: bytes charsetDecode "gb2312" xpath "normalize-space(//div[@id='pet0'])"
 
 #### JSONPath capture {#file-format-capturing-response-jsonpath-capture}
 
-Capture a [JSONPath](https://goessner.net/articles/JsonPath/) query from the received HTTP body.
+Capture a [JSONPath](https://www.rfc-editor.org/info/rfc9535/) query from the received HTTP body.
 
 ```hurl
 POST https://example.org/api/contact
@@ -4032,7 +4036,7 @@ HTTP 200
 contact-id: jsonpath "$['id']"
 ```
 
-> Explain that the value selected by the JSONPath is coerced to a string when only one node is selected.
+> By default, Hurl applies [coercion to the JSONPath] query results.
 
 As with [XPath captures](#file-format-capturing-response-xpath-capture), JSONPath captures can be anything from string, number, to object and collections.
 For instance, if we have a JSON endpoint that returns the following JSON:
@@ -4070,6 +4074,49 @@ a_bool:     jsonpath "$['a_bool']"
 a_string:   jsonpath "$['a_string']"
 all:        jsonpath "$"
 ```
+
+##### JSONPath coercion {#file-format-capturing-response-jsonpath-coercion}
+
+Hurl's JSONPath implementation respects [RFC 9535: JSONPATH: Query Expression for JSON](https://www.rfc-editor.org/info/rfc9535/) specification. In RFC 9535, every
+query result always returns a list. To facilitate JSONPath query usage, Hurl coerces lists that return a single value to this value.
+
+Let's say with have this JSON:
+
+```json
+{
+  "fruits": [
+    "Apple", "Lemon", "Strawberry"
+  ]
+}
+```
+
+By the spec, the JSONPath query `$.fruits[0]` should return a list of one element `["Apple"]`. As the result list has only 
+one single element, Hurl JSONPath query returns the string "Apple". So we're able to write this Hurl file:
+
+```hurl
+GET https://example.org/captures-json
+HTTP 200
+[Captures]
+# an_apple is a string due to Hurl's coercion
+an_apple: jsonpath "$.fruits[0]"
+```
+
+If you don't want JSONPath coercion applied to query results, you can use [`--no-jsonpath-coercion` option](#getting-started-manual-no-jsonpath-coercion), either in
+[Hurl configuration file](#getting-started-manual-configuration), in Hurl command line or using the env variable `HURL_NO_JSONPATH_COERCION=true`. This way, JSONPath
+query always returns list:
+
+```hurl
+GET https://example.org/captures-json
+[Options]
+no-jsonpath-coercion: true
+HTTP 200
+[Captures]
+# an_apple_list is a list
+an_apple_list: jsonpath "$.fruits[0]"
+# We can still get our element
+an_apple: jsonpath "$.fruits[0]" nth 0
+```
+
 
 #### Regex capture {#file-format-capturing-response-regex-capture}
 
@@ -5037,7 +5084,7 @@ curl -v http://httpbin.org/json
 }
 ```
 
-With Hurl, we can write multiple JSONPath asserts describing the DOM content:
+With Hurl, we can write multiple JSONPath asserts describing response structure:
 
 ```hurl
 GET http://httpbin.org/json
@@ -5050,8 +5097,7 @@ jsonpath "$.slideshow.date" != null
 jsonpath "$.slideshow.slides[*].title" contains "Mind Blowing!"
 ```
 
-> Explain that the value selected by the JSONPath is coerced to a string when only
-> one node is selected.
+> By default, Hurl applies [coercion to the JSONPath] query results.
 
 In `matches` predicates, metacharacters beginning with a backslash (like `\d`, `\s`) must be escaped. Alternatively, 
 `matches` predicate support [JavaScript-like Regular expression syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions) to enhance the readability:
@@ -5069,6 +5115,48 @@ jsonpath "$.name" matches "Hello [a-zA-Z]+!"
 jsonpath "$.date" matches /^\d{4}-\d{2}-\d{2}$/
 jsonpath "$.name" matches /Hello [a-zA-Z]+!/
 ```
+
+##### JSONPath coercion {#file-format-asserting-response-jsonpath-coercion}
+
+Hurl's JSONPath implementation respects [RFC 9535: JSONPATH: Query Expression for JSON](https://www.rfc-editor.org/info/rfc9535/) specification. In RFC 9535, every
+query result always returns a list. To facilitate JSONPath query usage, Hurl coerces lists that return a single value to this value.
+
+Let's say with have this JSON:
+
+```json
+{
+  "fruits": [
+    "Apple", "Lemon", "Strawberry"
+  ]
+}
+```
+
+By the spec, the JSONPath query `$.fruits[0]` should return a list of one element `["Apple"]`. As the result list has only
+one single element, Hurl JSONPath query returns the string "Apple". So we're able to write this Hurl file:
+
+```hurl
+GET https://example.org/captures-json
+HTTP 200
+[Asserts]
+jsonpath "$.fruits[0]" isString
+jsonpath "$.fruits[0]" == "Apple"
+```
+
+If you don't want JSONPath coercion applied to query results, you can use [`--no-jsonpath-coercion` option](#getting-started-manual-no-jsonpath-coercion), either in
+[Hurl configuration file](#getting-started-manual-configuration), in Hurl command line or using the env variable `HURL_NO_JSONPATH_COERCION=true`. This way, JSONPath
+query always returns list:
+
+```hurl
+GET https://example.org/captures-json
+[Options]
+no-jsonpath-coercion: true
+HTTP 200
+[Asserts]
+jsonpath "$.fruits[0]" isList
+jsonpath "$.fruits[0]" count == 1
+jsonpath "$.fruits[0]" nth 0 == "Apple"
+```
+
 
 #### Regex assert {#file-format-asserting-response-regex-assert}
 
