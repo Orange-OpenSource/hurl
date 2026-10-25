@@ -612,12 +612,10 @@ fn parse_option_tls_max(
     parse_value_separator(reader)?;
     let value_pos = reader.cursor().pos;
     let value = parse_value(reader)?;
-    let version = TlsVersion::from_str(&value)
-        .map_err(|err| {
-            let msg = format!("Option --tls-max has an invalid value, {}", err);
-            ConfigFileError::new(value_pos, &msg)
-        })
-        .map(Some)?;
+    let version = Some(TlsVersion::from_str(&value).map_err(|err| {
+        let msg = format!("Option --tls-max has an invalid value, {}", err);
+        ConfigFileError::new(value_pos, &msg)
+    })?);
     options.tls_max = version;
     Ok(())
 }
@@ -629,12 +627,10 @@ fn parse_option_tls_min(
     parse_value_separator(reader)?;
     let value_pos = reader.cursor().pos;
     let value = parse_value(reader)?;
-    let version = TlsVersion::from_str(&value)
-        .map_err(|err| {
-            let msg = format!("Option --tls-min has an invalid value, {}", err);
-            ConfigFileError::new(value_pos, &msg)
-        })
-        .map(Some)?;
+    let version = Some(TlsVersion::from_str(&value).map_err(|err| {
+        let msg = format!("Option --tls-min has an invalid value, {}", err);
+        ConfigFileError::new(value_pos, &msg)
+    })?);
     options.tls_min = version;
     Ok(())
 }
