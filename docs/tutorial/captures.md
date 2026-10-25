@@ -214,7 +214,7 @@ Failed files:      0 (0.0%)
 Duration:          28 ms
 ```
 
-> You can force Hurl to follow redirection by using [`-L / --location` option] or using an [`[Options]` section][options].
+> You can force Hurl to follow redirection by using [`-L / --location` option] or using an [`[Options]` section](/docs/request.md#options).
 > In this case, asserts and captures will be run against the last redirection step.
 
 A login workflow is surprisingly hard to do well. You can try to add more test on our `login.hurl` test. With Hurl, try 
@@ -277,7 +277,6 @@ of a redirection.
 [`Location`]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Location
 [`-L / --location` option]: /docs/manual.md#location
 [capture response data]: /docs/capturing-response.md
-[options]: /docs/request.md#options
 [captures]: /docs/capturing-response.md
 [header assert]: /docs/asserting-response.md#header-assert
 [the GitHub repo]: https://github.com/jcamiel/hurl-express-tutorial/tree/main/integration

@@ -194,6 +194,9 @@ def inline_ref_link(md: MarkdownDoc):
     for p in p_nodes:
 
         def repl(match_obj):
+            # Inline code spans (ex: `[Options]`) are kept as is
+            if match_obj.group("code"):
+                return match_obj.group("code")
             ref = match_obj.group("ref")
             ref_links = (n for n in ref_nodes if n.ref == ref)
             ref_link = next(ref_links, None)
@@ -205,7 +208,9 @@ def inline_ref_link(md: MarkdownDoc):
             sys.stderr.write(f"Inline `[{ref}]` to `{new}`\n")
             return new
 
-        p.content = re.sub(r"\[(?P<ref>.+?)]", repl, p.content)
+        p.content = re.sub(
+            r"(?P<code>`[^`]*`)|\[(?P<ref>(?:`[^`]*`|[^]`])+)]", repl, p.content
+        )
 
     # Delete ref links
     md.remove_nodes(ref_nodes)

@@ -141,7 +141,7 @@ Failed files:      1 (50.0%)
 Duration:          11 ms
 ```
 
-Individual requests can be modified with [`[Options]` section][options] to turn on logs for a particular request, using
+Individual requests can be modified with [`[Options]` section](/docs/request.md#options) to turn on logs for a particular request, using
 [`verbose`] and [`very-verbose`] option. 
 
 With this Hurl file:
@@ -334,7 +334,7 @@ To use variables in your tests, you can:
 - use [`--variable` option]
 - use [`--variables-file` option]
 - define environment variables, for instance `HURL_VARIABLE_foo=bar`
-- define variables in an [`[Options]` section][options]
+- define variables in an [`[Options]` section](/docs/request.md#options)
 - define variables in [Hurl configuration file]
 
 
@@ -355,7 +355,6 @@ You will find a detailed description in the [Injecting Variables] section of the
 [`--jobs 1`]: /docs/manual.md#jobs
 [`--json`]: /docs/manual.md#json
 [`--error-format long` option]: /docs/manual.md#error-format
-[options]: /docs/request.md#options
 [`--verbose`]: /docs/manual.md#verbose
 [`--very-verbose`]: /docs/manual.md#very-verbose
 [`verbose`]: /docs/manual.md#verbose
@@ -368,5 +367,4 @@ You will find a detailed description in the [Injecting Variables] section of the
 [performance check]: /docs/running-tests.md#stress-and-performance-tests
 [ephemeral ports exhaustion]: https://blog.cloudflare.com/how-to-stop-running-out-of-ephemeral-ports-and-start-to-love-long-lived-connections/
 [`--repeat`]: /docs/manual.md#repeat
-[options]: /docs/request.md#options
 [Hurl configuration file]: /docs/manual.md#configuration

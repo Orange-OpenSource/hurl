@@ -213,7 +213,7 @@ fail-with-body: true       # Output HTTP response even if there are assert error
 http3: true                # use HTTP/3 protocol version
 insecure: true             # allow insecure SSL connections and transfers
 ipv6: true                 # use IPv6 addresses
-limit-rate: 32000          # limit this request to the specidied speed (bytes/s)
+limit-rate: 32000          # limit this request to the specified speed (bytes/s)
 location: true             # follow redirection for this request
 max-redirs: 10             # maximum number of redirections
 max-time: 30s              # maximum time for a request/response
@@ -235,9 +235,8 @@ verbose: true              # allow verbose output
 very-verbose: true         # allow more verbose output    
 ```
 
-> Variables defined in an `[Options]` section, including values loaded from `variables-file`, are
-> defined also for the next entries. This is the exception, all other options are defined only for
-> the current request.
+> Variables defined in an `[Options]` section are defined also for the next entries. This is the
+> exception, all other options are defined only for the current request.
 
 ### Query parameters
 

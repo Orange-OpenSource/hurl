@@ -151,7 +151,7 @@ Variables can be injected in a Hurl file:
 - by using [`--variable` option]
 - by using [`--variables-file` option]
 - by defining environment variables, for instance `HURL_VARIABLE_foo=bar`
-- by defining variables in an [`[Options]` section][options]
+- by defining variables in an [`[Options]` section](/docs/request.md#options)
 - by defining variables in [Hurl configuration file]
 
 Lets' see how to inject variables, given this `test.hurl`:
@@ -300,7 +300,6 @@ Resulting in a PUT request with the following JSON body:
 [JSON body]: /docs/request.md#json-body
 [XML body]: /docs/request.md#xml-body
 [multiline string body]: /docs/request.md#multiline-string-body
-[options]: /docs/request.md#options
 [UUID v4 random string]: https://en.wikipedia.org/wiki/Universally_unique_identifier
 [RFC 3339]: https://www.rfc-editor.org/rfc/rfc3339
 [`--very-verbose`]: /docs/manual.md#very-verbose

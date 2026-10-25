@@ -1,6 +1,6 @@
 # Hurl Documentation
 
-## Version 8.1.0 - 24-10-2026
+## Version 8.1.0 - 25-10-2026
 
 # Table of Contents
 
@@ -850,7 +850,7 @@ $ cat ~/.config/hurl/config
 ```
 
 Most of the options can also be defined with environment variables (like `HURL_INSECURE` for [`--insecure`](#getting-started-manual-insecure)). So, in order
-to configure Hurl, there are four sources from the lowest priority (most easily overridden) to highest (overrides all others):
+to configure Hurl, there are four sources from the lowest priority to highest (overrides all others):
 
 - Configuration file (ex: `~/.config/hurl/config`)
 - Environment variables (ex: `export HURL_INSECURE=true`)
@@ -2157,7 +2157,7 @@ Failed files:      1 (50.0%)
 Duration:          11 ms
 ```
 
-Individual requests can be modified with [`[Options]` section][options](#file-format-request-options) to turn on logs for a particular request, using
+Individual requests can be modified with [`[Options]` section](#file-format-request-options) to turn on logs for a particular request, using
 [`verbose`](#getting-started-manual-verbose) and [`very-verbose`](#getting-started-manual-very-verbose) option. 
 
 With this Hurl file:
@@ -2350,7 +2350,7 @@ To use variables in your tests, you can:
 - use [`--variable` option](#getting-started-manual-variable)
 - use [`--variables-file` option](#getting-started-manual-variables-file)
 - define environment variables, for instance `HURL_VARIABLE_foo=bar`
-- define variables in an [`[Options]` section][options](#file-format-request-options)
+- define variables in an [`[Options]` section](#file-format-request-options)
 - define variables in [Hurl configuration file](#getting-started-manual-configuration)
 
 
@@ -2739,7 +2739,7 @@ every entry of a given file will follow redirection:
 $ hurl --location foo.hurl
 ```
 
-You can use an [`[Options]` section][options](#file-format-request-options) to set option only for a specified request. For instance, in this Hurl file,
+You can use an [`[Options]` section](#file-format-request-options) to set option only for a specified request. For instance, in this Hurl file,
 the second entry will follow location (so we can test the status code to be 200 instead of 301).
 
 ```hurl
@@ -2755,7 +2755,7 @@ GET https://google.fr
 HTTP 301
 ```
 
-You can use the `[Options](#getting-started-manual-options)` section to log a specific entry:
+You can use the `[Options]` section to log a specific entry:
 
 ```hurl
 # ... previous entries
@@ -2767,6 +2767,15 @@ HTTP 200
 
 # ... next entries
 ```
+
+Most of the options can also be defined with environment variables (like `HURL_INSECURE` for `--insecure`) or used in 
+[Hurl configuration file](#getting-started-manual-configuration). So, in order to configure Hurl, there are four sources from the lowest priority to highest (overrides all others):
+
+- Configuration file (ex: `~/.config/hurl/config`)
+- Environment variables (ex: `export HURL_INSECURE=true`)
+- Command-line options (ex: `hurl --insecure`)
+- Options section options (ex: `insecure: true` in file)
+
 
 #### Cookie storage {#file-format-entry-cookie-storage}
 
@@ -2799,7 +2808,7 @@ GET https://example.org
 HTTP 200
 ```
 
-Finally, you can force redirection on a particular request with an [`[Options]` section][options](#file-format-request-options) and the [`--location`](#getting-started-manual-location) 
+Finally, you can force redirection on a particular request with an [`[Options]` section](#file-format-request-options) and the [`--location`](#getting-started-manual-location) 
 / [`--location-trusted`](#getting-started-manual-location-trusted) options:
 
 ```hurl
@@ -2857,10 +2866,10 @@ url == "https://example.org/step3"
 #### Retry {#file-format-entry-retry}
 
 Every entry can be retried upon asserts, captures or runtime errors. Retries allow polling scenarios and effective runs 
-under flaky conditions. Asserts can be explicit (with an [`[Asserts]` section][asserts](#file-format-response-asserts)), or implicit (like [headers](#file-format-response-headers) or [status code](#file-format-response-version-status)).
+under flaky conditions. Asserts can be explicit (with an [`[Asserts]` section](#file-format-response-asserts), or implicit (like [headers](#file-format-response-headers) or [status code](#file-format-response-version-status)).
 
 Retries can be set globally for every request (see [`--retry`](#getting-started-manual-retry) and [`--retry-interval`](#getting-started-manual-retry-interval)), 
-or activated on a particular request with an [`[Options]` section][options](#file-format-request-options).
+or activated on a particular request with an [`[Options]` section](#file-format-request-options).
 
 For example, in this Hurl file, first we create a new job then we poll the new job until it's completed:
 
@@ -2886,7 +2895,7 @@ jsonpath "$.state" == "COMPLETED"
 
 #### Control flow {#file-format-entry-control-flow}
 
-In `[Options](#getting-started-manual-options)` section, `skip` and `repeat` can be used to control flow of execution:
+In `[Options]` section, `skip` and `repeat` can be used to control flow of execution:
 
 - `skip: true/false` skip this request and execute the next one unconditionally,
 - `repeat: N` loop the request N times. If there are assert or runtime errors, the requests execution is stopped.
@@ -3150,7 +3159,7 @@ fail-with-body: true       # Output HTTP response even if there are assert error
 http3: true                # use HTTP/3 protocol version
 insecure: true             # allow insecure SSL connections and transfers
 ipv6: true                 # use IPv6 addresses
-limit-rate: 32000          # limit this request to the specidied speed (bytes/s)
+limit-rate: 32000          # limit this request to the specified speed (bytes/s)
 location: true             # follow redirection for this request
 max-redirs: 10             # maximum number of redirections
 max-time: 30s              # maximum time for a request/response
@@ -3172,9 +3181,8 @@ verbose: true              # allow verbose output
 very-verbose: true         # allow more verbose output    
 ```
 
-> Variables defined in an `[Options]` section, including values loaded from `variables-file`, are
-> defined also for the next entries. This is the exception, all other options are defined only for
-> the current request.
+> Variables defined in an `[Options]` section are defined also for the next entries. This is the
+> exception, all other options are defined only for the current request.
 
 #### Query parameters {#file-format-request-query-parameters}
 
@@ -4036,7 +4044,7 @@ HTTP 200
 contact-id: jsonpath "$['id']"
 ```
 
-> By default, Hurl applies [coercion to the JSONPath] query results.
+> By default, Hurl applies [coercion to the JSONPath](#file-format-capturing-response-jsonpath-coercion) query results.
 
 As with [XPath captures](#file-format-capturing-response-xpath-capture), JSONPath captures can be anything from string, number, to object and collections.
 For instance, if we have a JSON endpoint that returns the following JSON:
@@ -4176,7 +4184,7 @@ affected by `Content-Encoding` response header)
 
 #### URL capture {#file-format-capturing-response-url-capture}
 
-Capture the last fetched URL. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]` section][options](#file-format-request-options) or
+Capture the last fetched URL. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]` section](#file-format-request-options) or
 [`--location` option](#getting-started-manual-location)). URL capture consists of a variable name, followed by a `:`, and the keyword `url`.
 
 ```hurl
@@ -4190,7 +4198,7 @@ landing_url: url
 
 #### Redirects capture {#file-format-capturing-response-redirects-capture}
 
-Capture each step of redirection. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]`section][options](#file-format-request-options) or
+Capture each step of redirection. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]`section](#file-format-request-options) or
 [`--location` option](#getting-started-manual-location)). Redirects capture consists of a variable name, followed by a `:`, and the keyword `redirects`.
 Redirects query returns a collection so each step of the redirection can be capture.
 
@@ -4663,7 +4671,7 @@ can extract data from
   - [`duration`](#file-format-asserting-response-duration-assert)
   - [`certificate`](#file-format-asserting-response-ssl-certificate-assert)
 
-Queries, in asserts and in captures, can be refined with [filters](#file-format-filters), like [`count`][count](#file-format-filters-count) to add tests on collections
+Queries, in asserts and in captures, can be refined with [filters](#file-format-filters), like [`count`](#file-format-filters-count) to add tests on collections
 sizes.
 
 #### Predicates {#file-format-asserting-response-predicates}
@@ -5097,7 +5105,7 @@ jsonpath "$.slideshow.date" != null
 jsonpath "$.slideshow.slides[*].title" contains "Mind Blowing!"
 ```
 
-> By default, Hurl applies [coercion to the JSONPath] query results.
+> By default, Hurl applies [coercion to the JSONPath](#file-format-asserting-response-jsonpath-coercion) query results.
 
 In `matches` predicates, metacharacters beginning with a backslash (like `\d`, `\s`) must be escaped. Alternatively, 
 `matches` predicate support [JavaScript-like Regular expression syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions) to enhance the readability:
@@ -5233,7 +5241,7 @@ affected by `Content-Encoding` response header)
 
 #### URL assert {#file-format-asserting-response-url-assert}
 
-Check the last fetched URL. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]`section][options](#file-format-request-options) or
+Check the last fetched URL. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]`section](#file-format-request-options) or
 [`--location` option](#getting-started-manual-location)). URL assert consists of the keyword `url` followed by a predicate function and value.
 
 ```hurl
@@ -5247,7 +5255,7 @@ url == "https://example.org/redirected"
 
 #### Redirects assert {#file-format-asserting-response-redirects-assert}
 
-Check each step of redirection. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]`section][options](#file-format-request-options) or
+Check each step of redirection. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]`section](#file-format-request-options) or
 [`--location` option](#getting-started-manual-location)). Redirects assert consists of the keyword `redirects` followed by a predicate function and value. The `redirects`
 query returns a collection of redirections that can be tested with a [`location` filter](#file-format-filters-location):
 
@@ -5959,7 +5967,7 @@ Variables can be injected in a Hurl file:
 - by using [`--variable` option](#getting-started-manual-variable)
 - by using [`--variables-file` option](#getting-started-manual-variables-file)
 - by defining environment variables, for instance `HURL_VARIABLE_foo=bar`
-- by defining variables in an [`[Options]` section][options](#file-format-request-options)
+- by defining variables in an [`[Options]` section](#file-format-request-options)
 - by defining variables in [Hurl configuration file](#getting-started-manual-configuration)
 
 Lets' see how to inject variables, given this `test.hurl`:

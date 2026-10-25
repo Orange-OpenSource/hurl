@@ -158,7 +158,7 @@ $ cat ~/.config/hurl/config
 ```
 
 Most of the options can also be defined with environment variables (like `HURL_INSECURE` for [`--insecure`](#insecure)). So, in order
-to configure Hurl, there are four sources from the lowest priority (most easily overridden) to highest (overrides all others):
+to configure Hurl, there are four sources from the lowest priority to highest (overrides all others):
 
 - Configuration file (ex: `~/.config/hurl/config`)
 - Environment variables (ex: `export HURL_INSECURE=true`)

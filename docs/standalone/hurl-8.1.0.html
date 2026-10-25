@@ -1639,7 +1639,7 @@
 <body>
 <div class="doc-content-col">
 <h1 id="hurl-documentation">Hurl Documentation</h1>
-<h2 id="version-8.1.0---16-10-2026">Version 8.1.0 - 16-10-2026</h2>
+<h2 id="version-8.1.0---25-10-2026">Version 8.1.0 - 25-10-2026</h2>
 <h1 id="table-of-contents">Table of Contents</h1>
 <ul>
 <li><a href="#introduction">Introduction</a>
@@ -2031,7 +2031,11 @@ capture</a></li>
 <li><a href="#file-format-capturing-response-xpath-capture">XPath
 capture</a></li>
 <li><a href="#file-format-capturing-response-jsonpath-capture">JSONPath
-capture</a></li>
+capture</a>
+<ul>
+<li><a href="#file-format-capturing-response-jsonpath-coercion">JSONPath
+coercion</a></li>
+</ul></li>
 <li><a href="#file-format-capturing-response-regex-capture">Regex
 capture</a></li>
 <li><a href="#file-format-capturing-response-sha-256-capture">SHA-256
@@ -2113,7 +2117,11 @@ assert</a></li>
 <li><a href="#file-format-asserting-response-xpath-assert">XPath
 assert</a></li>
 <li><a href="#file-format-asserting-response-jsonpath-assert">JSONPath
-assert</a></li>
+assert</a>
+<ul>
+<li><a href="#file-format-asserting-response-jsonpath-coercion">JSONPath
+coercion</a></li>
+</ul></li>
 <li><a href="#file-format-asserting-response-regex-assert">Regex
 assert</a></li>
 <li><a href="#file-format-asserting-response-sha-256-assert">SHA-256
@@ -2227,7 +2235,7 @@ GraphQL</b> APIs, or any other <b>XML / JSON</b> based APIs.</p>
 <span class="method">GET</span> <span class="url">https://example.org</span>
 </span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
 <span class="section-header">[Captures]</span>
-<span class="string">csrf_token</span>: <span class="query-type">xpath</span> <span class="string">"string(//meta[@name=&amp;#39;_csrf_token&amp;#39;]/@content)"</span>
+<span class="string">csrf_token</span>: <span class="query-type">xpath</span> <span class="string">"string(//meta[@name='_csrf_token']/@content)"</span>
 </span></span><span class="entry"><span class="request">
 
 <span class="comment"># Do login!</span>
@@ -2350,7 +2358,11 @@ suggestion, bugs or improvements</a> are welcome.</p>
 <p><a href="https://hurl.dev/blog">Blog</a></p>
 <p><a
 href="https://hurl.dev/docs/tutorial/your-first-hurl-file.html">Tutorial</a></p>
-<p><a href="https://hurl.dev">Documentation</a></p>
+<p><a href="https://hurl.dev">Documentation</a> (download <a
+href="/docs/standalone/hurl-8.1.0.html">HTML</a>, <a
+href="/docs/standalone/hurl-8.1.0.pdf">PDF</a>, <a
+href="/docs/standalone/hurl-8.1.0.md">Markdown</a>, <a
+href="/docs/standalone/hurl-8.1.0.epub">EPUB</a>)</p>
 <p><a href="https://github.com/Orange-OpenSource/hurl">GitHub</a></p>
 <hr>
 <h1 id="getting-started">Getting Started</h1>
@@ -2537,7 +2549,7 @@ requests.</p>
 </span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
 <span class="comment"># Capture the CSRF token value from html body.</span>
 <span class="section-header">[Captures]</span>
-<span class="string">csrf_token</span>: <span class="query-type">xpath</span> <span class="string">"normalize-space(//meta[@name=&amp;#39;_csrf_token&amp;#39;]/@content)"</span>
+<span class="string">csrf_token</span>: <span class="query-type">xpath</span> <span class="string">"normalize-space(//meta[@name='_csrf_token']/@content)"</span>
 </span></span><span class="entry"><span class="request">
 <span class="comment"># Do the login !</span>
 <span class="method">POST</span> <span class="url">https://example.org/login?user=toto&amp;password=1234</span>
@@ -2597,7 +2609,7 @@ of options added to each Hurl run.</p>
 (like <code>HURL_INSECURE</code> for <a
 href="#getting-started-manual-insecure"><code>--insecure</code></a>).
 So, in order to configure Hurl, there are four sources from the lowest
-priority (most easily overridden) to highest (overrides all others):</p>
+priority to highest (overrides all others):</p>
 <ul>
 <li>Configuration file (ex: <code>~/.config/hurl/config</code>)</li>
 <li>Environment variables (ex:
@@ -2885,6 +2897,16 @@ without TLS, this option has no effect. This includes QUIC-using
 version.<br>1.0 Use up to TLSv1.0.<br>1.1 Use up to TLSv1.1.<br>1.2 Use
 up to TLSv1.2.<br>1.3 Use up to TLSv1.3.<br><br>Environment variables:
 HURL_TLS_MAX<br></td>
+</tr>
+<tr>
+<td><a href="#getting-started-manual-tls-min" id="getting-started-manual-tls-min"><code>–tls-min
+&lt;VERSION&gt;</code></a></td>
+<td>Set the minimum allowed TLS version. If the connection is done
+without TLS, this option has no effect. This includes QUIC-using
+(HTTP/3) transfers.<br><br>default Use down to the recommended TLS
+version.<br>1.0 Use down to TLSv1.0.<br>1.1 Use down to TLSv1.1.<br>1.2
+Use down to TLSv1.2.<br>1.3 Use down to TLSv1.3.<br><br>Environment
+variables: HURL_TLS_MIN<br></td>
 </tr>
 <tr>
 <td><a href="#getting-started-manual-unix-socket" id="getting-started-manual-unix-socket"><code>–unix-socket
@@ -3422,7 +3444,7 @@ Authentication</h4>
 <p>This is equivalent to construct the request with a <a
 href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization">Authorization</a>
 header:</p>
-<div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="comment"># Authorization header value can be computed with `echo -n &amp;#39;bob:secret&amp;#39; | base64`</span>
+<div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="comment"># Authorization header value can be computed with `echo -n 'bob:secret' | base64`</span>
 <span class="method">GET</span> <span class="url">https://example.org/protected</span>
 <span class="string">Authorization</span>: <span class="string">Basic Ym9iOnNlY3JldA==</span> </span></span></code></pre></div>
 <p>Basic authentication section allows per request authentication. If
@@ -3709,7 +3731,7 @@ Content</h4>
 </span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
 <span class="section-header">[Asserts]</span>
 <span class="query-type">certificate</span> <span class="string">"Subject"</span> <span class="predicate-type">==</span> <span class="string">"CN=example.org"</span>
-<span class="query-type">certificate</span> <span class="string">"Issuer"</span> <span class="predicate-type">==</span> <span class="string">"C=US, O=Let&amp;#39;s Encrypt, CN=R3"</span>
+<span class="query-type">certificate</span> <span class="string">"Issuer"</span> <span class="predicate-type">==</span> <span class="string">"C=US, O=Let's Encrypt, CN=R3"</span>
 <span class="query-type">certificate</span> <span class="string">"Expire-Date"</span> <span class="filter-type">daysAfterNow</span> <span class="predicate-type">&gt;</span> <span class="number">15</span>
 <span class="query-type">certificate</span> <span class="string">"Serial-Number"</span> <span class="predicate-type">matches</span> <span class="regex">/[\da-f]+/</span>
 <span class="query-type">certificate</span> <span class="string">"Subject-Alt-Name"</span> <span class="predicate-type">contains</span> <span class="string">"DNS:example.org"</span>
@@ -3743,7 +3765,7 @@ Body</h4>
 &lt;catalog&gt;
    &lt;book id="bk101"&gt;
       &lt;author&gt;Gambardella, Matthew&lt;/author&gt;
-      &lt;title&gt;XML Developer&amp;#39;s Guide&lt;/title&gt;
+      &lt;title&gt;XML Developer's Guide&lt;/title&gt;
       &lt;genre&gt;Computer&lt;/genre&gt;
       &lt;price&gt;44.95&lt;/price&gt;
       &lt;publish_date&gt;2000-10-01&lt;/publish_date&gt;
@@ -3992,7 +4014,7 @@ and Using a CSRF Token</h4>
 <div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="method">GET</span> <span class="url">https://example.org</span>
 </span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
 <span class="section-header">[Captures]</span>
-<span class="string">csrf_token</span>: <span class="query-type">xpath</span> <span class="string">"string(//meta[@name=&amp;#39;_csrf_token&amp;#39;]/@content)"</span>
+<span class="string">csrf_token</span>: <span class="query-type">xpath</span> <span class="string">"string(//meta[@name='_csrf_token']/@content)"</span>
 </span></span><span class="entry"><span class="request">
 
 <span class="method">POST</span> <span class="url">https://example.org/login?user=toto&amp;password=1234</span>
@@ -4194,9 +4216,8 @@ Succeeded files:   1 (50.0%)
 Failed files:      1 (50.0%)
 Duration:          11 ms</code></pre></div>
 <p>Individual requests can be modified with <a
-href="#file-format-entry-options"><code>[Options]</code>
-section</a>(#file-format-request-options) to turn on logs for a
-particular request, using <a
+href="#file-format-request-options"><code>[Options]</code> section</a>
+to turn on logs for a particular request, using <a
 href="#getting-started-manual-verbose"><code>verbose</code></a> and <a
 href="#getting-started-manual-very-verbose"><code>very-verbose</code></a>
 option.</p>
@@ -4375,8 +4396,8 @@ option</a></li>
 <li>define environment variables, for instance
 <code>HURL_VARIABLE_foo=bar</code></li>
 <li>define variables in an <a
-href="#file-format-entry-options"><code>[Options]</code>
-section</a>(#file-format-request-options)</li>
+href="#file-format-request-options"><code>[Options]</code>
+section</a></li>
 <li>define variables in <a
 href="#getting-started-manual-configuration">Hurl configuration
 file</a></li>
@@ -4586,15 +4607,15 @@ I do calculation within a Hurl file?</h4>
 Calculations can be done beforehand, before running the Hurl File.</p>
 <p>For example, with date calculations, variables <code>now</code> and
 <code>tomorrow</code> can be used as param or expected value.</p>
-<div class="code-block"><pre><code class="language-shell"><span class="prompt">$ </span>TODAY=$(date &amp;#39;+%y%m%d&amp;#39;)
-<span class="prompt">$ </span>TOMORROW=$(date &amp;#39;+%y%m%d&amp;#39; -d"+1days")
+<div class="code-block"><pre><code class="language-shell"><span class="prompt">$ </span>TODAY=$(date '+%y%m%d')
+<span class="prompt">$ </span>TOMORROW=$(date '+%y%m%d' -d"+1days")
 <span class="prompt">$ </span>hurl --variable "today=$TODAY" --variable "tomorrow=$TOMORROW" test.hurl</code></pre></div>
 <p>You can also use environment variables that begins with
 <code>HURL_VARIABLE_</code> to inject data in an Hurl file. For
 instance, to inject <code>today</code> and <code>tomorrow</code>
 variables:</p>
-<div class="code-block"><pre><code class="language-shell"><span class="prompt">$ </span>export HURL_VARIABLE_today=$(date &amp;#39;+%y%m%d&amp;#39;)
-<span class="prompt">$ </span>export HURL_VARIABLE_tomorrow=$(date &amp;#39;+%y%m%d&amp;#39; -d"+1days")
+<div class="code-block"><pre><code class="language-shell"><span class="prompt">$ </span>export HURL_VARIABLE_today=$(date '+%y%m%d')
+<span class="prompt">$ </span>export HURL_VARIABLE_tomorrow=$(date '+%y%m%d' -d"+1days")
 <span class="prompt">$ </span>hurl test.hurl</code></pre></div>
 <p>You can also use <a href="#file-format-filters">filters</a> to
 process HTTP responses in asserts and captures.</p>
@@ -4694,11 +4715,10 @@ with <a href="#getting-started-manual-location"><code>--location</code>
 option</a>, every entry of a given file will follow redirection:</p>
 <div class="code-block"><pre><code class="language-shell"><span class="prompt">$ </span>hurl --location foo.hurl</code></pre></div>
 <p>You can use an <a
-href="#file-format-entry-options"><code>[Options]</code>
-section</a>(#file-format-request-options) to set option only for a
-specified request. For instance, in this Hurl file, the second entry
-will follow location (so we can test the status code to be 200 instead
-of 301).</p>
+href="#file-format-request-options"><code>[Options]</code> section</a>
+to set option only for a specified request. For instance, in this Hurl
+file, the second entry will follow location (so we can test the status
+code to be 200 instead of 301).</p>
 <div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="method">GET</span> <span class="url">https://google.fr</span>
 </span><span class="response"><span class="version">HTTP</span> <span class="number">301</span>
 </span></span><span class="entry"><span class="request">
@@ -4709,9 +4729,8 @@ of 301).</p>
 </span></span><span class="entry"><span class="request">
 <span class="method">GET</span> <span class="url">https://google.fr</span>
 </span><span class="response"><span class="version">HTTP</span> <span class="number">301</span></span></span></code></pre></div>
-<p>You can use the
-<code>[Options](#getting-started-manual-options)</code> section to log a
-specific entry:</p>
+<p>You can use the <code>[Options]</code> section to log a specific
+entry:</p>
 <div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="comment"># ... previous entries</span>
 
 <span class="method">GET</span> <span class="url">https://api.example.org</span>
@@ -4720,6 +4739,19 @@ specific entry:</p>
 </span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
 </span></span>
 <span class="comment"># ... next entries</span></code></pre></div>
+<p>Most of the options can also be defined with environment variables
+(like <code>HURL_INSECURE</code> for <code>--insecure</code>) or used in
+<a href="#getting-started-manual-configuration">Hurl configuration
+file</a>. So, in order to configure Hurl, there are four sources from
+the lowest priority to highest (overrides all others):</p>
+<ul>
+<li>Configuration file (ex: <code>~/.config/hurl/config</code>)</li>
+<li>Environment variables (ex:
+<code>export HURL_INSECURE=true</code>)</li>
+<li>Command-line options (ex: <code>hurl --insecure</code>)</li>
+<li>Options section options (ex: <code>insecure: true</code> in
+file)</li>
+</ul>
 <h4 id="file-format-entry-cookie-storage">Cookie storage</h4>
 <p>By default, requests in the same Hurl file share cookie storage,
 enabling session-based scenario. The shared cookie store can be disabled
@@ -4728,7 +4760,7 @@ with [<code>--no-cookie-store</code>] option.</p>
 <p>By default, Hurl doesn’t follow redirection. To effectively run a
 redirection, entries should describe each step of the redirection,
 allowing insertion of asserts in each response.</p>
-<div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="comment"># First entry, test the redirection (status code and &amp;#39;Location&amp;#39; header)</span>
+<div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="comment"># First entry, test the redirection (status code and 'Location' header)</span>
 <span class="method">GET</span> <span class="url">https://example.org</span>
 </span><span class="response"><span class="version">HTTP</span> <span class="number">301</span>
 <span class="string">Location</span>: <span class="string">https://www.example.org</span>
@@ -4747,8 +4779,8 @@ href="#getting-started-manual-max-redirs"><code>--max-redirs</code></a>.</p>
 <span class="method">GET</span> <span class="url">https://example.org</span>
 </span><span class="response"><span class="version">HTTP</span> <span class="number">200</span></span></span></code></pre></div>
 <p>Finally, you can force redirection on a particular request with an <a
-href="#file-format-entry-options"><code>[Options]</code>
-section</a>(#file-format-request-options) and the <a
+href="#file-format-request-options"><code>[Options]</code> section</a>
+and the <a
 href="#getting-started-manual-location"><code>--location</code></a> / <a
 href="#getting-started-manual-location-trusted"><code>--location-trusted</code></a>
 options:</p>
@@ -4802,16 +4834,15 @@ query</a> can also be used to get the final effective URL:</p>
 <p>Every entry can be retried upon asserts, captures or runtime errors.
 Retries allow polling scenarios and effective runs under flaky
 conditions. Asserts can be explicit (with an <a
-href="#getting-started-manual-asserts"><code>[Asserts]</code>
-section</a>(#file-format-response-asserts)), or implicit (like <a
-href="#file-format-response-headers">headers</a> or <a
-href="#file-format-response-version-status">status code</a>).</p>
+href="#file-format-response-asserts"><code>[Asserts]</code> section</a>,
+or implicit (like <a href="#file-format-response-headers">headers</a> or
+<a href="#file-format-response-version-status">status code</a>).</p>
 <p>Retries can be set globally for every request (see <a
 href="#getting-started-manual-retry"><code>--retry</code></a> and <a
 href="#getting-started-manual-retry-interval"><code>--retry-interval</code></a>),
 or activated on a particular request with an <a
-href="#file-format-entry-options"><code>[Options]</code>
-section</a>(#file-format-request-options).</p>
+href="#file-format-request-options"><code>[Options]</code>
+section</a>.</p>
 <p>For example, in this Hurl file, first we create a new job then we
 poll the new job until it’s completed:</p>
 <div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="comment"># Create a new job</span>
@@ -4832,9 +4863,8 @@ poll the new job until it’s completed:</p>
 <span class="section-header">[Asserts]</span>
 <span class="query-type">jsonpath</span> <span class="string">"$.state"</span> <span class="predicate-type">==</span> <span class="string">"COMPLETED"</span></span></span></code></pre></div>
 <h4 id="file-format-entry-control-flow">Control flow</h4>
-<p>In <code>[Options](#getting-started-manual-options)</code> section,
-<code>skip</code> and <code>repeat</code> can be used to control flow of
-execution:</p>
+<p>In <code>[Options]</code> section, <code>skip</code> and
+<code>repeat</code> can be used to control flow of execution:</p>
 <ul>
 <li><code>skip: true/false</code> skip this request and execute the next
 one unconditionally,</li>
@@ -5072,7 +5102,7 @@ other requests are unaffected.</p>
 <span class="string">http3</span>: <span class="boolean">true</span>                <span class="comment"># use HTTP/3 protocol version</span>
 <span class="string">insecure</span>: <span class="boolean">true</span>             <span class="comment"># allow insecure SSL connections and transfers</span>
 <span class="string">ipv6</span>: <span class="boolean">true</span>                 <span class="comment"># use IPv6 addresses</span>
-<span class="string">limit-rate</span>: <span class="number">32000</span>          <span class="comment"># limit this request to the specidied speed (bytes/s)</span>
+<span class="string">limit-rate</span>: <span class="number">32000</span>          <span class="comment"># limit this request to the specified speed (bytes/s)</span>
 <span class="string">location</span>: <span class="boolean">true</span>             <span class="comment"># follow redirection for this request</span>
 <span class="string">max-redirs</span>: <span class="number">10</span>             <span class="comment"># maximum number of redirections</span>
 <span class="string">max-time</span>: <span class="number">30</span><span class="unit">s</span>              <span class="comment"># maximum time for a request/response</span>
@@ -5084,6 +5114,7 @@ other requests are unaffected.</p>
 <span class="string">retry-interval</span>: <span class="number">500</span><span class="unit">ms</span>      <span class="comment"># interval between retry</span>
 <span class="string">skip</span>: <span class="boolean">false</span>                <span class="comment"># skip this request</span>
 <span class="string">tls-max</span>: <span class="string">1.2</span>               <span class="comment"># maximum TLS version</span>
+<span class="string">tls-min</span>: <span class="string">1.0</span>               <span class="comment"># minimum TLS version</span>
 <span class="string">unix-socket</span>: <span class="filename">sock</span>          <span class="comment"># use Unix socket for transfer</span>
 <span class="string">user</span>: <span class="string">bob:secret</span>           <span class="comment"># use basic authentication</span>
 <span class="string">proxy</span>: <span class="string">my.proxy:8012</span>       <span class="comment"># define proxy (host:port where host can be an IP address)</span>
@@ -5092,10 +5123,9 @@ other requests are unaffected.</p>
 <span class="string">verbose</span>: <span class="boolean">true</span>              <span class="comment"># allow verbose output</span>
 <span class="string">very-verbose</span>: <span class="boolean">true</span>         <span class="comment"># allow more verbose output    </span></span></span></code></pre></div>
 <blockquote>
-<p>Variables defined in an <code>[Options]</code> section, including
-values loaded from <code>variables-file</code>, are defined also for the
-next entries. This is the exception, all other options are defined only
-for the current request.</p>
+<p>Variables defined in an <code>[Options]</code> section are defined
+also for the next entries. This is the exception, all other options are
+defined only for the current request.</p>
 </blockquote>
 <h4 id="file-format-request-query-parameters">Query parameters</h4>
 <p>Optional list of query parameters.</p>
@@ -5247,7 +5277,7 @@ literals </a>.</p>
 <p>This is equivalent (but simpler) to construct the request with a <a
 href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization">Authorization</a>
 header:</p>
-<div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="comment"># Authorization header value can be computed with `echo -n &amp;#39;bob:secret&amp;#39; | base64`</span>
+<div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="comment"># Authorization header value can be computed with `echo -n 'bob:secret' | base64`</span>
 <span class="method">GET</span> <span class="url">https://example.org/protected</span>
 <span class="string">Authorization</span>: <span class="string">Basic Ym9iOnNlY3JldA==</span> </span></span></code></pre></div>
 <p>Basic authentication allows per request authentication. If you want
@@ -5662,7 +5692,7 @@ session</a>.</p>
 </span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
 <span class="comment"># Capture the CSRF token value from html body.</span>
 <span class="section-header">[Captures]</span>
-<span class="string">csrf_token</span>: <span class="query-type">xpath</span> <span class="string">"normalize-space(//meta[@name=&amp;#39;_csrf_token&amp;#39;]/@content)"</span>
+<span class="string">csrf_token</span>: <span class="query-type">xpath</span> <span class="string">"normalize-space(//meta[@name='_csrf_token']/@content)"</span>
 </span></span><span class="entry"><span class="request">
 <span class="comment"># Do the login !</span>
 <span class="method">POST</span> <span class="url">https://acmecorp.net/login?user=toto&amp;password=1234</span>
@@ -5817,7 +5847,7 @@ response.</p>
 <a href="#file-format-filters-decode"><code>decode</code> filter</a> can
 be used to explicitly decode the body response bytes.</p>
 <div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="comment"># Our HTML response is encoded using GB 2312.</span>
-<span class="comment"># But, the &amp;#39;Content-Type&amp;#39; HTTP response header doesn&amp;#39;t precise any charset,</span>
+<span class="comment"># But, the 'Content-Type' HTTP response header doesn't precise any charset,</span>
 <span class="comment"># so we decode explicitly the bytes.</span>
 <span class="method">GET</span> <span class="url">https://example.org/cn</span>
 </span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
@@ -5856,7 +5886,7 @@ XPath 1.0 expression can be used.</p>
 </span><span class="response"><span class="comment"># Capture the identifier from the dom node &lt;div id="pet0"&gt;5646eaf23&lt;/div</span>
 <span class="version">HTTP</span> <span class="number">200</span>
 <span class="section-header">[Captures]</span>
-<span class="string">pet-id</span>: <span class="query-type">xpath</span> <span class="string">"normalize-space(//div[@id=&amp;#39;pet0&amp;#39;])"</span>
+<span class="string">pet-id</span>: <span class="query-type">xpath</span> <span class="string">"normalize-space(//div[@id='pet0'])"</span>
 </span></span><span class="entry"><span class="request">
 <span class="comment"># Open the captured page.</span>
 <span class="method">GET</span> <span class="url">https://example.org/home/pets/{{pet-id}}</span>
@@ -5877,11 +5907,11 @@ filter</a>:</p>
 <div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="method">GET</span> <span class="url">https://example.org/home_cn</span>
 </span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
 <span class="section-header">[Captures]</span>
-<span class="string">pet-id</span>: <span class="query-type">bytes</span> <span class="filter-type">charsetDecode</span> <span class="string">"gb2312"</span> <span class="filter-type">xpath</span> <span class="string">"normalize-space(//div[@id=&amp;#39;pet0&amp;#39;])"</span></span></span></code></pre></div>
+<span class="string">pet-id</span>: <span class="query-type">bytes</span> <span class="filter-type">charsetDecode</span> <span class="string">"gb2312"</span> <span class="filter-type">xpath</span> <span class="string">"normalize-space(//div[@id='pet0'])"</span></span></span></code></pre></div>
 <h4 id="file-format-capturing-response-jsonpath-capture">JSONPath
 capture</h4>
 <p>Capture a <a
-href="https://goessner.net/articles/JsonPath/">JSONPath</a> query from
+href="https://www.rfc-editor.org/info/rfc9535/">JSONPath</a> query from
 the received HTTP body.</p>
 <div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="method">POST</span> <span class="url">https://example.org/api/contact</span>
 <span class="section-header">[Form]</span>
@@ -5889,10 +5919,11 @@ the received HTTP body.</p>
 <span class="string">email</span>: <span class="string">toto@rookie.net</span>
 </span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
 <span class="section-header">[Captures]</span>
-<span class="string">contact-id</span>: <span class="query-type">jsonpath</span> <span class="string">"$[&amp;#39;id&amp;#39;]"</span></span></span></code></pre></div>
+<span class="string">contact-id</span>: <span class="query-type">jsonpath</span> <span class="string">"$['id']"</span></span></span></code></pre></div>
 <blockquote>
-<p>Explain that the value selected by the JSONPath is coerced to a
-string when only one node is selected.</p>
+<p>By default, Hurl applies <a
+href="#file-format-capturing-response-jsonpath-coercion">coercion to the
+JSONPath</a> query results.</p>
 </blockquote>
 <p>As with <a href="#file-format-capturing-response-xpath-capture">XPath
 captures</a>, JSONPath captures can be anything from string, number, to
@@ -5917,14 +5948,53 @@ returns the following JSON:</p>
 <div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="method">GET</span> <span class="url">https://example.org/captures-json</span>
 </span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
 <span class="section-header">[Captures]</span>
-<span class="string">an_object</span>:  <span class="query-type">jsonpath</span> <span class="string">"$[&amp;#39;an_object&amp;#39;]"</span>
-<span class="string">a_list</span>:     <span class="query-type">jsonpath</span> <span class="string">"$[&amp;#39;a_list&amp;#39;]"</span>
-<span class="string">a_null</span>:     <span class="query-type">jsonpath</span> <span class="string">"$[&amp;#39;a_null&amp;#39;]"</span>
-<span class="string">an_integer</span>: <span class="query-type">jsonpath</span> <span class="string">"$[&amp;#39;an_integer&amp;#39;]"</span>
-<span class="string">a_float</span>:    <span class="query-type">jsonpath</span> <span class="string">"$[&amp;#39;a_float&amp;#39;]"</span>
-<span class="string">a_bool</span>:     <span class="query-type">jsonpath</span> <span class="string">"$[&amp;#39;a_bool&amp;#39;]"</span>
-<span class="string">a_string</span>:   <span class="query-type">jsonpath</span> <span class="string">"$[&amp;#39;a_string&amp;#39;]"</span>
+<span class="string">an_object</span>:  <span class="query-type">jsonpath</span> <span class="string">"$['an_object']"</span>
+<span class="string">a_list</span>:     <span class="query-type">jsonpath</span> <span class="string">"$['a_list']"</span>
+<span class="string">a_null</span>:     <span class="query-type">jsonpath</span> <span class="string">"$['a_null']"</span>
+<span class="string">an_integer</span>: <span class="query-type">jsonpath</span> <span class="string">"$['an_integer']"</span>
+<span class="string">a_float</span>:    <span class="query-type">jsonpath</span> <span class="string">"$['a_float']"</span>
+<span class="string">a_bool</span>:     <span class="query-type">jsonpath</span> <span class="string">"$['a_bool']"</span>
+<span class="string">a_string</span>:   <span class="query-type">jsonpath</span> <span class="string">"$['a_string']"</span>
 <span class="string">all</span>:        <span class="query-type">jsonpath</span> <span class="string">"$"</span></span></span></code></pre></div>
+<h5 id="file-format-capturing-response-jsonpath-coercion">JSONPath
+coercion</h5>
+<p>Hurl’s JSONPath implementation respects <a
+href="https://www.rfc-editor.org/info/rfc9535/">RFC 9535: JSONPATH:
+Query Expression for JSON</a> specification. In RFC 9535, every query
+result always returns a list. To facilitate JSONPath query usage, Hurl
+coerces lists that return a single value to this value.</p>
+<p>Let’s say with have this JSON:</p>
+<pre><code class="language-json">{
+  &quot;fruits&quot;: [
+    &quot;Apple&quot;, &quot;Lemon&quot;, &quot;Strawberry&quot;
+  ]
+}</code></pre>
+<p>By the spec, the JSONPath query <code>$.fruits[0]</code> should
+return a list of one element <code>["Apple"]</code>. As the result list
+has only one single element, Hurl JSONPath query returns the string
+“Apple”. So we’re able to write this Hurl file:</p>
+<div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="method">GET</span> <span class="url">https://example.org/captures-json</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
+<span class="section-header">[Captures]</span>
+<span class="comment"># an_apple is a string due to Hurl's coercion</span>
+<span class="string">an_apple</span>: <span class="query-type">jsonpath</span> <span class="string">"$.fruits[0]"</span></span></span></code></pre></div>
+<p>If you don’t want JSONPath coercion applied to query results, you can
+use <a
+href="#getting-started-manual-no-jsonpath-coercion"><code>--no-jsonpath-coercion</code>
+option</a>, either in <a
+href="#getting-started-manual-configuration">Hurl configuration
+file</a>, in Hurl command line or using the env variable
+<code>HURL_NO_JSONPATH_COERCION=true</code>. This way, JSONPath query
+always returns list:</p>
+<div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="method">GET</span> <span class="url">https://example.org/captures-json</span>
+<span class="section-header">[Options]</span>
+<span class="string">no-jsonpath-coercion</span>: <span class="boolean">true</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
+<span class="section-header">[Captures]</span>
+<span class="comment"># an_apple_list is a list</span>
+<span class="string">an_apple_list</span>: <span class="query-type">jsonpath</span> <span class="string">"$.fruits[0]"</span>
+<span class="comment"># We can still get our element</span>
+<span class="string">an_apple</span>: <span class="query-type">jsonpath</span> <span class="string">"$.fruits[0]"</span> <span class="filter-type">nth</span> <span class="number">0</span></span></span></code></pre></div>
 <h4 id="file-format-capturing-response-regex-capture">Regex capture</h4>
 <p>Capture a regex pattern from the HTTP received body, decoded as
 text.</p>
@@ -5975,9 +6045,8 @@ are not affected by <code>Content-Encoding</code> response header)</p>
 <h4 id="file-format-capturing-response-url-capture">URL capture</h4>
 <p>Capture the last fetched URL. This is most meaningful if you have
 told Hurl to follow redirection (see <a
-href="#file-format-entry-options"><code>[Options]</code>
-section</a>(#file-format-request-options) or <a
-href="#getting-started-manual-location"><code>--location</code>
+href="#file-format-request-options"><code>[Options]</code> section</a>
+or <a href="#getting-started-manual-location"><code>--location</code>
 option</a>). URL capture consists of a variable name, followed by a
 <code>:</code>, and the keyword <code>url</code>.</p>
 <div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="method">GET</span> <span class="url">https://example.org/redirecting</span>
@@ -5990,8 +6059,8 @@ option</a>). URL capture consists of a variable name, followed by a
 capture</h4>
 <p>Capture each step of redirection. This is most meaningful if you have
 told Hurl to follow redirection (see <a
-href="#file-format-entry-options"><code>[Options]</code>section</a>(#file-format-request-options)
-or <a href="#getting-started-manual-location"><code>--location</code>
+href="#file-format-request-options"><code>[Options]</code>section</a> or
+<a href="#getting-started-manual-location"><code>--location</code>
 option</a>). Redirects capture consists of a variable name, followed by
 a <code>:</code>, and the keyword <code>redirects</code>. Redirects
 query returns a collection so each step of the redirection can be
@@ -6288,7 +6357,7 @@ string body</a> with <code>json</code> identifier:</p>
 &lt;catalog&gt;
    &lt;book id="bk101"&gt;
       &lt;author&gt;Gambardella, Matthew&lt;/author&gt;
-      &lt;title&gt;XML Developer&amp;#39;s Guide&lt;/title&gt;
+      &lt;title&gt;XML Developer's Guide&lt;/title&gt;
       &lt;genre&gt;Computer&lt;/genre&gt;
       &lt;price&gt;44.95&lt;/price&gt;
       &lt;publish_date&gt;2000-10-01&lt;/publish_date&gt;
@@ -6305,7 +6374,7 @@ string body</a> with <code>xml</code> identifier:</p>
 &lt;catalog&gt;
    &lt;book id="bk101"&gt;
       &lt;author&gt;Gambardella, Matthew&lt;/author&gt;
-      &lt;title&gt;XML Developer&amp;#39;s Guide&lt;/title&gt;
+      &lt;title&gt;XML Developer's Guide&lt;/title&gt;
       &lt;genre&gt;Computer&lt;/genre&gt;
       &lt;price&gt;44.95&lt;/price&gt;
       &lt;publish_date&gt;2000-10-01&lt;/publish_date&gt;
@@ -6435,8 +6504,8 @@ href="#file-format-asserting-response-ssl-certificate-assert"><code>certificate<
 </ul>
 <p>Queries, in asserts and in captures, can be refined with <a
 href="#file-format-filters">filters</a>, like <a
-href="#file-format-filters-count"><code>count</code></a>(#file-format-filters-count)
-to add tests on collections sizes.</p>
+href="#file-format-filters-count"><code>count</code></a> to add tests on
+collections sizes.</p>
 <h4 id="file-format-asserting-response-predicates">Predicates</h4>
 <p>Predicates consist of a predicate function and a predicate value.
 Predicate functions are:</p>
@@ -6634,7 +6703,7 @@ works on string. If a query returns a number, using a
 <span class="section-header">[Asserts]</span>
 <span class="query-type">header</span> <span class="string">"Content-Type"</span> <span class="predicate-type">contains</span> <span class="string">"text/html"</span>
 <span class="query-type">header</span> <span class="string">"Last-Modified"</span> <span class="predicate-type">==</span> <span class="string">"Wed, 21 Oct 2015 07:28:00 GMT"</span>
-<span class="query-type">xpath</span> <span class="string">"//h1"</span> <span class="predicate-type">exists</span>  <span class="comment"># Check we&amp;#39;ve at least one h1</span>
+<span class="query-type">xpath</span> <span class="string">"//h1"</span> <span class="predicate-type">exists</span>  <span class="comment"># Check we've at least one h1</span>
 <span class="query-type">xpath</span> <span class="string">"normalize-space(//h1)"</span> <span class="predicate-type">contains</span> <span class="string">"Welcome"</span>
 <span class="query-type">xpath</span> <span class="string">"//h2"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">13</span>
 <span class="query-type">xpath</span> <span class="string">"string(//article/@data-id)"</span> <span class="predicate-type">startsWith</span> <span class="string">"electric"</span></span></span></code></pre></div>
@@ -6765,7 +6834,7 @@ encoding hint, a <a
 href="#file-format-filters-decode"><code>decode</code> filter</a> can be
 used to explicitly decode the response body bytes.</p>
 <div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="comment"># Our HTML response is encoded using GB 2312.</span>
-<span class="comment"># But, the &amp;#39;Content-Type&amp;#39; HTTP response header doesn&amp;#39;t precise any charset,</span>
+<span class="comment"># But, the 'Content-Type' HTTP response header doesn't precise any charset,</span>
 <span class="comment"># so we decode explicitly the bytes.</span>
 <span class="method">GET</span> <span class="url">https://example.org/cn</span>
 </span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
@@ -6878,12 +6947,12 @@ XML response:</p>
 <span class="section-header">[Asserts]</span>
 
 <span class="query-type">xpath</span> <span class="string">"string(//bk:book/bk:title)"</span> <span class="predicate-type">==</span> <span class="string">"Cheaper by the Dozen"</span>
-<span class="query-type">xpath</span> <span class="string">"string(//*[name()=&amp;#39;bk:book&amp;#39;]/*[name()=&amp;#39;bk:title&amp;#39;])"</span> <span class="predicate-type">==</span> <span class="string">"Cheaper by the Dozen"</span>
-<span class="query-type">xpath</span> <span class="string">"string(//*[local-name()=&amp;#39;book&amp;#39;]/*[local-name()=&amp;#39;title&amp;#39;])"</span> <span class="predicate-type">==</span> <span class="string">"Cheaper by the Dozen"</span>
+<span class="query-type">xpath</span> <span class="string">"string(//*[name()='bk:book']/*[name()='bk:title'])"</span> <span class="predicate-type">==</span> <span class="string">"Cheaper by the Dozen"</span>
+<span class="query-type">xpath</span> <span class="string">"string(//*[local-name()='book']/*[local-name()='title'])"</span> <span class="predicate-type">==</span> <span class="string">"Cheaper by the Dozen"</span>
 
 <span class="query-type">xpath</span> <span class="string">"string(//bk:book/isbn:number)"</span> <span class="predicate-type">==</span> <span class="string">"1568491379"</span>
-<span class="query-type">xpath</span> <span class="string">"string(//*[name()=&amp;#39;bk:book&amp;#39;]/*[name()=&amp;#39;isbn:number&amp;#39;])"</span> <span class="predicate-type">==</span> <span class="string">"1568491379"</span>
-<span class="query-type">xpath</span> <span class="string">"string(//*[local-name()=&amp;#39;book&amp;#39;]/*[local-name()=&amp;#39;number&amp;#39;])"</span> <span class="predicate-type">==</span> <span class="string">"1568491379"</span></span></span></code></pre></div>
+<span class="query-type">xpath</span> <span class="string">"string(//*[name()='bk:book']/*[name()='isbn:number'])"</span> <span class="predicate-type">==</span> <span class="string">"1568491379"</span>
+<span class="query-type">xpath</span> <span class="string">"string(//*[local-name()='book']/*[local-name()='number'])"</span> <span class="predicate-type">==</span> <span class="string">"1568491379"</span></span></span></code></pre></div>
 <p>The XPath expressions <code>string(//bk:book/bk:title)</code> and
 <code>string(//bk:book/isbn:number)</code> are written with
 <code>bk</code> and <code>isbn</code> namespaces.</p>
@@ -6919,8 +6988,8 @@ and value.</p>
     &quot;title&quot;: &quot;Sample Slide Show&quot;
   }
 }</code></pre>
-<p>With Hurl, we can write multiple JSONPath asserts describing the DOM
-content:</p>
+<p>With Hurl, we can write multiple JSONPath asserts describing response
+structure:</p>
 <div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="method">GET</span> <span class="url">http://httpbin.org/json</span>
 </span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
 <span class="section-header">[Asserts]</span>
@@ -6930,8 +6999,9 @@ content:</p>
 <span class="query-type">jsonpath</span> <span class="string">"$.slideshow.date"</span> <span class="predicate-type">!=</span> <span class="null">null</span>
 <span class="query-type">jsonpath</span> <span class="string">"$.slideshow.slides[*].title"</span> <span class="predicate-type">contains</span> <span class="string">"Mind Blowing!"</span></span></span></code></pre></div>
 <blockquote>
-<p>Explain that the value selected by the JSONPath is coerced to a
-string when only one node is selected.</p>
+<p>By default, Hurl applies <a
+href="#file-format-asserting-response-jsonpath-coercion">coercion to the
+JSONPath</a> query results.</p>
 </blockquote>
 <p>In <code>matches</code> predicates, metacharacters beginning with a
 backslash (like <code>\d</code>, <code>\s</code>) must be escaped.
@@ -6949,6 +7019,44 @@ Regular expression syntax</a> to enhance the readability:</p>
 <span class="comment"># Equivalent syntax:</span>
 <span class="query-type">jsonpath</span> <span class="string">"$.date"</span> <span class="predicate-type">matches</span> <span class="regex">/^\d{4}-\d{2}-\d{2}$/</span>
 <span class="query-type">jsonpath</span> <span class="string">"$.name"</span> <span class="predicate-type">matches</span> <span class="regex">/Hello [a-zA-Z]+!/</span></span></span></code></pre></div>
+<h5 id="file-format-asserting-response-jsonpath-coercion">JSONPath
+coercion</h5>
+<p>Hurl’s JSONPath implementation respects <a
+href="https://www.rfc-editor.org/info/rfc9535/">RFC 9535: JSONPATH:
+Query Expression for JSON</a> specification. In RFC 9535, every query
+result always returns a list. To facilitate JSONPath query usage, Hurl
+coerces lists that return a single value to this value.</p>
+<p>Let’s say with have this JSON:</p>
+<pre><code class="language-json">{
+  &quot;fruits&quot;: [
+    &quot;Apple&quot;, &quot;Lemon&quot;, &quot;Strawberry&quot;
+  ]
+}</code></pre>
+<p>By the spec, the JSONPath query <code>$.fruits[0]</code> should
+return a list of one element <code>["Apple"]</code>. As the result list
+has only one single element, Hurl JSONPath query returns the string
+“Apple”. So we’re able to write this Hurl file:</p>
+<div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="method">GET</span> <span class="url">https://example.org/captures-json</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
+<span class="section-header">[Asserts]</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.fruits[0]"</span> <span class="predicate-type">isString</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.fruits[0]"</span> <span class="predicate-type">==</span> <span class="string">"Apple"</span></span></span></code></pre></div>
+<p>If you don’t want JSONPath coercion applied to query results, you can
+use <a
+href="#getting-started-manual-no-jsonpath-coercion"><code>--no-jsonpath-coercion</code>
+option</a>, either in <a
+href="#getting-started-manual-configuration">Hurl configuration
+file</a>, in Hurl command line or using the env variable
+<code>HURL_NO_JSONPATH_COERCION=true</code>. This way, JSONPath query
+always returns list:</p>
+<div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="method">GET</span> <span class="url">https://example.org/captures-json</span>
+<span class="section-header">[Options]</span>
+<span class="string">no-jsonpath-coercion</span>: <span class="boolean">true</span>
+</span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
+<span class="section-header">[Asserts]</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.fruits[0]"</span> <span class="predicate-type">isList</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.fruits[0]"</span> <span class="filter-type">count</span> <span class="predicate-type">==</span> <span class="number">1</span>
+<span class="query-type">jsonpath</span> <span class="string">"$.fruits[0]"</span> <span class="filter-type">nth</span> <span class="number">0</span> <span class="predicate-type">==</span> <span class="string">"Apple"</span></span></span></code></pre></div>
 <h4 id="file-format-asserting-response-regex-assert">Regex assert</h4>
 <p>Check that the HTTP received body, decoded as text, matches a regex
 pattern.</p>
@@ -7014,8 +7122,8 @@ are not affected by <code>Content-Encoding</code> response header)</p>
 <h4 id="file-format-asserting-response-url-assert">URL assert</h4>
 <p>Check the last fetched URL. This is most meaningful if you have told
 Hurl to follow redirection (see <a
-href="#file-format-entry-options"><code>[Options]</code>section</a>(#file-format-request-options)
-or <a href="#getting-started-manual-location"><code>--location</code>
+href="#file-format-request-options"><code>[Options]</code>section</a> or
+<a href="#getting-started-manual-location"><code>--location</code>
 option</a>). URL assert consists of the keyword <code>url</code>
 followed by a predicate function and value.</p>
 <div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="method">GET</span> <span class="url">https://example.org/redirecting</span>
@@ -7028,8 +7136,8 @@ followed by a predicate function and value.</p>
 assert</h4>
 <p>Check each step of redirection. This is most meaningful if you have
 told Hurl to follow redirection (see <a
-href="#file-format-entry-options"><code>[Options]</code>section</a>(#file-format-request-options)
-or <a href="#getting-started-manual-location"><code>--location</code>
+href="#file-format-request-options"><code>[Options]</code>section</a> or
+<a href="#getting-started-manual-location"><code>--location</code>
 option</a>). Redirects assert consists of the keyword
 <code>redirects</code> followed by a predicate function and value. The
 <code>redirects</code> query returns a collection of redirections that
@@ -7090,7 +7198,7 @@ attribute value.</p>
 </span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
 <span class="section-header">[Asserts]</span>
 <span class="query-type">certificate</span> <span class="string">"Subject"</span> <span class="predicate-type">==</span> <span class="string">"CN=example.org"</span>
-<span class="query-type">certificate</span> <span class="string">"Issuer"</span> <span class="predicate-type">==</span> <span class="string">"C=US, O=Let&amp;#39;s Encrypt, CN=R3"</span>
+<span class="query-type">certificate</span> <span class="string">"Issuer"</span> <span class="predicate-type">==</span> <span class="string">"C=US, O=Let's Encrypt, CN=R3"</span>
 <span class="query-type">certificate</span> <span class="string">"Expire-Date"</span> <span class="filter-type">daysAfterNow</span> <span class="predicate-type">&gt;</span> <span class="number">15</span>
 <span class="query-type">certificate</span> <span class="string">"Serial-Number"</span> <span class="predicate-type">matches</span> <span class="string">"[0-9af]+"</span>
 <span class="query-type">certificate</span> <span class="string">"Subject-Alt-Name"</span> <span class="predicate-type">contains</span> <span class="string">"DNS:example.org"</span>
@@ -7409,7 +7517,7 @@ will be removed in a future major version.</em></p>
 defined in <a
 href="https://encoding.spec.whatwg.org/#concept-encoding-get">Encoding
 Standard</a>.</p>
-<div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="comment"># The &amp;#39;Content-Type&amp;#39; HTTP response header does not precise the charset &amp;#39;gb2312&amp;#39;</span>
+<div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="comment"># The 'Content-Type' HTTP response header does not precise the charset 'gb2312'</span>
 <span class="comment"># so body must be decoded explicitly by Hurl before processing any text based assert</span>
 <span class="method">GET</span> <span class="url">https://example.org/hello_china</span>
 </span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
@@ -7636,7 +7744,7 @@ in the next POST request:</p>
 <div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="method">GET</span> <span class="url">https://example.org</span>
 </span><span class="response"><span class="version">HTTP</span> <span class="number">200</span>
 <span class="section-header">[Captures]</span>
-<span class="string">csrf_token</span>: <span class="query-type">xpath</span> <span class="string">"string(//meta[@name=&amp;#39;_csrf_token&amp;#39;]/@content)"</span>
+<span class="string">csrf_token</span>: <span class="query-type">xpath</span> <span class="string">"string(//meta[@name='_csrf_token']/@content)"</span>
 </span></span><span class="entry"><span class="request">
 <span class="comment"># Do the login !</span>
 <span class="method">POST</span> <span class="url">https://acmecorp.net/login?user=toto&amp;password=1234</span>
@@ -7767,8 +7875,8 @@ option</a></li>
 <li>by defining environment variables, for instance
 <code>HURL_VARIABLE_foo=bar</code></li>
 <li>by defining variables in an <a
-href="#file-format-entry-options"><code>[Options]</code>
-section</a>(#file-format-request-options)</li>
+href="#file-format-request-options"><code>[Options]</code>
+section</a></li>
 <li>by defining variables in <a
 href="#getting-started-manual-configuration">Hurl configuration
 file</a></li>

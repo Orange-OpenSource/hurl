@@ -378,7 +378,7 @@ can extract data from
   - [`duration`](#duration-assert)
   - [`certificate`](#ssl-certificate-assert)
 
-Queries, in asserts and in captures, can be refined with [filters], like [`count`][count] to add tests on collections
+Queries, in asserts and in captures, can be refined with [filters], like [`count`](/docs/filters.md#count) to add tests on collections
 sizes.
 
 ### Predicates
@@ -948,7 +948,7 @@ affected by `Content-Encoding` response header)
 
 ### URL assert
 
-Check the last fetched URL. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]`section][options] or
+Check the last fetched URL. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]`section](/docs/request.md#options) or
 [`--location` option]). URL assert consists of the keyword `url` followed by a predicate function and value.
 
 ```hurl
@@ -962,7 +962,7 @@ url == "https://example.org/redirected"
 
 ### Redirects assert
 
-Check each step of redirection. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]`section][options] or
+Check each step of redirection. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]`section](/docs/request.md#options) or
 [`--location` option]). Redirects assert consists of the keyword `redirects` followed by a predicate function and value. The `redirects`
 query returns a collection of redirections that can be tested with a [`location` filter]:
 
@@ -1054,11 +1054,9 @@ certificate "Value" startsWith "-----BEGIN CERTIFICATE-----"
 [JavaScript-like Regular expression syntax]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
 [MD5]: https://en.wikipedia.org/wiki/MD5
 [SHA-256]: https://en.wikipedia.org/wiki/SHA-2
-[options]: /docs/request.md#options
 [`--location` option]: /docs/manual.md#location
 [multiline string body]: #multiline-string-body
 [filters]: /docs/filters.md
-[count]: /docs/filters.md#count
 [`decode` filter]: /docs/filters.md#decode
 [headers implicit asserts]: #headers
 [RFC 3339]: https://www.rfc-editor.org/rfc/rfc3339
@@ -1067,7 +1065,7 @@ certificate "Value" startsWith "-----BEGIN CERTIFICATE-----"
 [`body` assert]: #body-assert
 [`location` filter]: /docs/filters.md#location
 [UUID v4]: https://en.wikipedia.org/wiki/Universally_unique_identifier
-[coercion to the JSONPATH]: /docs/asserting-response.md#jsonpath-coercion
+[coercion to the JSONPath]: /docs/asserting-response.md#jsonpath-coercion
 [`--no-jsonpath-coercion` option]: /docs/manual.md#no-jsonpath-coercion
 [Hurl configuration file]: /docs/manual.md#configuration
 [RFC 9535: JSONPATH: Query Expression for JSON]: https://www.rfc-editor.org/info/rfc9535/

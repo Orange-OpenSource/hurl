@@ -40,7 +40,7 @@ every entry of a given file will follow redirection:
 $ hurl --location foo.hurl
 ```
 
-You can use an [`[Options]` section][options] to set option only for a specified request. For instance, in this Hurl file,
+You can use an [`[Options]` section](/docs/request.md#options) to set option only for a specified request. For instance, in this Hurl file,
 the second entry will follow location (so we can test the status code to be 200 instead of 301).
 
 ```hurl
@@ -68,6 +68,15 @@ HTTP 200
 
 # ... next entries
 ```
+
+Most of the options can also be defined with environment variables (like `HURL_INSECURE` for `--insecure`) or used in 
+[Hurl configuration file]. So, in order to configure Hurl, there are four sources from the lowest priority to highest (overrides all others):
+
+- Configuration file (ex: `~/.config/hurl/config`)
+- Environment variables (ex: `export HURL_INSECURE=true`)
+- Command-line options (ex: `hurl --insecure`)
+- Options section options (ex: `insecure: true` in file)
+
 
 ### Cookie storage
 
@@ -100,7 +109,7 @@ GET https://example.org
 HTTP 200
 ```
 
-Finally, you can force redirection on a particular request with an [`[Options]` section][options] and the [`--location`] 
+Finally, you can force redirection on a particular request with an [`[Options]` section](/docs/request.md#options) and the [`--location`] 
 / [`--location-trusted`] options:
 
 ```hurl
@@ -158,10 +167,10 @@ url == "https://example.org/step3"
 ### Retry
 
 Every entry can be retried upon asserts, captures or runtime errors. Retries allow polling scenarios and effective runs 
-under flaky conditions. Asserts can be explicit (with an [`[Asserts]` section][asserts]), or implicit (like [headers] or [status code]).
+under flaky conditions. Asserts can be explicit (with an [`[Asserts]` section](/docs/response.md#asserts), or implicit (like [headers] or [status code]).
 
 Retries can be set globally for every request (see [`--retry`] and [`--retry-interval`]), 
-or activated on a particular request with an [`[Options]` section][options].
+or activated on a particular request with an [`[Options]` section](/docs/request.md#options).
 
 For example, in this Hurl file, first we create a new job then we poll the new job until it's completed:
 
@@ -241,10 +250,8 @@ For complete reference, below is a diagram for the executed entries.
 [`--location-trusted`]: /docs/manual.md#location-trusted
 [`--max-redirs`]: /docs/manual.md#max-redirs
 [Options]: /docs/manual.md#options
-[options]: /docs/request.md#options
 [headers]: /docs/response.md#headers
 [status code]: /docs/response.md#version-status
-[asserts]: /docs/response.md#asserts
 [Asserts]: /docs/response.md#asserts
 [`--retry`]: /docs/manual.md#retry
 [`--retry-interval`]: /docs/manual.md#retry-interval
@@ -253,3 +260,4 @@ For complete reference, below is a diagram for the executed entries.
 [`redirects` query]: /docs/asserting-response.md#redirects-assert
 [`url` query]: /docs/asserting-response.md#url-assert
 [`--no-coookie-store`]: /docs/manual.md#no-cookie-store
+[Hurl configuration file]: /docs/manual.md#configuration
