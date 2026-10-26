@@ -346,6 +346,8 @@ Comma-separated list of hosts which do not use a proxy.
 
 Environment variables: no_proxy
 
+This is a cli-only option.
+
 #### --ntlm {#ntlm}
 
 Tell Hurl to use NTLM authentication

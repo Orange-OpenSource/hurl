@@ -1,6 +1,6 @@
 # Hurl Documentation
 
-## Version 8.1.0 - 25-10-2026
+## Version 8.1.0 - 26-10-2026
 
 # Table of Contents
 
@@ -889,7 +889,7 @@ to configure Hurl, there are four sources from the lowest priority to highest (o
 | <a href="#getting-started-manual-negotiate" id="getting-started-manual-negotiate"><code>--negotiate</code></a>                                                  | Tell Hurl to use Negotiate (SPNEGO) authentication.<br>                                                                                                                                                                                                                                                                                                                                                                                              |
 | <a href="#getting-started-manual-no-cookie-store" id="getting-started-manual-no-cookie-store"><code>--no-cookie-store</code></a>                                | Do not use cookie storage for requests/responses in a file. By default, requests in the same Hurl file share cookie storage, this option deactivates cookie engine.<br><br>Environment variables: HURL_NO_COOKIE_STORE<br><br>This is a cli-only option.<br>                                                                                                                                                                                         |
 | <a href="#getting-started-manual-no-header" id="getting-started-manual-no-header"><code>--no-header &lt;NAME&gt;</code></a>                                     | Remove a header from information sent. Can be used several times in a command.<br><br>Environment variables: HURL_NO_HEADER='name1&#124;name2' (names are separated by &#124;)<br>                                                                                                                                                                                                                                                                   |
-| <a href="#getting-started-manual-no-proxy" id="getting-started-manual-no-proxy"><code>--no-proxy &lt;HOST(S)&gt;</code></a>                                     | Comma-separated list of hosts which do not use a proxy.<br><br>Environment variables: no_proxy<br>                                                                                                                                                                                                                                                                                                                                                   |
+| <a href="#getting-started-manual-no-proxy" id="getting-started-manual-no-proxy"><code>--no-proxy &lt;HOST(S)&gt;</code></a>                                     | Comma-separated list of hosts which do not use a proxy.<br><br>Environment variables: no_proxy<br><br>This is a cli-only option.<br>                                                                                                                                                                                                                                                                                                                 |
 | <a href="#getting-started-manual-ntlm" id="getting-started-manual-ntlm"><code>--ntlm</code></a>                                                                 | Tell Hurl to use NTLM authentication<br>                                                                                                                                                                                                                                                                                                                                                                                                             |
 | <a href="#getting-started-manual-path-as-is" id="getting-started-manual-path-as-is"><code>--path-as-is</code></a>                                               | Tell Hurl to not handle sequences of /../ or /./ in the given URL path. Normally Hurl will squash or merge them according to standards but with this option set you tell it not to do that.<br>                                                                                                                                                                                                                                                      |
 | <a href="#getting-started-manual-pinnedpubkey" id="getting-started-manual-pinnedpubkey"><code>--pinnedpubkey &lt;HASHES&gt;</code></a>                          | When negotiating a TLS or SSL connection, the server sends a certificate indicating its identity. A public key is extracted from this certificate and if it does not exactly match the public key provided to this option, Hurl aborts the connection before sending or receiving any data.<br>                                                                                                                                                      |
@@ -3148,37 +3148,54 @@ to the command line), while other requests are unaffected.
 GET https://example.org
 # An options section, each option is optional and applied only to this request...
 [Options]
-aws-sigv4: aws:amz:sts     # generate AWS SigV4 Authorization header
-cacert: /etc/cert.pem      # custom certificate file
-cert: /etc/client-cert.pem # client authentication certificate
-key: /etc/client-cert.key  # client authentication certificate key
-compressed: true           # request a compressed response
-connect-timeout: 20s       # connect timeout
-delay: 3s                  # delay for this request (aka sleep)
-fail-with-body: true       # Output HTTP response even if there are assert errors
-http3: true                # use HTTP/3 protocol version
-insecure: true             # allow insecure SSL connections and transfers
-ipv6: true                 # use IPv6 addresses
-limit-rate: 32000          # limit this request to the specified speed (bytes/s)
-location: true             # follow redirection for this request
-max-redirs: 10             # maximum number of redirections
-max-time: 30s              # maximum time for a request/response
-no-header: Accept          # header name to remove from the request
-no-jsonpath-coercion: true # disable JSONPath result coercion for this request
-output: out.html           # dump the response to this file
-path-as-is: true           # do not handle sequences of /../ or /./ in URL path
-retry: 10                  # number of retry if HTTP/asserts errors
-retry-interval: 500ms      # interval between retry
-skip: false                # skip this request
-tls-max: 1.2               # maximum TLS version
-tls-min: 1.0               # minimum TLS version
-unix-socket: sock          # use Unix socket for transfer
-user: bob:secret           # use basic authentication
-proxy: my.proxy:8012       # define proxy (host:port where host can be an IP address)
-variable: country=Italy    # define variable country
-variable: planet=Earth     # define variable planet
-verbose: true              # allow verbose output
-very-verbose: true         # allow more verbose output    
+aws-sigv4: aws:amz:sts          # generate AWS SigV4 Authorization header
+cacert: /etc/cert.pem           # custom certificate file
+cert: /etc/client-cert.pem      # client authentication certificate
+compressed: true                # request a compressed response
+connect-timeout: 20s            # connect timeout
+delay: 3s                       # delay for this request (aka sleep)
+digest: true                    # use HTTP digest authentication
+fail-with-body: true            # Output HTTP response even if there are assert errors
+header: foo:bar                 # add a HTTP request for this request
+http1.0: true                   # use HTTP/1.0 protocol version
+http1.1: true                   # use HTTP/1.1 protocol version
+http2: true                     # use HTTP/2 protocol version
+http2-prior-knowledge: true     # use HTTP/2 protocol version (without HTTP/1.1 Upgrade)
+http3: true                     # use HTTP/3 protocol version
+insecure: true                  # allow insecure SSL connections and transfers
+ipv4: true                      # use IPv4 addresses
+ipv6: true                      # use IPv6 addresses
+key: /etc/client-cert.key       # client authentication certificate key
+limit-rate: 32000               # limit this request to the specified speed (bytes/s)
+location: true                  # follow redirection for this request 
+location-trusted: true          # follow redirection for this request (no credential host filter)
+max-redirs: 10                  # maximum number of redirections
+max-time: 30s                   # maximum time for a request/response
+negotiate: true                 # use Negotiate (SPNEGO) authentication
+netrc: true                     # must read .netrc for username and password
+netrc-file: foo.netrc           # specify .netrc file
+netrc-optional: false           # make .netrc usage optional
+no-header: Accept               # header name to remove from the request
+no-jsonpath-coercion: true      # disable JSONPath result coercion for this request
+ntlm: true                      # use NTLM authentication
+output: out.html                # dump the response to this file
+path-as-is: true                # do not handle sequences of /../ or /./ in URL path
+pinnedpubkey: key.pem           # public key
+proxy: my.proxy:8012            # define proxy (host:port where host can be an IP address)
+repeat: 10                      # repeat the request
+resolve: foo.com:8000:127.0.0.1 # custom address by hosts
+retry: 10                       # number of retry if HTTP/asserts errors
+retry-interval: 500ms           # interval between retry
+skip: false                     # skip this request
+tls-max: 1.2                    # maximum TLS version
+tls-min: 1.0                    # minimum TLS version
+unix-socket: sock               # use Unix socket for transfer
+user: bob:secret                # use basic authentication
+variable: country=Italy         # define variable country
+variable: planet=Earth          # define variable planet
+verbosity: brief                # allow brief verbose
+verbose: true                   # allow verbose output
+very-verbose: true              # allow more verbose output    
 ```
 
 > Variables defined in an `[Options]` section are defined also for the next entries. This is the

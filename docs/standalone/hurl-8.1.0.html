@@ -1639,7 +1639,7 @@
 <body>
 <div class="doc-content-col">
 <h1 id="hurl-documentation">Hurl Documentation</h1>
-<h2 id="version-8.1.0---25-10-2026">Version 8.1.0 - 25-10-2026</h2>
+<h2 id="version-8.1.0---26-10-2026">Version 8.1.0 - 26-10-2026</h2>
 <h1 id="table-of-contents">Table of Contents</h1>
 <ul>
 <li><a href="#introduction">Introduction</a>
@@ -2836,7 +2836,8 @@ a command.<br><br>Environment variables: HURL_NO_HEADER=‘name1|name2’
 <td><a href="#getting-started-manual-no-proxy" id="getting-started-manual-no-proxy"><code>–no-proxy
 &lt;HOST(S)&gt;</code></a></td>
 <td>Comma-separated list of hosts which do not use a
-proxy.<br><br>Environment variables: no_proxy<br></td>
+proxy.<br><br>Environment variables: no_proxy<br><br>This is a cli-only
+option.<br></td>
 </tr>
 <tr>
 <td><a href="#getting-started-manual-ntlm" id="getting-started-manual-ntlm"><code>–ntlm</code></a></td>
@@ -5091,37 +5092,54 @@ other requests are unaffected.</p>
 <div class="code-block"><pre><code class="language-hurl"><span class="entry"><span class="request"><span class="method">GET</span> <span class="url">https://example.org</span>
 <span class="comment"># An options section, each option is optional and applied only to this request...</span>
 <span class="section-header">[Options]</span>
-<span class="string">aws-sigv4</span>: <span class="string">aws:amz:sts</span>     <span class="comment"># generate AWS SigV4 Authorization header</span>
-<span class="string">cacert</span>: <span class="filename">/etc/cert.pem</span>      <span class="comment"># custom certificate file</span>
-<span class="string">cert</span>: <span class="filename">/etc/client-cert.pem</span> <span class="comment"># client authentication certificate</span>
-<span class="string">key</span>: <span class="filename">/etc/client-cert.key</span>  <span class="comment"># client authentication certificate key</span>
-<span class="string">compressed</span>: <span class="boolean">true</span>           <span class="comment"># request a compressed response</span>
-<span class="string">connect-timeout</span>: <span class="number">20</span><span class="unit">s</span>       <span class="comment"># connect timeout</span>
-<span class="string">delay</span>: <span class="number">3</span><span class="unit">s</span>                  <span class="comment"># delay for this request (aka sleep)</span>
-<span class="string">fail-with-body</span>: <span class="boolean">true</span>       <span class="comment"># Output HTTP response even if there are assert errors</span>
-<span class="string">http3</span>: <span class="boolean">true</span>                <span class="comment"># use HTTP/3 protocol version</span>
-<span class="string">insecure</span>: <span class="boolean">true</span>             <span class="comment"># allow insecure SSL connections and transfers</span>
-<span class="string">ipv6</span>: <span class="boolean">true</span>                 <span class="comment"># use IPv6 addresses</span>
-<span class="string">limit-rate</span>: <span class="number">32000</span>          <span class="comment"># limit this request to the specified speed (bytes/s)</span>
-<span class="string">location</span>: <span class="boolean">true</span>             <span class="comment"># follow redirection for this request</span>
-<span class="string">max-redirs</span>: <span class="number">10</span>             <span class="comment"># maximum number of redirections</span>
-<span class="string">max-time</span>: <span class="number">30</span><span class="unit">s</span>              <span class="comment"># maximum time for a request/response</span>
-<span class="string">no-header</span>: <span class="string">Accept</span>          <span class="comment"># header name to remove from the request</span>
-<span class="string">no-jsonpath-coercion</span>: <span class="boolean">true</span> <span class="comment"># disable JSONPath result coercion for this request</span>
-<span class="string">output</span>: <span class="filename">out.html</span>           <span class="comment"># dump the response to this file</span>
-<span class="string">path-as-is</span>: <span class="boolean">true</span>           <span class="comment"># do not handle sequences of /../ or /./ in URL path</span>
-<span class="string">retry</span>: <span class="number">10</span>                  <span class="comment"># number of retry if HTTP/asserts errors</span>
-<span class="string">retry-interval</span>: <span class="number">500</span><span class="unit">ms</span>      <span class="comment"># interval between retry</span>
-<span class="string">skip</span>: <span class="boolean">false</span>                <span class="comment"># skip this request</span>
-<span class="string">tls-max</span>: <span class="string">1.2</span>               <span class="comment"># maximum TLS version</span>
-<span class="string">tls-min</span>: <span class="string">1.0</span>               <span class="comment"># minimum TLS version</span>
-<span class="string">unix-socket</span>: <span class="filename">sock</span>          <span class="comment"># use Unix socket for transfer</span>
-<span class="string">user</span>: <span class="string">bob:secret</span>           <span class="comment"># use basic authentication</span>
-<span class="string">proxy</span>: <span class="string">my.proxy:8012</span>       <span class="comment"># define proxy (host:port where host can be an IP address)</span>
-<span class="string">variable</span>: country=<span class="string">Italy</span>    <span class="comment"># define variable country</span>
-<span class="string">variable</span>: planet=<span class="string">Earth</span>     <span class="comment"># define variable planet</span>
-<span class="string">verbose</span>: <span class="boolean">true</span>              <span class="comment"># allow verbose output</span>
-<span class="string">very-verbose</span>: <span class="boolean">true</span>         <span class="comment"># allow more verbose output    </span></span></span></code></pre></div>
+<span class="string">aws-sigv4</span>: <span class="string">aws:amz:sts</span>          <span class="comment"># generate AWS SigV4 Authorization header</span>
+<span class="string">cacert</span>: <span class="filename">/etc/cert.pem</span>           <span class="comment"># custom certificate file</span>
+<span class="string">cert</span>: <span class="filename">/etc/client-cert.pem</span>      <span class="comment"># client authentication certificate</span>
+<span class="string">compressed</span>: <span class="boolean">true</span>                <span class="comment"># request a compressed response</span>
+<span class="string">connect-timeout</span>: <span class="number">20</span><span class="unit">s</span>            <span class="comment"># connect timeout</span>
+<span class="string">delay</span>: <span class="number">3</span><span class="unit">s</span>                       <span class="comment"># delay for this request (aka sleep)</span>
+<span class="string">digest</span>: <span class="boolean">true</span>                    <span class="comment"># use HTTP digest authentication</span>
+<span class="string">fail-with-body</span>: <span class="boolean">true</span>            <span class="comment"># Output HTTP response even if there are assert errors</span>
+<span class="string">header</span>: <span class="string">foo:bar</span>                 <span class="comment"># add a HTTP request for this request</span>
+<span class="string">http1.0</span>: <span class="boolean">true</span>                   <span class="comment"># use HTTP/1.0 protocol version</span>
+<span class="string">http1.1</span>: <span class="boolean">true</span>                   <span class="comment"># use HTTP/1.1 protocol version</span>
+<span class="string">http2</span>: <span class="boolean">true</span>                     <span class="comment"># use HTTP/2 protocol version</span>
+<span class="string">http2-prior-knowledge</span>: <span class="boolean">true</span>     <span class="comment"># use HTTP/2 protocol version (without HTTP/1.1 Upgrade)</span>
+<span class="string">http3</span>: <span class="boolean">true</span>                     <span class="comment"># use HTTP/3 protocol version</span>
+<span class="string">insecure</span>: <span class="boolean">true</span>                  <span class="comment"># allow insecure SSL connections and transfers</span>
+<span class="string">ipv4</span>: <span class="boolean">true</span>                      <span class="comment"># use IPv4 addresses</span>
+<span class="string">ipv6</span>: <span class="boolean">true</span>                      <span class="comment"># use IPv6 addresses</span>
+<span class="string">key</span>: <span class="filename">/etc/client-cert.key</span>       <span class="comment"># client authentication certificate key</span>
+<span class="string">limit-rate</span>: <span class="number">32000</span>               <span class="comment"># limit this request to the specified speed (bytes/s)</span>
+<span class="string">location</span>: <span class="boolean">true</span>                  <span class="comment"># follow redirection for this request </span>
+<span class="string">location-trusted</span>: <span class="boolean">true</span>          <span class="comment"># follow redirection for this request (no credential host filter)</span>
+<span class="string">max-redirs</span>: <span class="number">10</span>                  <span class="comment"># maximum number of redirections</span>
+<span class="string">max-time</span>: <span class="number">30</span><span class="unit">s</span>                   <span class="comment"># maximum time for a request/response</span>
+<span class="string">negotiate</span>: <span class="boolean">true</span>                 <span class="comment"># use Negotiate (SPNEGO) authentication</span>
+<span class="string">netrc</span>: <span class="boolean">true</span>                     <span class="comment"># must read .netrc for username and password</span>
+<span class="string">netrc-file</span>: <span class="filename">foo.netrc</span>           <span class="comment"># specify .netrc file</span>
+<span class="string">netrc-optional</span>: <span class="boolean">false</span>           <span class="comment"># make .netrc usage optional</span>
+<span class="string">no-header</span>: <span class="string">Accept</span>               <span class="comment"># header name to remove from the request</span>
+<span class="string">no-jsonpath-coercion</span>: <span class="boolean">true</span>      <span class="comment"># disable JSONPath result coercion for this request</span>
+<span class="string">ntlm</span>: <span class="boolean">true</span>                      <span class="comment"># use NTLM authentication</span>
+<span class="string">output</span>: <span class="filename">out.html</span>                <span class="comment"># dump the response to this file</span>
+<span class="string">path-as-is</span>: <span class="boolean">true</span>                <span class="comment"># do not handle sequences of /../ or /./ in URL path</span>
+<span class="string">pinnedpubkey</span>: <span class="string">key.pem</span>           <span class="comment"># public key</span>
+<span class="string">proxy</span>: <span class="string">my.proxy:8012</span>            <span class="comment"># define proxy (host:port where host can be an IP address)</span>
+<span class="string">repeat</span>: <span class="number">10</span>                      <span class="comment"># repeat the request</span>
+<span class="string">resolve</span>: <span class="string">foo.com:8000:127.0.0.1</span> <span class="comment"># custom address by hosts</span>
+<span class="string">retry</span>: <span class="number">10</span>                       <span class="comment"># number of retry if HTTP/asserts errors</span>
+<span class="string">retry-interval</span>: <span class="number">500</span><span class="unit">ms</span>           <span class="comment"># interval between retry</span>
+<span class="string">skip</span>: <span class="boolean">false</span>                     <span class="comment"># skip this request</span>
+<span class="string">tls-max</span>: <span class="string">1.2</span>                    <span class="comment"># maximum TLS version</span>
+<span class="string">tls-min</span>: <span class="string">1.0</span>                    <span class="comment"># minimum TLS version</span>
+<span class="string">unix-socket</span>: <span class="filename">sock</span>               <span class="comment"># use Unix socket for transfer</span>
+<span class="string">user</span>: <span class="string">bob:secret</span>                <span class="comment"># use basic authentication</span>
+<span class="string">variable</span>: country=<span class="string">Italy</span>         <span class="comment"># define variable country</span>
+<span class="string">variable</span>: planet=<span class="string">Earth</span>          <span class="comment"># define variable planet</span>
+<span class="string">verbosity</span>: <span class="string">brief</span>                <span class="comment"># allow brief verbose</span>
+<span class="string">verbose</span>: <span class="boolean">true</span>                   <span class="comment"># allow verbose output</span>
+<span class="string">very-verbose</span>: <span class="boolean">true</span>              <span class="comment"># allow more verbose output    </span></span></span></code></pre></div>
 <blockquote>
 <p>Variables defined in an <code>[Options]</code> section are defined
 also for the next entries. This is the exception, all other options are
