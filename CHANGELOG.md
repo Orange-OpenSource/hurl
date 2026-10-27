@@ -1,4 +1,4 @@
-[8.1.0 (TBD)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#8.1.0)
+[8.1.0 (2026-10-27)](https://github.com/Orange-OpenSource/hurl/blob/master/CHANGELOG.md#8.1.0)
 ========================================================================================================================
 
 Thanks to
