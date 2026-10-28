@@ -1,4 +1,4 @@
-.TH hurl 1 "29 Apr 2026" "hurl 8.0.1" " Hurl Manual"
+.TH hurl 1 "27 Oct 2026" "hurl 8.1.0" " Hurl Manual"
 .SH NAME
 
 hurl - run and test HTTP requests.
@@ -108,8 +108,8 @@ More information on asserts can be found here \fIhttps://hurl.dev/docs/asserting
 
 Options that exist in curl have exactly the same semantics.
 
-Options specified on the command line are defined for every Hurl file's entry,
-except if they are tagged as cli-only (can not be defined in the Hurl request `[Options]` entry)
+Options specified on the command line are defined for every Hurl file's entry, except if they are tagged as cli-only 
+(can not be defined in the Hurl request `[Options]` entry)
 
 For instance:
 
@@ -127,13 +127,25 @@ will follow redirection for each entry in `foo.hurl`. You can also define an opt
 
 will follow a redirection only for the second entry.
 
+Hurl looks also for a configuration file at the following places `$XDG_CONFIG_HOME/hurl/config` if `$XDG_CONFIG_HOME` exists,
+or `$HOME/.config/hurl/config`. The configuration file is a list of options added to each Hurl run.
+
+    $ cat ~/.config/hurl/config
+    # Hurl config file
+    --header x-identifier:quux
+    --verbose
+    --delay=1s
+    --fail-with-body
+
 Most of the options can also be defined with environment variables (like `HURL_INSECURE` for \fI--insecure\fP). So, in order
-to configure Hurl, there are three sources from the lowest priority (most easily overridden) to highest (overrides all others):
+to configure Hurl, there are four sources from the lowest priority to highest (overrides all others):
 
 .IP \(bu 2
-Environment variables (ex: `HURL_INSECURE`)
+Configuration file (ex: `~/.config/hurl/config`)
 .IP \(bu 2
-Command-line options (ex: `--insecure`)
+Environment variables (ex: `export HURL_INSECURE=true`)
+.IP \(bu 2
+Command-line options (ex: `hurl --insecure`)
 .IP \(bu 2
 Options section options (ex: `insecure: true` in file)
 
@@ -213,6 +225,12 @@ For HTTPS, this means Hurl negotiates HTTP/2 in the TLS handshake. Hurl does thi
 For HTTP, this means Hurl attempts to upgrade the request to HTTP/2 using the Upgrade: request header.
 
 Environment variables: HURL_HTTP2
+
+.IP "--http2-prior-knowledge "
+
+Tells Hurl to issue a non-TLS HTTP request using HTTP/2 directly without HTTP/1.1 Upgrade. It requires prior knowledge that the server supports HTTP/2 straight away. HTTPS requests still do HTTP/2 the standard way with negotiated protocol versions in the TLS handshake.
+
+Environment variables: HURL_HTTP2_PRIOR_KNOWLEDGE
 
 .IP "--http3 "
 
@@ -300,11 +318,19 @@ Environment variables: HURL_NO_COOKIE_STORE
 
 This is a cli-only option.
 
+.IP "--no-header <NAME> "
+
+Remove a header from information sent. Can be used several times in a command.
+
+Environment variables: HURL_NO_HEADER='name1|name2' (names are separated by |)
+
 .IP "--no-proxy <HOST(S)> "
 
 Comma-separated list of hosts which do not use a proxy.
 
 Environment variables: no_proxy
+
+This is a cli-only option.
 
 .IP "--ntlm "
 
@@ -324,6 +350,14 @@ Use the specified proxy.
 
 Environment variables: http_proxy https_proxy all_proxy
 
+.IP "--proxy-header <HEADER> "
+
+Extra header to include in the request when sending to a proxy. These headers are only applied when a proxy is involved; if Hurl connects directly to the target server, they are ignored.
+
+Environment variables: HURL_PROXY_HEADER='name1:value1|name2:value2' (headers are separated by |)
+
+This is a cli-only option.
+
 .IP "--resolve <HOST:PORT:ADDR> "
 
 Provide a custom address for a specific host and port pair. Using this, you can make the Hurl requests(s) use a specified address and prevent the otherwise normally resolved address to be used. Consider it a sort of /etc/hosts alternative provided on the command line.
@@ -333,6 +367,30 @@ Provide a custom address for a specific host and port pair. Using this, you can 
 (Windows) This option tells Hurl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for exactly that.
 
 This is a cli-only option.
+
+.IP "--tls-max <VERSION> "
+
+Set the maximum allowed TLS version. If the connection is done without TLS, this option has no effect. This includes QUIC-using (HTTP/3) transfers.
+
+default   Use up to the recommended TLS version.
+1.0       Use up to TLSv1.0.
+1.1       Use up to TLSv1.1.
+1.2       Use up to TLSv1.2.
+1.3       Use up to TLSv1.3.
+
+Environment variables: HURL_TLS_MAX
+
+.IP "--tls-min <VERSION> "
+
+Set the minimum allowed TLS version. If the connection is done without TLS, this option has no effect. This includes QUIC-using (HTTP/3) transfers.
+
+default   Use down to the recommended TLS version.
+1.0       Use down to TLSv1.0.
+1.1       Use down to TLSv1.1.
+1.2       Use down to TLSv1.2.
+1.3       Use down to TLSv1.3.
+
+Environment variables: HURL_TLS_MIN
 
 .IP "--unix-socket <PATH> "
 
@@ -377,6 +435,12 @@ Control the format of error message (short by default or long).  When using long
 Environment variables: HURL_ERROR_FORMAT
 
 This is a cli-only option.
+
+.IP "--fail-with-body "
+
+Output body response on standard output if there are any errors. By default, Hurl outputs the last body response on standard output only when a run is successful.
+
+Environment variables: HURL_FAIL_WITH_BODY
 
 .IP "-i, --include "
 
@@ -509,6 +573,14 @@ Ignore all asserts defined in the Hurl file.
 Environment variables: HURL_NO_ASSERT
 
 This is a cli-only option.
+
+.IP "--no-jsonpath-coercion "
+
+Disable JSONPath result coercion.
+
+By default, when JSONPath coercion is enabled, empty JSONPath results are returned as no value and single JSONPath results are returned as a scalar value. With this option, JSONPath results are always returned as arrays.
+
+Environment variables: HURL_NO_JSONPATH_COERCION
 
 .IP "--parallel "
 
