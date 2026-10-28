@@ -92,8 +92,8 @@ jobs:
       - name: Update general docs
         run: |
           python3 bin/docs/build_man_md.py docs/manual/hurl.md > docs/manual.md
-          python3 bin/docs/build_readme.py github > README.md
-          python3 bin/docs/build_readme.py crates > packages/hurl/README.md
+          python3 bin/docs/build_readme.py github "${NEW_VERSION}" > README.md
+          python3 bin/docs/build_readme.py crates "${NEW_VERSION}" > packages/hurl/README.md
 
       - name: Init git bot context
         uses: crazy-max/ghaction-import-gpg@2dc316deee8e90f13e1a351ab510b4d5bc0c82cd #v7.0.0
