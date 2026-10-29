@@ -73,8 +73,6 @@ read -e -i "" -p "Hurl ${docker_build_tag} manifest sha256: " sha
 docker buildx imagetools create   -t ghcr.io/"${organisation}"/hurl:latest   ghcr.io/orange-opensource/hurl@"${sha}"
 ```
 
-## Build and push
-
 # Build amd64 image only
 
 ## Clone desired tag
