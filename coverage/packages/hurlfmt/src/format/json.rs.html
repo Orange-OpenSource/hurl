@@ -405,7 +405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    FilterValue, Hex, HurlFile, JsonListElement, JsonValue, KeyValue, MultilineString,</pre>
+                <pre class="has-background-white py-0 px-2">    FilterValue, Hex, HurlFile, JsonListElement, JsonValue, JsonValueKind, KeyValue,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -421,7 +421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    MultilineStringKind, MultipartParam, NaturalOption, OptionKind, Placeholder, Predicate,</pre>
+                <pre class="has-background-white py-0 px-2">    MultilineString, MultilineStringKind, MultipartParam, NaturalOption, OptionKind, Placeholder,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -437,7 +437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    PredicateFuncValue, PredicateValue, Query, QueryValue, Regex, RegexValue, Request, Response,</pre>
+                <pre class="has-background-white py-0 px-2">    Predicate, PredicateFuncValue, PredicateValue, Query, QueryValue, Regex, RegexValue, Request,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -453,7 +453,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    StatusValue, VersionValue,</pre>
+                <pre class="has-background-white py-0 px-2">    Response, StatusValue, VersionValue,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10069,7 +10069,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        match self {</pre>
+                <pre class="has-background-success-light py-0 px-2">        match &amp;self.kind() {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10085,7 +10085,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            JsonValue::Null =&gt; JValue::Null,</pre>
+                <pre class="has-background-success-light py-0 px-2">            JsonValueKind::Null =&gt; JValue::Null,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10101,7 +10101,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            JsonValue::Number(s) =&gt; JValue::Number(s.to_string()),</pre>
+                <pre class="has-background-success-light py-0 px-2">            JsonValueKind::Number(s) =&gt; JValue::Number(s.to_string()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10117,7 +10117,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            JsonValue::String(s) =&gt; JValue::String(s.to_string()),</pre>
+                <pre class="has-background-success-light py-0 px-2">            JsonValueKind::String(s) =&gt; JValue::String(s.to_string()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10133,7 +10133,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            JsonValue::Boolean(v) =&gt; JValue::Boolean(*v),</pre>
+                <pre class="has-background-success-light py-0 px-2">            JsonValueKind::Boolean(v) =&gt; JValue::Boolean(*v),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10149,7 +10149,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            JsonValue::List { elements, .. } =&gt; {</pre>
+                <pre class="has-background-success-light py-0 px-2">            JsonValueKind::List { elements, .. } =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10197,7 +10197,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            JsonValue::Object { elements, .. } =&gt; JValue::Object(</pre>
+                <pre class="has-background-success-light py-0 px-2">            JsonValueKind::Object { elements, .. } =&gt; JValue::Object(</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10293,7 +10293,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            JsonValue::Placeholder(exp) =&gt; JValue::String(format!(&quot;{{{{{exp}}}}}&quot;)),</pre>
+                <pre class="has-background-success-light py-0 px-2">            JsonValueKind::Placeholder(exp) =&gt; JValue::String(format!(&quot;{{{{{exp}}}}}&quot;)),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -16444,7 +16444,7 @@
         <footer class="footer">
             
                 <div class="content has-text-centered">
-                    <p class="heading">Date: 2026-10-29 17:32</p>
+                    <p class="heading">Date: 2026-10-30 10:16</p>
                 </div>
             
         </footer>
