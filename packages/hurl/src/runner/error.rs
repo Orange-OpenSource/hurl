@@ -25,7 +25,7 @@ use hurl_core::text::{Style, StyledString};
 
 use crate::http::HttpError;
 
-use super::diff::DiffHunk;
+use super::assert::diff::DiffHunk;
 
 /// Represents a single instance of a runtime error, usually triggered by running a
 /// [`hurl_core::ast::Entry`]. Running a Hurl content (see [`crate::runner::run`]) returns a list of
@@ -480,7 +480,7 @@ mod tests {
     use hurl_core::text::Format;
 
     use crate::http::HttpError;
-    use crate::runner::diff::diff;
+    use crate::runner::assert::diff::diff;
     use crate::runner::{RunnerError, RunnerErrorKind};
 
     #[test]

@@ -22,14 +22,19 @@ use crate::http;
 use crate::util::path::ContextDir;
 
 use super::cache::BodyCache;
-use super::diff::diff;
 use super::error::{RunnerError, RunnerErrorKind};
 use super::filter::{FilterOptions, eval_filters};
-use super::predicate::eval_predicate;
 use super::query::{QueryOptions, eval_query};
 use super::result::AssertResult;
 use super::value::Value;
 use super::variable::VariableSet;
+
+use self::diff::diff;
+use self::predicate::eval_predicate;
+
+pub(super) mod diff;
+mod predicate;
+mod predicate_value;
 
 impl AssertResult {
     /// Evaluates an assert and returns `None` if assert is succeeded or an `Error` if failed.

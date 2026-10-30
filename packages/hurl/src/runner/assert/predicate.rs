@@ -22,11 +22,11 @@ use hurl_core::reader::Pos;
 
 use crate::util::path::ContextDir;
 
-use super::error::{RunnerError, RunnerErrorKind};
-use super::number::Number;
+use super::super::error::{RunnerError, RunnerErrorKind};
+use super::super::number::Number;
+use super::super::value::{EvalError, Value};
+use super::super::variable::VariableSet;
 use super::predicate_value::{eval_predicate_value, eval_predicate_value_template};
-use super::value::{EvalError, Value};
-use super::variable::VariableSet;
 
 /// Evaluates a `predicate` against an actual `value`.
 ///
