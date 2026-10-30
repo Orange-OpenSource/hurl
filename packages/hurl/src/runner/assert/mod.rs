@@ -33,6 +33,8 @@ use self::diff::diff;
 use self::predicate::eval_predicate;
 
 pub(super) mod diff;
+#[allow(dead_code)]
+mod json_compare;
 mod predicate;
 mod predicate_value;
 
