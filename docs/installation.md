@@ -28,7 +28,7 @@ For Ubuntu >=22.04, Hurl can be installed from `ppa:lepapareil/hurl`
 ```shell
 $ VERSION=8.1.0
 $ sudo apt-add-repository -y ppa:lepapareil/hurl
-$ sudo apt install hurl="${VERSION}"*
+$ sudo apt install hurl="${VERSION}"
 ```
 
 #### Alpine

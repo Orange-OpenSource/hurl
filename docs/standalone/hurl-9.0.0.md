@@ -1,6 +1,6 @@
 # Hurl Documentation
 
-## Version 8.0.0 - 24-04-2026
+## Version 9.0.0 - 30-10-2026
 
 # Table of Contents
 
@@ -19,6 +19,7 @@
                 * [Alpine](#getting-started-installation-alpine)
                 * [Arch Linux / Manjaro](#getting-started-installation-arch-linux--manjaro)
                 * [NixOS / Nix](#getting-started-installation-nixos--nix)
+                * [Guix](#getting-started-installation-guix)
             * [macOS](#getting-started-installation-macos)
                 * [Homebrew](#getting-started-installation-homebrew)
                 * [MacPorts](#getting-started-installation-macports)
@@ -189,6 +190,7 @@
             * [RawBytes capture](#file-format-capturing-response-rawbytes-capture)
             * [XPath capture](#file-format-capturing-response-xpath-capture)
             * [JSONPath capture](#file-format-capturing-response-jsonpath-capture)
+                * [JSONPath coercion](#file-format-capturing-response-jsonpath-coercion)
             * [Regex capture](#file-format-capturing-response-regex-capture)
             * [SHA-256 capture](#file-format-capturing-response-sha-256-capture)
             * [MD5 capture](#file-format-capturing-response-md5-capture)
@@ -223,6 +225,7 @@
             * [RawBytes assert](#file-format-asserting-response-rawbytes-assert)
             * [XPath assert](#file-format-asserting-response-xpath-assert)
             * [JSONPath assert](#file-format-asserting-response-jsonpath-assert)
+                * [JSONPath coercion](#file-format-asserting-response-jsonpath-coercion)
             * [Regex assert](#file-format-asserting-response-regex-assert)
             * [SHA-256 assert](#file-format-asserting-response-sha-256-assert)
             * [MD5 assert](#file-format-asserting-response-md5-assert)
@@ -465,7 +468,7 @@ HTTP 200
 
 [Tutorial](https://hurl.dev/docs/tutorial/your-first-hurl-file.html)
 
-[Documentation](https://hurl.dev) 
+[Documentation](https://hurl.dev) (download [HTML](/docs/standalone/hurl-9.0.0.html), [PDF](/docs/standalone/hurl-9.0.0.pdf), [Markdown](/docs/standalone/hurl-9.0.0.md), [EPUB](/docs/standalone/hurl-9.0.0.epub)) 
 
 [GitHub](https://github.com/Orange-OpenSource/hurl)
 
@@ -485,7 +488,7 @@ Precompiled binary (depending on libc >=2.35) is available at [Hurl latest GitHu
 
 ```shell
 $ INSTALL_DIR=/tmp
-$ VERSION=8.0.0
+$ VERSION=8.1.0
 $ curl --silent --location https://github.com/Orange-OpenSource/hurl/releases/download/$VERSION/hurl-$VERSION-x86_64-unknown-linux-gnu.tar.gz | tar xvz -C $INSTALL_DIR
 $ export PATH=$INSTALL_DIR/hurl-$VERSION-x86_64-unknown-linux-gnu/bin:$PATH
 ```
@@ -495,7 +498,7 @@ $ export PATH=$INSTALL_DIR/hurl-$VERSION-x86_64-unknown-linux-gnu/bin:$PATH
 For Debian >=12 / Ubuntu 22.04 and 24.04, Hurl can be installed using a binary .deb file provided in each Hurl release.
 
 ```shell
-$ VERSION=8.0.0
+$ VERSION=8.1.0
 $ curl --location --remote-name https://github.com/Orange-OpenSource/hurl/releases/download/$VERSION/hurl_${VERSION}_amd64.deb
 $ sudo apt update && sudo apt install ./hurl_${VERSION}_amd64.deb
 ```
@@ -503,9 +506,9 @@ $ sudo apt update && sudo apt install ./hurl_${VERSION}_amd64.deb
 For Ubuntu >=22.04, Hurl can be installed from `ppa:lepapareil/hurl`
 
 ```shell
-$ VERSION=8.0.0
+$ VERSION=8.1.0
 $ sudo apt-add-repository -y ppa:lepapareil/hurl
-$ sudo apt install hurl="${VERSION}"*
+$ sudo apt install hurl="${VERSION}"
 ```
 
 ##### Alpine {#getting-started-installation-alpine}
@@ -527,6 +530,12 @@ $ pacman -Sy hurl
 ##### NixOS / Nix {#getting-started-installation-nixos--nix}
 
 [NixOS / Nix package](https://search.nixos.org/packages?from=0&size=1&sort=relevance&type=packages&query=hurl) is available on stable channel.
+
+##### Guix {#getting-started-installation-guix}
+
+```shell
+$ guix install hurl
+```
 
 #### macOS {#getting-started-installation-macos}
 
@@ -619,25 +628,25 @@ Hurl depends on libssl, libcurl and libxml2 native libraries. You will need thei
 ##### Debian based distributions {#getting-started-installation-debian-based-distributions}
 
 ```shell
-$ apt install -y build-essential pkg-config libssl-dev libcurl4-openssl-dev libxml2-dev libclang-dev
+$ apt install build-essential pkg-config libssl-dev libcurl4-openssl-dev libxml2-dev libclang-dev
 ```
 
 ##### Fedora based distributions {#getting-started-installation-fedora-based-distributions}
 
 ```shell
-$ dnf install -y pkgconf-pkg-config gcc openssl-devel libxml2-devel clang-devel
+$ dnf install pkgconf-pkg-config gcc openssl-devel libxml2-devel clang-devel
 ```
 
 ##### Red Hat based distributions {#getting-started-installation-red-hat-based-distributions}
 
 ```shell
-$ yum install -y pkg-config gcc openssl-devel libxml2-devel clang-devel
+$ yum install pkg-config gcc openssl-devel libxml2-devel clang-devel
 ```
 
 ##### Arch based distributions {#getting-started-installation-arch-based-distributions}
 
 ```shell
-$ pacman -S --noconfirm pkgconf gcc glibc openssl libxml2 clang
+$ pacman -S pkgconf gcc glibc openssl libxml2 clang
 ```
 
 ##### Alpine based distributions {#getting-started-installation-alpine-based-distributions}
@@ -650,7 +659,7 @@ $ apk add curl-dev gcc libxml2-dev musl-dev openssl-dev clang-dev
 
 ```shell
 $ xcode-select --install
-$ brew install pkg-config
+$ brew install pkg-config openssl
 ```
 
 Hurl is written in [Rust](https://www.rust-lang.org). You should [install](https://www.rust-lang.org/tools/install) the latest stable release.
@@ -805,8 +814,8 @@ More information on asserts can be found here [https://hurl.dev/docs/asserting-r
 
 Options that exist in curl have exactly the same semantics.
 
-Options specified on the command line are defined for every Hurl file's entry,
-except if they are tagged as cli-only (can not be defined in the Hurl request `[Options]` entry)
+Options specified on the command line are defined for every Hurl file's entry, except if they are tagged as cli-only 
+(can not be defined in the Hurl request `[Options]` entry)
 
 For instance:
 
@@ -828,11 +837,24 @@ HTTP 200
 
 will follow a redirection only for the second entry.
 
-Most of the options can also be defined with environment variables (like `HURL_INSECURE` for [`--insecure`](#getting-started-manual-insecure)). So, in order
-to configure Hurl, there are three sources from the lowest priority (most easily overridden) to highest (overrides all others):
+Hurl looks also for a configuration file at the following places `$XDG_CONFIG_HOME/hurl/config` if `$XDG_CONFIG_HOME` exists,
+or `$HOME/.config/hurl/config`. The configuration file is a list of options added to each Hurl run.
 
-- Environment variables (ex: `HURL_INSECURE`)
-- Command-line options (ex: `--insecure`)
+```shell
+$ cat ~/.config/hurl/config
+# Hurl config file
+--header x-identifier:quux
+--verbose
+--delay=1s
+--fail-with-body
+```
+
+Most of the options can also be defined with environment variables (like `HURL_INSECURE` for [`--insecure`](#getting-started-manual-insecure)). So, in order
+to configure Hurl, there are four sources from the lowest priority to highest (overrides all others):
+
+- Configuration file (ex: `~/.config/hurl/config`)
+- Environment variables (ex: `export HURL_INSECURE=true`)
+- Command-line options (ex: `hurl --insecure`)
 - Options section options (ex: `insecure: true` in file)
 
 ### All Options {#getting-started-manual-all-options}
@@ -852,6 +874,7 @@ to configure Hurl, there are three sources from the lowest priority (most easily
 | <a href="#getting-started-manual-http10" id="getting-started-manual-http10"><code>-0, --http1.0</code></a>                                                      | Tells Hurl to use HTTP version 1.0 instead of using its internally preferred HTTP version.<br><br>Environment variables: HURL_HTTP10<br>                                                                                                                                                                                                                                                                                                             |
 | <a href="#getting-started-manual-http11" id="getting-started-manual-http11"><code>--http1.1</code></a>                                                          | Tells Hurl to use HTTP version 1.1.<br><br>Environment variables: HURL_HTTP11<br>                                                                                                                                                                                                                                                                                                                                                                    |
 | <a href="#getting-started-manual-http2" id="getting-started-manual-http2"><code>--http2</code></a>                                                              | Tells Hurl to use HTTP version 2.<br>For HTTPS, this means Hurl negotiates HTTP/2 in the TLS handshake. Hurl does this by default.<br>For HTTP, this means Hurl attempts to upgrade the request to HTTP/2 using the Upgrade: request header.<br><br>Environment variables: HURL_HTTP2<br>                                                                                                                                                            |
+| <a href="#getting-started-manual-http2-prior-knowledge" id="getting-started-manual-http2-prior-knowledge"><code>--http2-prior-knowledge</code></a>              | Tells Hurl to issue a non-TLS HTTP request using HTTP/2 directly without HTTP/1.1 Upgrade. It requires prior knowledge that the server supports HTTP/2 straight away. HTTPS requests still do HTTP/2 the standard way with negotiated protocol versions in the TLS handshake.<br><br>Environment variables: HURL_HTTP2_PRIOR_KNOWLEDGE<br>                                                                                                           |
 | <a href="#getting-started-manual-http3" id="getting-started-manual-http3"><code>--http3</code></a>                                                              | Tells Hurl to try HTTP version 3 to the host in the URL, but fallback to earlier HTTP versions if the HTTP/3 connection establishment fails. HTTP/3 is only available for HTTPS and not for HTTP URLs.<br><br>Environment variables: HURL_HTTP3<br>                                                                                                                                                                                                  |
 | <a href="#getting-started-manual-insecure" id="getting-started-manual-insecure"><code>-k, --insecure</code></a>                                                 | This option explicitly allows Hurl to perform "insecure" SSL connections and transfers.<br><br>Environment variables: HURL_INSECURE<br>                                                                                                                                                                                                                                                                                                              |
 | <a href="#getting-started-manual-ipv4" id="getting-started-manual-ipv4"><code>-4, --ipv4</code></a>                                                             | This option tells Hurl to use IPv4 addresses only when resolving host names, and not for example try IPv6.<br><br>Environment variables: HURL_IPV4<br>                                                                                                                                                                                                                                                                                               |
@@ -865,13 +888,17 @@ to configure Hurl, there are three sources from the lowest priority (most easily
 | <a href="#getting-started-manual-max-time" id="getting-started-manual-max-time"><code>-m, --max-time &lt;SECONDS&gt;</code></a>                                 | Maximum time in seconds that you allow a request/response to take. This is the standard timeout.<br><br>You can specify time units in the maximum time expression. Set Hurl to use a maximum time of 20 seconds with `--max-time 20s` or set it to 35,000 milliseconds with `--max-time 35000ms`. No spaces allowed.<br><br>See also [`--connect-timeout`](#getting-started-manual-connect-timeout).<br><br>Environment variables: HURL_MAX_TIME<br> |
 | <a href="#getting-started-manual-negotiate" id="getting-started-manual-negotiate"><code>--negotiate</code></a>                                                  | Tell Hurl to use Negotiate (SPNEGO) authentication.<br>                                                                                                                                                                                                                                                                                                                                                                                              |
 | <a href="#getting-started-manual-no-cookie-store" id="getting-started-manual-no-cookie-store"><code>--no-cookie-store</code></a>                                | Do not use cookie storage for requests/responses in a file. By default, requests in the same Hurl file share cookie storage, this option deactivates cookie engine.<br><br>Environment variables: HURL_NO_COOKIE_STORE<br><br>This is a cli-only option.<br>                                                                                                                                                                                         |
-| <a href="#getting-started-manual-no-proxy" id="getting-started-manual-no-proxy"><code>--no-proxy &lt;HOST(S)&gt;</code></a>                                     | Comma-separated list of hosts which do not use a proxy.<br><br>Environment variables: no_proxy<br>                                                                                                                                                                                                                                                                                                                                                   |
+| <a href="#getting-started-manual-no-header" id="getting-started-manual-no-header"><code>--no-header &lt;NAME&gt;</code></a>                                     | Remove a header from information sent. Can be used several times in a command.<br><br>Environment variables: HURL_NO_HEADER='name1&#124;name2' (names are separated by &#124;)<br>                                                                                                                                                                                                                                                                   |
+| <a href="#getting-started-manual-no-proxy" id="getting-started-manual-no-proxy"><code>--no-proxy &lt;HOST(S)&gt;</code></a>                                     | Comma-separated list of hosts which do not use a proxy.<br><br>Environment variables: no_proxy<br><br>This is a cli-only option.<br>                                                                                                                                                                                                                                                                                                                 |
 | <a href="#getting-started-manual-ntlm" id="getting-started-manual-ntlm"><code>--ntlm</code></a>                                                                 | Tell Hurl to use NTLM authentication<br>                                                                                                                                                                                                                                                                                                                                                                                                             |
 | <a href="#getting-started-manual-path-as-is" id="getting-started-manual-path-as-is"><code>--path-as-is</code></a>                                               | Tell Hurl to not handle sequences of /../ or /./ in the given URL path. Normally Hurl will squash or merge them according to standards but with this option set you tell it not to do that.<br>                                                                                                                                                                                                                                                      |
 | <a href="#getting-started-manual-pinnedpubkey" id="getting-started-manual-pinnedpubkey"><code>--pinnedpubkey &lt;HASHES&gt;</code></a>                          | When negotiating a TLS or SSL connection, the server sends a certificate indicating its identity. A public key is extracted from this certificate and if it does not exactly match the public key provided to this option, Hurl aborts the connection before sending or receiving any data.<br>                                                                                                                                                      |
 | <a href="#getting-started-manual-proxy" id="getting-started-manual-proxy"><code>-x, --proxy &lt;[PROTOCOL://]HOST[:PORT]&gt;</code></a>                         | Use the specified proxy.<br><br>Environment variables: http_proxy https_proxy all_proxy<br>                                                                                                                                                                                                                                                                                                                                                          |
+| <a href="#getting-started-manual-proxy-header" id="getting-started-manual-proxy-header"><code>--proxy-header &lt;HEADER&gt;</code></a>                          | Extra header to include in the request when sending to a proxy. These headers are only applied when a proxy is involved; if Hurl connects directly to the target server, they are ignored.<br><br>Environment variables: HURL_PROXY_HEADER='name1:value1&#124;name2:value2' (headers are separated by &#124;)<br><br>This is a cli-only option.<br>                                                                                                  |
 | <a href="#getting-started-manual-resolve" id="getting-started-manual-resolve"><code>--resolve &lt;HOST:PORT:ADDR&gt;</code></a>                                 | Provide a custom address for a specific host and port pair. Using this, you can make the Hurl requests(s) use a specified address and prevent the otherwise normally resolved address to be used. Consider it a sort of /etc/hosts alternative provided on the command line.<br>                                                                                                                                                                     |
 | <a href="#getting-started-manual-ssl-no-revoke" id="getting-started-manual-ssl-no-revoke"><code>--ssl-no-revoke</code></a>                                      | (Windows) This option tells Hurl to disable certificate revocation checks. WARNING: this option loosens the SSL security, and by using this flag you ask for exactly that.<br><br>This is a cli-only option.<br>                                                                                                                                                                                                                                     |
+| <a href="#getting-started-manual-tls-max" id="getting-started-manual-tls-max"><code>--tls-max &lt;VERSION&gt;</code></a>                                        | Set the maximum allowed TLS version. If the connection is done without TLS, this option has no effect. This includes QUIC-using (HTTP/3) transfers.<br><br>default   Use up to the recommended TLS version.<br>1.0       Use up to TLSv1.0.<br>1.1       Use up to TLSv1.1.<br>1.2       Use up to TLSv1.2.<br>1.3       Use up to TLSv1.3.<br><br>Environment variables: HURL_TLS_MAX<br>                                                           |
+| <a href="#getting-started-manual-tls-min" id="getting-started-manual-tls-min"><code>--tls-min &lt;VERSION&gt;</code></a>                                        | Set the minimum allowed TLS version. If the connection is done without TLS, this option has no effect. This includes QUIC-using (HTTP/3) transfers.<br><br>default   Use down to the recommended TLS version.<br>1.0       Use down to TLSv1.0.<br>1.1       Use down to TLSv1.1.<br>1.2       Use down to TLSv1.2.<br>1.3       Use down to TLSv1.3.<br><br>Environment variables: HURL_TLS_MIN<br>                                                 |
 | <a href="#getting-started-manual-unix-socket" id="getting-started-manual-unix-socket"><code>--unix-socket &lt;PATH&gt;</code></a>                               | (HTTP) Connect through this Unix domain socket, instead of using the network.<br>                                                                                                                                                                                                                                                                                                                                                                    |
 | <a href="#getting-started-manual-user" id="getting-started-manual-user"><code>-u, --user &lt;USER:PASSWORD&gt;</code></a>                                       | Add basic Authentication header to each request.<br><br>Environment variables: HURL_USER<br>                                                                                                                                                                                                                                                                                                                                                         |
 | <a href="#getting-started-manual-user-agent" id="getting-started-manual-user-agent"><code>-A, --user-agent &lt;NAME&gt;</code></a>                              | Specify the User-Agent string to send to the HTTP server.<br><br>Environment variables: HURL_USER_AGENT<br><br>This is a cli-only option.<br>                                                                                                                                                                                                                                                                                                        |
@@ -883,6 +910,7 @@ to configure Hurl, there are three sources from the lowest priority (most easily
 | <a href="#getting-started-manual-color" id="getting-started-manual-color"><code>--color</code></a>                                     | Colorize standard output and standard error.<br><br>By default, Hurl outputs a prettified and colorized response. When redirected through pipes, standard streams are not colorized and color can be forced with this option.<br><br>Environment variables: HURL_COLOR<br><br>This is a cli-only option.<br>                                                                                                                                                                          |
 | <a href="#getting-started-manual-curl" id="getting-started-manual-curl"><code>--curl &lt;FILE&gt;</code></a>                           | Export each request to a list of curl commands.<br><br>This is a cli-only option.<br>                                                                                                                                                                                                                                                                                                                                                                                                 |
 | <a href="#getting-started-manual-error-format" id="getting-started-manual-error-format"><code>--error-format &lt;FORMAT&gt;</code></a> | Control the format of error message (short by default or long).  When using long, the response body is logged when there are errors.<br><br>Environment variables: HURL_ERROR_FORMAT<br><br>This is a cli-only option.<br>                                                                                                                                                                                                                                                            |
+| <a href="#getting-started-manual-fail-with-body" id="getting-started-manual-fail-with-body"><code>--fail-with-body</code></a>          | Output body response on standard output if there are any errors. By default, Hurl outputs the last body response on standard output only when a run is successful.<br><br>Environment variables: HURL_FAIL_WITH_BODY<br>                                                                                                                                                                                                                                                              |
 | <a href="#getting-started-manual-include" id="getting-started-manual-include"><code>-i, --include</code></a>                           | Include the HTTP headers in the output<br><br>This is a cli-only option.<br>                                                                                                                                                                                                                                                                                                                                                                                                          |
 | <a href="#getting-started-manual-json" id="getting-started-manual-json"><code>--json</code></a>                                        | Output each Hurl file result to JSON. The format is very closed to HAR format.<br><br>This is a cli-only option.<br>                                                                                                                                                                                                                                                                                                                                                                  |
 | <a href="#getting-started-manual-no-color" id="getting-started-manual-no-color"><code>--no-color</code></a>                            | Do not colorize standard output nor standard error.<br><br>Environment variables: HURL_NO_COLOR NO_COLOR<br><br>This is a cli-only option.<br>                                                                                                                                                                                                                                                                                                                                        |
@@ -904,6 +932,7 @@ to configure Hurl, there are three sources from the lowest priority (most easily
 | <a href="#getting-started-manual-from-entry" id="getting-started-manual-from-entry"><code>--from-entry &lt;ENTRY_NUMBER&gt;</code></a>             | Execute Hurl file from ENTRY_NUMBER (starting at 1).<br><br>This is a cli-only option.<br>                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | <a href="#getting-started-manual-jobs" id="getting-started-manual-jobs"><code>--jobs &lt;NUM&gt;</code></a>                                        | Maximum number of parallel jobs in parallel mode. Default value corresponds (in most cases) to the current amount of CPUs. Set to 1 to disable parallel execution of files.<br><br>See also [`--parallel`](#getting-started-manual-parallel).<br><br>Environment variables: HURL_JOBS<br><br>This is a cli-only option.<br>                                                                                                                                                                                                         |
 | <a href="#getting-started-manual-no-assert" id="getting-started-manual-no-assert"><code>--no-assert</code></a>                                     | Ignore all asserts defined in the Hurl file.<br><br>Environment variables: HURL_NO_ASSERT<br><br>This is a cli-only option.<br>                                                                                                                                                                                                                                                                                                                                                                                                     |
+| <a href="#getting-started-manual-no-jsonpath-coercion" id="getting-started-manual-no-jsonpath-coercion"><code>--no-jsonpath-coercion</code></a>    | Disable JSONPath result coercion.<br><br>By default, when JSONPath coercion is enabled, empty JSONPath results are returned as no value and single JSONPath results are returned as a scalar value. With this option, JSONPath results are always returned as arrays.<br><br>Environment variables: HURL_NO_JSONPATH_COERCION<br>                                                                                                                                                                                                   |
 | <a href="#getting-started-manual-parallel" id="getting-started-manual-parallel"><code>--parallel</code></a>                                        | Run files in parallel.<br><br>Each Hurl file is executed in its own worker thread, without sharing anything with the other workers. The default run mode is sequential. Parallel execution is by default in [`--test`](#getting-started-manual-test) mode.<br><br>See also [`--jobs`](#getting-started-manual-jobs).<br><br>This is a cli-only option.<br>                                                                                                                                                                          |
 | <a href="#getting-started-manual-repeat" id="getting-started-manual-repeat"><code>--repeat &lt;NUM&gt;</code></a>                                  | Repeat the input files sequence NUM times, -1 for infinite loop. Given a.hurl, b.hurl, c.hurl as input, repeat two<br>times will run a.hurl, b.hurl, c.hurl, a.hurl, b.hurl, c.hurl.<br>                                                                                                                                                                                                                                                                                                                                            |
 | <a href="#getting-started-manual-retry" id="getting-started-manual-retry"><code>--retry &lt;NUM&gt;</code></a>                                     | Maximum number of retries, 0 for no retries, -1 for unlimited retries. Retry happens if any error occurs (asserts, captures, runtimes etc...).<br><br>Environment variables: HURL_RETRY<br>                                                                                                                                                                                                                                                                                                                                         |
@@ -983,12 +1012,12 @@ $ hurl --test sample.hurl
 A particular response can be saved with [`[Options] section`](#file-format-request-options):
 
 ```hurl
-GET https://example.ord/cats/123
+GET https://example.org/cats/123
 [Options]
 output: cat123.txt    # use - to output to stdout
 HTTP 200
 
-GET https://example.ord/dogs/567
+GET https://example.org/dogs/567
 HTTP 200
 ```
 
@@ -1283,7 +1312,7 @@ variables {
 
 GraphQL queries can also use [Hurl templates](#file-format-templates).
 
-[Doc](#file-format-request-graphql-body)
+[Doc](#file-format-request-graphql-query)
 
 #### Using Dynamic Datas {#getting-started-samples-using-dynamic-datas}
 
@@ -1470,6 +1499,7 @@ certificate "Expire-Date" daysAfterNow > 15
 certificate "Serial-Number" matches /[\da-f]+/
 certificate "Subject-Alt-Name" contains "DNS:example.org"
 certificate "Subject-Alt-Name" split "," count == 2
+certificate "Value" startsWith "-----BEGIN CERTIFICATE-----"
 ```
 
 [Doc](#file-format-asserting-response-ssl-certificate-assert)
@@ -2127,7 +2157,7 @@ Failed files:      1 (50.0%)
 Duration:          11 ms
 ```
 
-Individual requests can be modified with [`[Options]` section][options](#file-format-request-options) to turn on logs for a particular request, using
+Individual requests can be modified with [`[Options]` section](#file-format-request-options) to turn on logs for a particular request, using
 [`verbose`](#getting-started-manual-verbose) and [`very-verbose`](#getting-started-manual-very-verbose) option. 
 
 With this Hurl file:
@@ -2320,6 +2350,9 @@ To use variables in your tests, you can:
 - use [`--variable` option](#getting-started-manual-variable)
 - use [`--variables-file` option](#getting-started-manual-variables-file)
 - define environment variables, for instance `HURL_VARIABLE_foo=bar`
+- define variables in an [`[Options]` section](#file-format-request-options)
+- define variables in [Hurl configuration file](#getting-started-manual-configuration)
+
 
 You will find a detailed description in the [Injecting Variables](#file-format-templates-injecting-variables) section of the docs.
 
@@ -2706,7 +2739,7 @@ every entry of a given file will follow redirection:
 $ hurl --location foo.hurl
 ```
 
-You can use an [`[Options]` section][options](#file-format-request-options) to set option only for a specified request. For instance, in this Hurl file,
+You can use an [`[Options]` section](#file-format-request-options) to set option only for a specified request. For instance, in this Hurl file,
 the second entry will follow location (so we can test the status code to be 200 instead of 301).
 
 ```hurl
@@ -2722,7 +2755,7 @@ GET https://google.fr
 HTTP 301
 ```
 
-You can use the `[Options](#getting-started-manual-options)` section to log a specific entry:
+You can use the `[Options]` section to log a specific entry:
 
 ```hurl
 # ... previous entries
@@ -2734,6 +2767,15 @@ HTTP 200
 
 # ... next entries
 ```
+
+Most of the options can also be defined with environment variables (like `HURL_INSECURE` for `--insecure`) or used in 
+[Hurl configuration file](#getting-started-manual-configuration). So, in order to configure Hurl, there are four sources from the lowest priority to highest (overrides all others):
+
+- Configuration file (ex: `~/.config/hurl/config`)
+- Environment variables (ex: `export HURL_INSECURE=true`)
+- Command-line options (ex: `hurl --insecure`)
+- Options section options (ex: `insecure: true` in file)
+
 
 #### Cookie storage {#file-format-entry-cookie-storage}
 
@@ -2766,7 +2808,7 @@ GET https://example.org
 HTTP 200
 ```
 
-Finally, you can force redirection on a particular request with an [`[Options]` section][options](#file-format-request-options) and the [`--location`](#getting-started-manual-location) 
+Finally, you can force redirection on a particular request with an [`[Options]` section](#file-format-request-options) and the [`--location`](#getting-started-manual-location) 
 / [`--location-trusted`](#getting-started-manual-location-trusted) options:
 
 ```hurl
@@ -2824,10 +2866,10 @@ url == "https://example.org/step3"
 #### Retry {#file-format-entry-retry}
 
 Every entry can be retried upon asserts, captures or runtime errors. Retries allow polling scenarios and effective runs 
-under flaky conditions. Asserts can be explicit (with an [`[Asserts]` section][asserts](#file-format-response-asserts)), or implicit (like [headers](#file-format-response-headers) or [status code](#file-format-response-version-status)).
+under flaky conditions. Asserts can be explicit (with an [`[Asserts]` section](#file-format-response-asserts), or implicit (like [headers](#file-format-response-headers) or [status code](#file-format-response-version-status)).
 
 Retries can be set globally for every request (see [`--retry`](#getting-started-manual-retry) and [`--retry-interval`](#getting-started-manual-retry-interval)), 
-or activated on a particular request with an [`[Options]` section][options](#file-format-request-options).
+or activated on a particular request with an [`[Options]` section](#file-format-request-options).
 
 For example, in this Hurl file, first we create a new job then we poll the new job until it's completed:
 
@@ -2853,7 +2895,7 @@ jsonpath "$.state" == "COMPLETED"
 
 #### Control flow {#file-format-entry-control-flow}
 
-In `[Options](#getting-started-manual-options)` section, `skip` and `repeat` can be used to control flow of execution:
+In `[Options]` section, `skip` and `repeat` can be used to control flow of execution:
 
 - `skip: true/false` skip this request and execute the next one unconditionally,
 - `repeat: N` loop the request N times. If there are assert or runtime errors, the requests execution is stopped.
@@ -3106,36 +3148,58 @@ to the command line), while other requests are unaffected.
 GET https://example.org
 # An options section, each option is optional and applied only to this request...
 [Options]
-aws-sigv4: aws:amz:sts     # generate AWS SigV4 Authorization header
-cacert: /etc/cert.pem      # custom certificate file
-cert: /etc/client-cert.pem # client authentication certificate
-key: /etc/client-cert.key  # client authentication certificate key
-compressed: true           # request a compressed response
-connect-timeout: 20s       # connect timeout
-delay: 3s                  # delay for this request (aka sleep)
-http3: true                # use HTTP/3 protocol version
-insecure: true             # allow insecure SSL connections and transfers
-ipv6: true                 # use IPv6 addresses
-limit-rate: 32000          # limit this request to the specidied speed (bytes/s)
-location: true             # follow redirection for this request
-max-redirs: 10             # maximum number of redirections
-max-time: 30s              # maximum time for a request/response
-output: out.html           # dump the response to this file
-path-as-is: true           # do not handle sequences of /../ or /./ in URL path
-retry: 10                  # number of retry if HTTP/asserts errors
-retry-interval: 500ms      # interval between retry
-skip: false                # skip this request
-unix-socket: sock          # use Unix socket for transfer
-user: bob:secret           # use basic authentication
-proxy: my.proxy:8012       # define proxy (host:port where host can be an IP address)
-variable: country=Italy    # define variable country
-variable: planet=Earth     # define variable planet
-verbose: true              # allow verbose output
-very-verbose: true         # allow more verbose output    
+aws-sigv4: aws:amz:sts          # generate AWS SigV4 Authorization header
+cacert: /etc/cert.pem           # custom certificate file
+cert: /etc/client-cert.pem      # client authentication certificate
+compressed: true                # request a compressed response
+connect-timeout: 20s            # connect timeout
+delay: 3s                       # delay for this request (aka sleep)
+digest: true                    # use HTTP digest authentication
+fail-with-body: true            # Output HTTP response even if there are assert errors
+header: foo:bar                 # add a HTTP request for this request
+http1.0: true                   # use HTTP/1.0 protocol version
+http1.1: true                   # use HTTP/1.1 protocol version
+http2: true                     # use HTTP/2 protocol version
+http2-prior-knowledge: true     # use HTTP/2 protocol version (without HTTP/1.1 Upgrade)
+http3: true                     # use HTTP/3 protocol version
+insecure: true                  # allow insecure SSL connections and transfers
+ipv4: true                      # use IPv4 addresses
+ipv6: true                      # use IPv6 addresses
+key: /etc/client-cert.key       # client authentication certificate key
+limit-rate: 32000               # limit this request to the specified speed (bytes/s)
+location: true                  # follow redirection for this request 
+location-trusted: true          # follow redirection for this request (no credential host filter)
+max-redirs: 10                  # maximum number of redirections
+max-time: 30s                   # maximum time for a request/response
+negotiate: true                 # use Negotiate (SPNEGO) authentication
+netrc: true                     # must read .netrc for username and password
+netrc-file: foo.netrc           # specify .netrc file
+netrc-optional: false           # make .netrc usage optional
+no-header: Accept               # header name to remove from the request
+no-jsonpath-coercion: true      # disable JSONPath result coercion for this request
+ntlm: true                      # use NTLM authentication
+output: out.html                # dump the response to this file
+path-as-is: true                # do not handle sequences of /../ or /./ in URL path
+pinnedpubkey: key.pem           # public key
+proxy: my.proxy:8012            # define proxy (host:port where host can be an IP address)
+repeat: 10                      # repeat the request
+resolve: foo.com:8000:127.0.0.1 # custom address by hosts
+retry: 10                       # number of retry if HTTP/asserts errors
+retry-interval: 500ms           # interval between retry
+skip: false                     # skip this request
+tls-max: 1.2                    # maximum TLS version
+tls-min: 1.0                    # minimum TLS version
+unix-socket: sock               # use Unix socket for transfer
+user: bob:secret                # use basic authentication
+variable: country=Italy         # define variable country
+variable: planet=Earth          # define variable planet
+verbosity: brief                # allow brief verbose
+verbose: true                   # allow verbose output
+very-verbose: true              # allow more verbose output    
 ```
 
-> Variable defined in an `[Options]` section are defined also for the next entries. This is
-> the exception, all other options are defined only for the current request.
+> Variables defined in an `[Options]` section are defined also for the next entries. This is the
+> exception, all other options are defined only for the current request.
 
 #### Query parameters {#file-format-request-query-parameters}
 
@@ -3768,14 +3832,14 @@ X-CSRF-TOKEN: {{csrf_token}}
 HTTP 302
 ```
 
-Body responses can be encoded by server (see [`Content-Encoding` HTTP header]) but captures in Hurl files are not
+Body responses can be encoded by server (see [`Content-Encoding` HTTP header][content-encoding](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding)) but captures in Hurl files are not
 affected by this content compression. All body captures (`body`, `bytes`, `sha256` etc...) except `rawbytes` work _after_ content decoding.
 
-Finally, body text captures (`body`, `jsonpath`, `xpath` etc...) are also decoded to strings based on [`Content-Type` header]
+Finally, body text captures (`body`, `jsonpath`, `xpath` etc...) are also decoded to strings based on [`Content-Type` header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type)
 so these queries can be captures as usual strings.
 
 
-Structure of a capture:
+__Structure of a capture:__
 
 <div class="schema-container schema-container u-font-size-2 u-font-size-3-sm">
  <div class="schema">
@@ -3803,6 +3867,7 @@ A query can extract data from
 - body:
   - [`body`](#file-format-capturing-response-body-capture)
   - [`bytes`](#file-format-capturing-response-bytes-capture)
+  - [`rawbytes`](#file-format-capturing-response-bytes-capture)
   - [`xpath`](#file-format-capturing-response-xpath-capture)
   - [`jsonpath`](#file-format-capturing-response-jsonpath-capture)
   - [`regex`](#file-format-capturing-response-regex-capture)
@@ -3911,7 +3976,7 @@ bytes.
 GET https://example.org/cn
 HTTP 200
 [Captures]
-my_body: bytes decode "gb2312"
+my_body: bytes charsetDecode "gb2312"
 ```
 
 `body` capture works _after_ content encoding decompression (so the captured value is not affected by `Content-Encoding` response header).
@@ -3979,12 +4044,12 @@ XPath expression can also be evaluated against part of the body with a [`xpath` 
 GET https://example.org/home_cn
 HTTP 200
 [Captures]
-pet-id: bytes decode "gb2312" xpath "normalize-space(//div[@id='pet0'])"
+pet-id: bytes charsetDecode "gb2312" xpath "normalize-space(//div[@id='pet0'])"
 ```
 
 #### JSONPath capture {#file-format-capturing-response-jsonpath-capture}
 
-Capture a [JSONPath](https://goessner.net/articles/JsonPath/) query from the received HTTP body.
+Capture a [JSONPath](https://www.rfc-editor.org/info/rfc9535/) query from the received HTTP body.
 
 ```hurl
 POST https://example.org/api/contact
@@ -3996,7 +4061,7 @@ HTTP 200
 contact-id: jsonpath "$['id']"
 ```
 
-> Explain that the value selected by the JSONPath is coerced to a string when only one node is selected.
+> By default, Hurl applies [coercion to the JSONPath](#file-format-capturing-response-jsonpath-coercion) query results.
 
 As with [XPath captures](#file-format-capturing-response-xpath-capture), JSONPath captures can be anything from string, number, to object and collections.
 For instance, if we have a JSON endpoint that returns the following JSON:
@@ -4034,6 +4099,49 @@ a_bool:     jsonpath "$['a_bool']"
 a_string:   jsonpath "$['a_string']"
 all:        jsonpath "$"
 ```
+
+##### JSONPath coercion {#file-format-capturing-response-jsonpath-coercion}
+
+Hurl's JSONPath implementation respects [RFC 9535: JSONPATH: Query Expression for JSON](https://www.rfc-editor.org/info/rfc9535/) specification. In RFC 9535, every
+query result always returns a list. To facilitate JSONPath query usage, Hurl coerces lists that return a single value to this value.
+
+Let's say with have this JSON:
+
+```json
+{
+  "fruits": [
+    "Apple", "Lemon", "Strawberry"
+  ]
+}
+```
+
+By the spec, the JSONPath query `$.fruits[0]` should return a list of one element `["Apple"]`. As the result list has only 
+one single element, Hurl JSONPath query returns the string "Apple". So we're able to write this Hurl file:
+
+```hurl
+GET https://example.org/captures-json
+HTTP 200
+[Captures]
+# an_apple is a string due to Hurl's coercion
+an_apple: jsonpath "$.fruits[0]"
+```
+
+If you don't want JSONPath coercion applied to query results, you can use [`--no-jsonpath-coercion` option](#getting-started-manual-no-jsonpath-coercion), either in
+[Hurl configuration file](#getting-started-manual-configuration), in Hurl command line or using the env variable `HURL_NO_JSONPATH_COERCION=true`. This way, JSONPath
+query always returns list:
+
+```hurl
+GET https://example.org/captures-json
+[Options]
+no-jsonpath-coercion: true
+HTTP 200
+[Captures]
+# an_apple_list is a list
+an_apple_list: jsonpath "$.fruits[0]"
+# We can still get our element
+an_apple: jsonpath "$.fruits[0]" nth 0
+```
+
 
 #### Regex capture {#file-format-capturing-response-regex-capture}
 
@@ -4093,7 +4201,7 @@ affected by `Content-Encoding` response header)
 
 #### URL capture {#file-format-capturing-response-url-capture}
 
-Capture the last fetched URL. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]` section][options](#file-format-request-options) or
+Capture the last fetched URL. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]` section](#file-format-request-options) or
 [`--location` option](#getting-started-manual-location)). URL capture consists of a variable name, followed by a `:`, and the keyword `url`.
 
 ```hurl
@@ -4107,7 +4215,7 @@ landing_url: url
 
 #### Redirects capture {#file-format-capturing-response-redirects-capture}
 
-Capture each step of redirection. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]`section][options](#file-format-request-options) or
+Capture each step of redirection. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]`section](#file-format-request-options) or
 [`--location` option](#getting-started-manual-location)). Redirects capture consists of a variable name, followed by a `:`, and the keyword `redirects`.
 Redirects query returns a collection so each step of the redirection can be capture.
 
@@ -4162,7 +4270,8 @@ duration_in_ms: duration
 
 Capture the SSL certificate properties. Certificate capture consists of the keyword `certificate`, followed by the certificate attribute value.
 
-The following attributes are supported: `Subject`, `Issuer`, `Start-Date`, `Expire-Date` and `Serial-Number`.
+The following attributes are supported: `Subject`, `Issuer`, `Start-Date`, `Expire-Date`, `Serial-Number`,
+`Subject-Alt-Name` and `Value`.
 
 ```hurl
 GET https://example.org
@@ -4172,6 +4281,8 @@ cert_subject: certificate "Subject"
 cert_issuer: certificate "Issuer"
 cert_expire_date: certificate "Expire-Date"
 cert_serial_number: certificate "Serial-Number"
+san: certificate "Serial-Number"
+value: certificate "Value"
 ```
 
 ### Redacting Secrets {#file-format-capturing-response-redacting-secrets}
@@ -4219,7 +4330,7 @@ jsonpath "$.cats[0].name" == "Felix"
 jsonpath "$.cats[0].lives" == 9
 ```
 
-Body responses can be encoded by server (see [`Content-Encoding` HTTP header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding)) but asserts in Hurl files are not 
+Body responses can be encoded by server (see [`Content-Encoding` HTTP header][content-encoding](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding)) but asserts in Hurl files are not 
 affected by this content compression. All body asserts (`body`, `bytes`, `sha256` etc...) except `rawbytes` work _after_ content decoding.
 
 Finally, body text asserts (`body`, `jsonpath`, `xpath` etc...) are also decoded to strings based on [`Content-Type` header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type) 
@@ -4284,6 +4395,7 @@ The asserts order in a Hurl file is:
     </div>
 </div>
 </div>
+
 
 ### Implicit asserts {#file-format-asserting-response-implicit-asserts}
 
@@ -4531,7 +4643,7 @@ to specify the root directory of all file nodes.
 Optional list of assertions on the HTTP response within an `[Asserts]` section. Assertions can describe checks
 on status code, on the received body (or part of it) and on response headers.
 
-Structure of an assert:
+__Structure of an explicit assert:__
 
 <div class="schema-container schema-container u-font-size-1 u-font-size-2-sm u-font-size-3-md">
  <div class="schema">
@@ -4562,6 +4674,7 @@ can extract data from
 - body:
   - [`body`](#file-format-asserting-response-body-assert)
   - [`bytes`](#file-format-asserting-response-bytes-assert)
+  - [`rawbytes`](#file-format-asserting-response-rawbytes-assert)
   - [`xpath`](#file-format-asserting-response-xpath-assert)
   - [`jsonpath`](#file-format-asserting-response-jsonpath-assert)
   - [`regex`](#file-format-asserting-response-regex-assert)
@@ -4575,7 +4688,7 @@ can extract data from
   - [`duration`](#file-format-asserting-response-duration-assert)
   - [`certificate`](#file-format-asserting-response-ssl-certificate-assert)
 
-Queries, in asserts and in captures, can be refined with [filters](#file-format-filters), like [`count`][count](#file-format-filters-count) to add tests on collections
+Queries, in asserts and in captures, can be refined with [filters](#file-format-filters), like [`count`](#file-format-filters-count) to add tests on collections
 sizes.
 
 #### Predicates {#file-format-asserting-response-predicates}
@@ -4828,7 +4941,7 @@ HTTP 200
 [Asserts]
 header "Content-Type" == "text/html"
 bytes contains hex,c4e3bac3cac0bde7; # 你好世界 encoded in GB2312
-bytes decode "gb2312" contains "你好世界"
+bytes charsetDecode "gb2312" contains "你好世界"
 ```
 
 Body asserts are automatically decompressed based on the value of `Content-Encoding` response header. So,
@@ -4996,7 +5109,7 @@ curl -v http://httpbin.org/json
 }
 ```
 
-With Hurl, we can write multiple JSONPath asserts describing the DOM content:
+With Hurl, we can write multiple JSONPath asserts describing response structure:
 
 ```hurl
 GET http://httpbin.org/json
@@ -5009,8 +5122,7 @@ jsonpath "$.slideshow.date" != null
 jsonpath "$.slideshow.slides[*].title" contains "Mind Blowing!"
 ```
 
-> Explain that the value selected by the JSONPath is coerced to a string when only
-> one node is selected.
+> By default, Hurl applies [coercion to the JSONPath](#file-format-asserting-response-jsonpath-coercion) query results.
 
 In `matches` predicates, metacharacters beginning with a backslash (like `\d`, `\s`) must be escaped. Alternatively, 
 `matches` predicate support [JavaScript-like Regular expression syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions) to enhance the readability:
@@ -5028,6 +5140,48 @@ jsonpath "$.name" matches "Hello [a-zA-Z]+!"
 jsonpath "$.date" matches /^\d{4}-\d{2}-\d{2}$/
 jsonpath "$.name" matches /Hello [a-zA-Z]+!/
 ```
+
+##### JSONPath coercion {#file-format-asserting-response-jsonpath-coercion}
+
+Hurl's JSONPath implementation respects [RFC 9535: JSONPATH: Query Expression for JSON](https://www.rfc-editor.org/info/rfc9535/) specification. In RFC 9535, every
+query result always returns a list. To facilitate JSONPath query usage, Hurl coerces lists that return a single value to this value.
+
+Let's say with have this JSON:
+
+```json
+{
+  "fruits": [
+    "Apple", "Lemon", "Strawberry"
+  ]
+}
+```
+
+By the spec, the JSONPath query `$.fruits[0]` should return a list of one element `["Apple"]`. As the result list has only
+one single element, Hurl JSONPath query returns the string "Apple". So we're able to write this Hurl file:
+
+```hurl
+GET https://example.org/captures-json
+HTTP 200
+[Asserts]
+jsonpath "$.fruits[0]" isString
+jsonpath "$.fruits[0]" == "Apple"
+```
+
+If you don't want JSONPath coercion applied to query results, you can use [`--no-jsonpath-coercion` option](#getting-started-manual-no-jsonpath-coercion), either in
+[Hurl configuration file](#getting-started-manual-configuration), in Hurl command line or using the env variable `HURL_NO_JSONPATH_COERCION=true`. This way, JSONPath
+query always returns list:
+
+```hurl
+GET https://example.org/captures-json
+[Options]
+no-jsonpath-coercion: true
+HTTP 200
+[Asserts]
+jsonpath "$.fruits[0]" isList
+jsonpath "$.fruits[0]" count == 1
+jsonpath "$.fruits[0]" nth 0 == "Apple"
+```
+
 
 #### Regex assert {#file-format-asserting-response-regex-assert}
 
@@ -5104,7 +5258,7 @@ affected by `Content-Encoding` response header)
 
 #### URL assert {#file-format-asserting-response-url-assert}
 
-Check the last fetched URL. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]`section][options](#file-format-request-options) or
+Check the last fetched URL. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]`section](#file-format-request-options) or
 [`--location` option](#getting-started-manual-location)). URL assert consists of the keyword `url` followed by a predicate function and value.
 
 ```hurl
@@ -5118,7 +5272,7 @@ url == "https://example.org/redirected"
 
 #### Redirects assert {#file-format-asserting-response-redirects-assert}
 
-Check each step of redirection. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]`section][options](#file-format-request-options) or
+Check each step of redirection. This is most meaningful if you have told Hurl to follow redirection (see [`[Options]`section](#file-format-request-options) or
 [`--location` option](#getting-started-manual-location)). Redirects assert consists of the keyword `redirects` followed by a predicate function and value. The `redirects`
 query returns a collection of redirections that can be tested with a [`location` filter](#file-format-filters-location):
 
@@ -5178,7 +5332,8 @@ duration < 1000   # Check that response time is less than one second
 Check the SSL certificate properties. Certificate assert consists of the keyword `certificate`, followed by the 
 certificate attribute value.
 
-The following attributes are supported: `Subject`, `Issuer`, `Start-Date`, `Expire-Date`, `Serial-Number`, and `Subject-Alt-Name`.
+The following attributes are supported: `Subject`, `Issuer`, `Start-Date`, `Expire-Date`, `Serial-Number`, 
+`Subject-Alt-Name` and `Value`.
 
 ```hurl
 GET https://example.org
@@ -5190,6 +5345,7 @@ certificate "Expire-Date" daysAfterNow > 15
 certificate "Serial-Number" matches "[0-9af]+"
 certificate "Subject-Alt-Name" contains "DNS:example.org"
 certificate "Subject-Alt-Name" split "," count == 2
+certificate "Value" startsWith "-----BEGIN CERTIFICATE-----"
 ```
 
 
@@ -5336,6 +5492,8 @@ bytes base64UrlSafeEncode == "PDw_Pz8-Pg"
 ```
 
 #### charsetDecode {#file-format-filters-charsetdecode}
+
+*Formerly known as `decode`, which is deprecated and will be removed in a future major version.*
 
 Decodes bytes to string using a charset encoding. Encoding labels are defined in [Encoding Standard](https://encoding.spec.whatwg.org/#concept-encoding-get).
 
@@ -5666,7 +5824,7 @@ Evaluates a [XPath](https://en.wikipedia.org/wiki/XPath) expression.
 GET https://example.org/hello_gb2312
 HTTP 200
 [Asserts]
-bytes decode "gb2312" xpath "string(//body)" == "你好世界"
+bytes charsetDecode "gb2312" xpath "string(//body)" == "你好世界"
 ```
 
 
@@ -5826,7 +5984,8 @@ Variables can be injected in a Hurl file:
 - by using [`--variable` option](#getting-started-manual-variable)
 - by using [`--variables-file` option](#getting-started-manual-variables-file)
 - by defining environment variables, for instance `HURL_VARIABLE_foo=bar`
-- by defining variables in an [`[Options]` section][options](#file-format-request-options)
+- by defining variables in an [`[Options]` section](#file-format-request-options)
+- by defining variables in [Hurl configuration file](#getting-started-manual-configuration)
 
 Lets' see how to inject variables, given this `test.hurl`:
 
@@ -6050,7 +6209,7 @@ Short description:
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="assert">assert</span><span class="grammar-usedby">(used by <a href="#asserts-section">asserts-section</a>)</span></div><div class="grammar-rule-expression"><a href="#lt">lt</a><span class="grammar-symbol">*</span><br>
 <a href="#query">query</a>&nbsp;<span class="grammar-symbol">(</span><a href="#sp">sp</a>&nbsp;<a href="#filter">filter</a><span class="grammar-symbol">)</span><span class="grammar-symbol">*</span>&nbsp;<a href="#sp">sp</a>&nbsp;<a href="#predicate">predicate</a>&nbsp;<a href="#lt">lt</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="option">option</span><span class="grammar-usedby">(used by <a href="#options-section">options-section</a>)</span></div><div class="grammar-rule-expression"><a href="#lt">lt</a><span class="grammar-symbol">*</span><br>
-<span class="grammar-symbol">(</span><a href="#aws-sigv4-option">aws-sigv4-option</a><span class="grammar-symbol">|</span><a href="#ca-certificate-option">ca-certificate-option</a><span class="grammar-symbol">|</span><a href="#client-certificate-option">client-certificate-option</a><span class="grammar-symbol">|</span><a href="#client-key-option">client-key-option</a><span class="grammar-symbol">|</span><a href="#compressed-option">compressed-option</a><span class="grammar-symbol">|</span><a href="#connect-to-option">connect-to-option</a><span class="grammar-symbol">|</span><a href="#connect-timeout-option">connect-timeout-option</a><span class="grammar-symbol">|</span><a href="#delay-option">delay-option</a><span class="grammar-symbol">|</span><a href="#follow-redirect-option">follow-redirect-option</a><span class="grammar-symbol">|</span><a href="#follow-redirect-trusted-option">follow-redirect-trusted-option</a><span class="grammar-symbol">|</span><a href="#header-option">header-option</a><span class="grammar-symbol">|</span><a href="#http10-option">http10-option</a><span class="grammar-symbol">|</span><a href="#http11-option">http11-option</a><span class="grammar-symbol">|</span><a href="#http2-option">http2-option</a><span class="grammar-symbol">|</span><a href="#http3-option">http3-option</a><span class="grammar-symbol">|</span><a href="#insecure-option">insecure-option</a><span class="grammar-symbol">|</span><a href="#ipv4-option">ipv4-option</a><span class="grammar-symbol">|</span><a href="#ipv6-option">ipv6-option</a><span class="grammar-symbol">|</span><a href="#limit-rate-option">limit-rate-option</a><span class="grammar-symbol">|</span><a href="#max-redirs-option">max-redirs-option</a><span class="grammar-symbol">|</span><a href="#max-time-option">max-time-option</a><span class="grammar-symbol">|</span><a href="#netrc-option">netrc-option</a><span class="grammar-symbol">|</span><a href="#netrc-file-option">netrc-file-option</a><span class="grammar-symbol">|</span><a href="#netrc-optional-option">netrc-optional-option</a><span class="grammar-symbol">|</span><a href="#output-option">output-option</a><span class="grammar-symbol">|</span><a href="#path-as-is-option">path-as-is-option</a><span class="grammar-symbol">|</span><a href="#pinned-public-key-option">pinned-public-key-option</a><span class="grammar-symbol">|</span><a href="#proxy-option">proxy-option</a><span class="grammar-symbol">|</span><a href="#repeat-option">repeat-option</a><span class="grammar-symbol">|</span><a href="#resolve-option">resolve-option</a><span class="grammar-symbol">|</span><a href="#retry-option">retry-option</a><span class="grammar-symbol">|</span><a href="#retry-interval-option">retry-interval-option</a><span class="grammar-symbol">|</span><a href="#skip-option">skip-option</a><span class="grammar-symbol">|</span><a href="#unix-socket-option">unix-socket-option</a><span class="grammar-symbol">|</span><a href="#user-option">user-option</a><span class="grammar-symbol">|</span><a href="#variable-option">variable-option</a><span class="grammar-symbol">|</span><a href="#verbose-option">verbose-option</a><span class="grammar-symbol">|</span><a href="#very-verbose-option">very-verbose-option</a><span class="grammar-symbol">)</span></div></div>
+<span class="grammar-symbol">(</span><a href="#aws-sigv4-option">aws-sigv4-option</a><span class="grammar-symbol">|</span><a href="#ca-certificate-option">ca-certificate-option</a><span class="grammar-symbol">|</span><a href="#client-certificate-option">client-certificate-option</a><span class="grammar-symbol">|</span><a href="#client-key-option">client-key-option</a><span class="grammar-symbol">|</span><a href="#compressed-option">compressed-option</a><span class="grammar-symbol">|</span><a href="#connect-to-option">connect-to-option</a><span class="grammar-symbol">|</span><a href="#connect-timeout-option">connect-timeout-option</a><span class="grammar-symbol">|</span><a href="#delay-option">delay-option</a><span class="grammar-symbol">|</span><a href="#digest-option">digest-option</a><span class="grammar-symbol">|</span><a href="#fail-with-body-option">fail-with-body-option</a><span class="grammar-symbol">|</span><a href="#follow-redirect-option">follow-redirect-option</a><span class="grammar-symbol">|</span><a href="#follow-redirect-trusted-option">follow-redirect-trusted-option</a><span class="grammar-symbol">|</span><a href="#header-option">header-option</a><span class="grammar-symbol">|</span><a href="#http10-option">http10-option</a><span class="grammar-symbol">|</span><a href="#http11-option">http11-option</a><span class="grammar-symbol">|</span><a href="#http2-option">http2-option</a><span class="grammar-symbol">|</span><a href="#http3-option">http3-option</a><span class="grammar-symbol">|</span><a href="#insecure-option">insecure-option</a><span class="grammar-symbol">|</span><a href="#ipv4-option">ipv4-option</a><span class="grammar-symbol">|</span><a href="#ipv6-option">ipv6-option</a><span class="grammar-symbol">|</span><a href="#limit-rate-option">limit-rate-option</a><span class="grammar-symbol">|</span><a href="#max-redirs-option">max-redirs-option</a><span class="grammar-symbol">|</span><a href="#max-time-option">max-time-option</a><span class="grammar-symbol">|</span><a href="#negotiate-option">negotiate-option</a><span class="grammar-symbol">|</span><a href="#netrc-option">netrc-option</a><span class="grammar-symbol">|</span><a href="#netrc-file-option">netrc-file-option</a><span class="grammar-symbol">|</span><a href="#netrc-optional-option">netrc-optional-option</a><span class="grammar-symbol">|</span><a href="#output-option">output-option</a><span class="grammar-symbol">|</span><a href="#path-as-is-option">path-as-is-option</a><span class="grammar-symbol">|</span><a href="#pinned-public-key-option">pinned-public-key-option</a><span class="grammar-symbol">|</span><a href="#proxy-option">proxy-option</a><span class="grammar-symbol">|</span><a href="#repeat-option">repeat-option</a><span class="grammar-symbol">|</span><a href="#resolve-option">resolve-option</a><span class="grammar-symbol">|</span><a href="#retry-option">retry-option</a><span class="grammar-symbol">|</span><a href="#retry-interval-option">retry-interval-option</a><span class="grammar-symbol">|</span><a href="#skip-option">skip-option</a><span class="grammar-symbol">|</span><a href="#unix-socket-option">unix-socket-option</a><span class="grammar-symbol">|</span><a href="#user-option">user-option</a><span class="grammar-symbol">|</span><a href="#variable-option">variable-option</a><span class="grammar-symbol">|</span><a href="#variables-file-option">variables-file-option</a><span class="grammar-symbol">|</span><a href="#verbose-option">verbose-option</a><span class="grammar-symbol">|</span><a href="#verbosity-option">verbosity-option</a><span class="grammar-symbol">|</span><a href="#very-verbose-option">very-verbose-option</a><span class="grammar-symbol">)</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="aws-sigv4-option">aws-sigv4-option</span><span class="grammar-usedby">(used by <a href="#option">option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">aws-sigv4</span>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#value-string">value-string</a>&nbsp;<a href="#lt">lt</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="ca-certificate-option">ca-certificate-option</span><span class="grammar-usedby">(used by <a href="#option">option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">cacert</span>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#filename">filename</a>&nbsp;<a href="#lt">lt</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="client-certificate-option">client-certificate-option</span><span class="grammar-usedby">(used by <a href="#option">option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">cert</span>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#filename-password">filename-password</a>&nbsp;<a href="#lt">lt</a></div></div>
@@ -6059,6 +6218,8 @@ Short description:
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="connect-to-option">connect-to-option</span><span class="grammar-usedby">(used by <a href="#option">option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">connect-to</span>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#value-string">value-string</a>&nbsp;<a href="#lt">lt</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="connect-timeout-option">connect-timeout-option</span><span class="grammar-usedby">(used by <a href="#option">option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">connect-timeout</span>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#duration-option">duration-option</a>&nbsp;<a href="#lt">lt</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="delay-option">delay-option</span><span class="grammar-usedby">(used by <a href="#option">option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">delay</span>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#duration-option">duration-option</a>&nbsp;<a href="#lt">lt</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="digest-option">digest-option</span><span class="grammar-usedby">(used by <a href="#option">option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">digest</span>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#boolean-option">boolean-option</a>&nbsp;<a href="#lt">lt</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="fail-with-body-option">fail-with-body-option</span><span class="grammar-usedby">(used by <a href="#option">option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">fail-with-body</span>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#boolean-option">boolean-option</a>&nbsp;<a href="#lt">lt</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="follow-redirect-option">follow-redirect-option</span><span class="grammar-usedby">(used by <a href="#option">option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">location</span>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#boolean-option">boolean-option</a>&nbsp;<a href="#lt">lt</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="follow-redirect-trusted-option">follow-redirect-trusted-option</span><span class="grammar-usedby">(used by <a href="#option">option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">location-trusted</span>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#boolean-option">boolean-option</a>&nbsp;<a href="#lt">lt</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="header-option">header-option</span><span class="grammar-usedby">(used by <a href="#option">option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">header</span>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#value-string">value-string</a>&nbsp;<a href="#lt">lt</a></div></div>
@@ -6072,6 +6233,7 @@ Short description:
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="limit-rate-option">limit-rate-option</span><span class="grammar-usedby">(used by <a href="#option">option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">limit-rate</span>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#integer-option">integer-option</a>&nbsp;<a href="#lt">lt</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="max-redirs-option">max-redirs-option</span><span class="grammar-usedby">(used by <a href="#option">option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">max-redirs</span>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#integer-option">integer-option</a>&nbsp;<a href="#lt">lt</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="max-time-option">max-time-option</span><span class="grammar-usedby">(used by <a href="#option">option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">max-time</span>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#integer-option">integer-option</a>&nbsp;<a href="#lt">lt</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="negotiate-option">negotiate-option</span><span class="grammar-usedby">(used by <a href="#option">option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">negotiate</span>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#boolean-option">boolean-option</a>&nbsp;<a href="#lt">lt</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="netrc-option">netrc-option</span><span class="grammar-usedby">(used by <a href="#option">option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">netrc</span>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#boolean-option">boolean-option</a>&nbsp;<a href="#lt">lt</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="netrc-file-option">netrc-file-option</span><span class="grammar-usedby">(used by <a href="#option">option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">netrc-file</span>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#value-string">value-string</a>&nbsp;<a href="#lt">lt</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="netrc-optional-option">netrc-optional-option</span><span class="grammar-usedby">(used by <a href="#option">option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">netrc-optional</span>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#boolean-option">boolean-option</a>&nbsp;<a href="#lt">lt</a></div></div>
@@ -6087,10 +6249,12 @@ Short description:
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="unix-socket-option">unix-socket-option</span><span class="grammar-usedby">(used by <a href="#option">option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">unix-socket</span>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#value-string">value-string</a>&nbsp;<a href="#lt">lt</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="user-option">user-option</span><span class="grammar-usedby">(used by <a href="#option">option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">user</span>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#value-string">value-string</a>&nbsp;<a href="#lt">lt</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="variable-option">variable-option</span><span class="grammar-usedby">(used by <a href="#option">option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">variable</span>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#variable-definition">variable-definition</a>&nbsp;<a href="#lt">lt</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="variables-file-option">variables-file-option</span><span class="grammar-usedby">(used by <a href="#option">option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">variables-file</span>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#filename">filename</a>&nbsp;<a href="#lt">lt</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="verbose-option">verbose-option</span><span class="grammar-usedby">(used by <a href="#option">option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">verbose</span>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#boolean-option">boolean-option</a>&nbsp;<a href="#lt">lt</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="verbosity-option">verbosity-option</span><span class="grammar-usedby">(used by <a href="#option">option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">verbosity</span>&nbsp;<span class="grammar-literal">:</span>&nbsp;<span class="grammar-symbol">(</span><span class="grammar-literal">brief</span><span class="grammar-symbol">|</span><span class="grammar-literal">verbose</span><span class="grammar-symbol">|</span><span class="grammar-literal">debug</span><span class="grammar-symbol">)</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="very-verbose-option">very-verbose-option</span><span class="grammar-usedby">(used by <a href="#option">option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">very-verbose</span>&nbsp;<span class="grammar-literal">:</span>&nbsp;<a href="#boolean-option">boolean-option</a>&nbsp;<a href="#lt">lt</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="variable-definition">variable-definition</span><span class="grammar-usedby">(used by <a href="#variable-option">variable-option</a>)</span></div><div class="grammar-rule-expression"><a href="#variable-name">variable-name</a>&nbsp;<span class="grammar-literal">=</span>&nbsp;<a href="#variable-value">variable-value</a></div></div>
-<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="boolean-option">boolean-option</span><span class="grammar-usedby">(used by <a href="#compressed-option">compressed-option</a>,&nbsp;<a href="#follow-redirect-option">follow-redirect-option</a>,&nbsp;<a href="#follow-redirect-trusted-option">follow-redirect-trusted-option</a>,&nbsp;<a href="#http10-option">http10-option</a>,&nbsp;<a href="#http11-option">http11-option</a>,&nbsp;<a href="#http2-option">http2-option</a>,&nbsp;<a href="#http3-option">http3-option</a>,&nbsp;<a href="#insecure-option">insecure-option</a>,&nbsp;<a href="#ipv4-option">ipv4-option</a>,&nbsp;<a href="#ipv6-option">ipv6-option</a>,&nbsp;<a href="#netrc-option">netrc-option</a>,&nbsp;<a href="#netrc-optional-option">netrc-optional-option</a>,&nbsp;<a href="#path-as-is-option">path-as-is-option</a>,&nbsp;<a href="#skip-option">skip-option</a>,&nbsp;<a href="#verbose-option">verbose-option</a>,&nbsp;<a href="#very-verbose-option">very-verbose-option</a>)</span></div><div class="grammar-rule-expression"><a href="#boolean">boolean</a><span class="grammar-symbol">|</span><a href="#placeholder">placeholder</a></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="boolean-option">boolean-option</span><span class="grammar-usedby">(used by <a href="#compressed-option">compressed-option</a>,&nbsp;<a href="#digest-option">digest-option</a>,&nbsp;<a href="#fail-with-body-option">fail-with-body-option</a>,&nbsp;<a href="#follow-redirect-option">follow-redirect-option</a>,&nbsp;<a href="#follow-redirect-trusted-option">follow-redirect-trusted-option</a>,&nbsp;<a href="#http10-option">http10-option</a>,&nbsp;<a href="#http11-option">http11-option</a>,&nbsp;<a href="#http2-option">http2-option</a>,&nbsp;<a href="#http3-option">http3-option</a>,&nbsp;<a href="#insecure-option">insecure-option</a>,&nbsp;<a href="#ipv4-option">ipv4-option</a>,&nbsp;<a href="#ipv6-option">ipv6-option</a>,&nbsp;<a href="#negotiate-option">negotiate-option</a>,&nbsp;<a href="#netrc-option">netrc-option</a>,&nbsp;<a href="#netrc-optional-option">netrc-optional-option</a>,&nbsp;<a href="#path-as-is-option">path-as-is-option</a>,&nbsp;<a href="#skip-option">skip-option</a>,&nbsp;<a href="#verbose-option">verbose-option</a>,&nbsp;<a href="#very-verbose-option">very-verbose-option</a>)</span></div><div class="grammar-rule-expression"><a href="#boolean">boolean</a><span class="grammar-symbol">|</span><a href="#placeholder">placeholder</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="integer-option">integer-option</span><span class="grammar-usedby">(used by <a href="#limit-rate-option">limit-rate-option</a>,&nbsp;<a href="#max-redirs-option">max-redirs-option</a>,&nbsp;<a href="#max-time-option">max-time-option</a>,&nbsp;<a href="#repeat-option">repeat-option</a>,&nbsp;<a href="#retry-option">retry-option</a>)</span></div><div class="grammar-rule-expression"><a href="#integer">integer</a><span class="grammar-symbol">|</span><a href="#placeholder">placeholder</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="duration-option">duration-option</span><span class="grammar-usedby">(used by <a href="#connect-timeout-option">connect-timeout-option</a>,&nbsp;<a href="#delay-option">delay-option</a>,&nbsp;<a href="#retry-interval-option">retry-interval-option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><a href="#integer">integer</a>&nbsp;<a href="#duration-unit">duration-unit</a><span class="grammar-symbol">?</span><span class="grammar-symbol">)</span><span class="grammar-symbol">|</span><a href="#placeholder">placeholder</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="duration-unit">duration-unit</span><span class="grammar-usedby">(used by <a href="#duration-option">duration-option</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">ms</span><span class="grammar-symbol">|</span><span class="grammar-literal">s</span><span class="grammar-symbol">|</span><span class="grammar-literal">m</span></div></div>
@@ -6163,7 +6327,7 @@ Short description:
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="contain-predicate">contain-predicate</span><span class="grammar-usedby">(used by <a href="#predicate-func">predicate-func</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">contains</span>&nbsp;<a href="#sp">sp</a>&nbsp;<a href="#quoted-string">quoted-string</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="end-with-predicate">end-with-predicate</span><span class="grammar-usedby">(used by <a href="#predicate-func">predicate-func</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">endsWith</span>&nbsp;<a href="#sp">sp</a>&nbsp;<span class="grammar-symbol">(</span><a href="#quoted-string">quoted-string</a><span class="grammar-symbol">|</span><a href="#oneline-hex">oneline-hex</a><span class="grammar-symbol">|</span><a href="#oneline-base64">oneline-base64</a><span class="grammar-symbol">)</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="exist-predicate">exist-predicate</span><span class="grammar-usedby">(used by <a href="#predicate-func">predicate-func</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">exists</span></div></div>
-<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="greater-or-equal-predicate">greater-or-equal-predicate</span><span class="grammar-usedby">(used by <a href="#predicate-func">predicate-func</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">&gt;=</span>&nbsp;<a href="#sp">sp</a>&nbsp;<a href="#sp">sp</a><span class="grammar-symbol">*</span>&nbsp;<span class="grammar-symbol">(</span><a href="#number">number</a><span class="grammar-symbol">|</span><a href="#quoted-string">quoted-string</a><span class="grammar-symbol">|</span><a href="#placeholder">placeholder</a><span class="grammar-symbol">)</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="greater-or-equal-predicate">greater-or-equal-predicate</span><span class="grammar-usedby">(used by <a href="#predicate-func">predicate-func</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">&gt;=</span>&nbsp;<a href="#sp">sp</a>&nbsp;<span class="grammar-symbol">(</span><a href="#number">number</a><span class="grammar-symbol">|</span><a href="#quoted-string">quoted-string</a><span class="grammar-symbol">|</span><a href="#placeholder">placeholder</a><span class="grammar-symbol">)</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="greater-predicate">greater-predicate</span><span class="grammar-usedby">(used by <a href="#predicate-func">predicate-func</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">&gt;</span>&nbsp;<a href="#sp">sp</a>&nbsp;<span class="grammar-symbol">(</span><a href="#number">number</a><span class="grammar-symbol">|</span><a href="#quoted-string">quoted-string</a><span class="grammar-symbol">|</span><a href="#placeholder">placeholder</a><span class="grammar-symbol">)</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="include-predicate">include-predicate</span><span class="grammar-usedby">(used by <a href="#predicate-func">predicate-func</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">includes</span>&nbsp;<a href="#sp">sp</a>&nbsp;<a href="#predicate-value">predicate-value</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="is-collection-predicate">is-collection-predicate</span><span class="grammar-usedby">(used by <a href="#predicate-func">predicate-func</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">isCollection</span></div></div>
@@ -6204,7 +6368,7 @@ Short description:
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="oneline-base64">oneline-base64</span><span class="grammar-usedby">(used by <a href="#end-with-predicate">end-with-predicate</a>,&nbsp;<a href="#start-with-predicate">start-with-predicate</a>,&nbsp;<a href="#predicate-value">predicate-value</a>,&nbsp;<a href="#bytes">bytes</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">base64,</span>&nbsp;<span class="grammar-regex">[A-Z0-9+-= \n]+</span>&nbsp;<span class="grammar-literal">;</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="oneline-file">oneline-file</span><span class="grammar-usedby">(used by <a href="#predicate-value">predicate-value</a>,&nbsp;<a href="#bytes">bytes</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">file,</span>&nbsp;<a href="#filename">filename</a>&nbsp;<span class="grammar-literal">;</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="oneline-hex">oneline-hex</span><span class="grammar-usedby">(used by <a href="#end-with-predicate">end-with-predicate</a>,&nbsp;<a href="#start-with-predicate">start-with-predicate</a>,&nbsp;<a href="#predicate-value">predicate-value</a>,&nbsp;<a href="#bytes">bytes</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">hex,</span>&nbsp;<a href="#hexdigit">hexdigit</a><span class="grammar-symbol">*</span>&nbsp;<span class="grammar-literal">;</span></div></div>
-</div><div class="grammar-ruleset"><h3 id="strings">Strings</h3><div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="quoted-string">quoted-string</span><span class="grammar-usedby">(used by <a href="#variable-value">variable-value</a>,&nbsp;<a href="#header-query">header-query</a>,&nbsp;<a href="#cookie-query">cookie-query</a>,&nbsp;<a href="#xpath-query">xpath-query</a>,&nbsp;<a href="#jsonpath-query">jsonpath-query</a>,&nbsp;<a href="#regex-query">regex-query</a>,&nbsp;<a href="#variable-query">variable-query</a>,&nbsp;<a href="#contain-predicate">contain-predicate</a>,&nbsp;<a href="#end-with-predicate">end-with-predicate</a>,&nbsp;<a href="#greater-or-equal-predicate">greater-or-equal-predicate</a>,&nbsp;<a href="#greater-predicate">greater-predicate</a>,&nbsp;<a href="#less-or-equal-predicate">less-or-equal-predicate</a>,&nbsp;<a href="#less-predicate">less-predicate</a>,&nbsp;<a href="#match-predicate">match-predicate</a>,&nbsp;<a href="#start-with-predicate">start-with-predicate</a>,&nbsp;<a href="#predicate-value">predicate-value</a>,&nbsp;<a href="#charset-decode-filter">charset-decode-filter</a>,&nbsp;<a href="#charset-encode-filter">charset-encode-filter</a>,&nbsp;<a href="#date-format-filter">date-format-filter</a>,&nbsp;<a href="#jsonpath-filter">jsonpath-filter</a>,&nbsp;<a href="#regex-filter">regex-filter</a>,&nbsp;<a href="#replace-filter">replace-filter</a>,&nbsp;<a href="#replace-regex-filter">replace-regex-filter</a>,&nbsp;<a href="#split-filter">split-filter</a>,&nbsp;<a href="#to-date-filter">to-date-filter</a>,&nbsp;<a href="#url-query-param-filter">url-query-param-filter</a>,&nbsp;<a href="#xpath-filter">xpath-filter</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">"</span>&nbsp;<span class="grammar-symbol">(</span><a href="#quoted-string-content">quoted-string-content</a><span class="grammar-symbol">|</span><a href="#placeholder">placeholder</a><span class="grammar-symbol">)</span><span class="grammar-symbol">*</span>&nbsp;<span class="grammar-literal">"</span></div></div>
+</div><div class="grammar-ruleset"><h3 id="strings">Strings</h3><div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="quoted-string">quoted-string</span><span class="grammar-usedby">(used by <a href="#variable-value">variable-value</a>,&nbsp;<a href="#header-query">header-query</a>,&nbsp;<a href="#cookie-query">cookie-query</a>,&nbsp;<a href="#xpath-query">xpath-query</a>,&nbsp;<a href="#jsonpath-query">jsonpath-query</a>,&nbsp;<a href="#regex-query">regex-query</a>,&nbsp;<a href="#variable-query">variable-query</a>,&nbsp;<a href="#contain-predicate">contain-predicate</a>,&nbsp;<a href="#end-with-predicate">end-with-predicate</a>,&nbsp;<a href="#greater-or-equal-predicate">greater-or-equal-predicate</a>,&nbsp;<a href="#greater-predicate">greater-predicate</a>,&nbsp;<a href="#less-or-equal-predicate">less-or-equal-predicate</a>,&nbsp;<a href="#less-predicate">less-predicate</a>,&nbsp;<a href="#match-predicate">match-predicate</a>,&nbsp;<a href="#start-with-predicate">start-with-predicate</a>,&nbsp;<a href="#predicate-value">predicate-value</a>,&nbsp;<a href="#charset-decode-filter">charset-decode-filter</a>,&nbsp;<a href="#date-format-filter">date-format-filter</a>,&nbsp;<a href="#jsonpath-filter">jsonpath-filter</a>,&nbsp;<a href="#regex-filter">regex-filter</a>,&nbsp;<a href="#replace-filter">replace-filter</a>,&nbsp;<a href="#replace-regex-filter">replace-regex-filter</a>,&nbsp;<a href="#split-filter">split-filter</a>,&nbsp;<a href="#to-date-filter">to-date-filter</a>,&nbsp;<a href="#url-query-param-filter">url-query-param-filter</a>,&nbsp;<a href="#xpath-filter">xpath-filter</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">"</span>&nbsp;<span class="grammar-symbol">(</span><a href="#quoted-string-content">quoted-string-content</a><span class="grammar-symbol">|</span><a href="#placeholder">placeholder</a><span class="grammar-symbol">)</span><span class="grammar-symbol">*</span>&nbsp;<span class="grammar-literal">"</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="quoted-string-content">quoted-string-content</span><span class="grammar-usedby">(used by <a href="#quoted-string">quoted-string</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><a href="#quoted-string-text">quoted-string-text</a><span class="grammar-symbol">|</span><a href="#quoted-string-escaped-char">quoted-string-escaped-char</a><span class="grammar-symbol">)</span><span class="grammar-symbol">*</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="quoted-string-text">quoted-string-text</span><span class="grammar-usedby">(used by <a href="#quoted-string-content">quoted-string-content</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-regex">~["\\]+</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="quoted-string-escaped-char">quoted-string-escaped-char</span><span class="grammar-usedby">(used by <a href="#quoted-string-content">quoted-string-content</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">\</span>&nbsp;<span class="grammar-symbol">(</span><span class="grammar-literal">"</span><span class="grammar-symbol">|</span><span class="grammar-literal">\</span><span class="grammar-symbol">|</span><span class="grammar-literal">\b</span><span class="grammar-symbol">|</span><span class="grammar-literal">\f</span><span class="grammar-symbol">|</span><span class="grammar-literal">\n</span><span class="grammar-symbol">|</span><span class="grammar-literal">\r</span><span class="grammar-symbol">|</span><span class="grammar-literal">\t</span><span class="grammar-symbol">|</span><span class="grammar-literal">\u</span>&nbsp;<a href="#unicode-char">unicode-char</a><span class="grammar-symbol">)</span></div></div>
@@ -6232,7 +6396,7 @@ Short description:
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="multiline-string-content">multiline-string-content</span><span class="grammar-usedby">(used by <a href="#multiline-string">multiline-string</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><a href="#multiline-string-text">multiline-string-text</a><span class="grammar-symbol">|</span><a href="#multiline-string-escaped-char">multiline-string-escaped-char</a><span class="grammar-symbol">)</span><span class="grammar-symbol">*</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="multiline-string-text">multiline-string-text</span><span class="grammar-usedby">(used by <a href="#multiline-string-content">multiline-string-content</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-regex">~[\\]+</span>&nbsp;<span class="grammar-symbol">~</span><span class="grammar-literal">```</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="multiline-string-escaped-char">multiline-string-escaped-char</span><span class="grammar-usedby">(used by <a href="#multiline-string-content">multiline-string-content</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">\</span>&nbsp;<span class="grammar-symbol">(</span><span class="grammar-literal">\</span><span class="grammar-symbol">|</span><span class="grammar-literal">b</span><span class="grammar-symbol">|</span><span class="grammar-literal">f</span><span class="grammar-symbol">|</span><span class="grammar-literal">n</span><span class="grammar-symbol">|</span><span class="grammar-literal">r</span><span class="grammar-symbol">|</span><span class="grammar-literal">t</span><span class="grammar-symbol">|</span><span class="grammar-literal">`</span><span class="grammar-symbol">|</span><span class="grammar-literal">u</span>&nbsp;<a href="#unicode-char">unicode-char</a><span class="grammar-symbol">)</span></div></div>
-<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="filename">filename</span><span class="grammar-usedby">(used by <a href="#filename-value">filename-value</a>,&nbsp;<a href="#ca-certificate-option">ca-certificate-option</a>,&nbsp;<a href="#oneline-file">oneline-file</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><a href="#filename-content">filename-content</a><span class="grammar-symbol">|</span><a href="#placeholder">placeholder</a><span class="grammar-symbol">)</span><span class="grammar-symbol">*</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="filename">filename</span><span class="grammar-usedby">(used by <a href="#filename-value">filename-value</a>,&nbsp;<a href="#ca-certificate-option">ca-certificate-option</a>,&nbsp;<a href="#variables-file-option">variables-file-option</a>,&nbsp;<a href="#oneline-file">oneline-file</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><a href="#filename-content">filename-content</a><span class="grammar-symbol">|</span><a href="#placeholder">placeholder</a><span class="grammar-symbol">)</span><span class="grammar-symbol">*</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="filename-content">filename-content</span><span class="grammar-usedby">(used by <a href="#filename">filename</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><a href="#filename-text">filename-text</a><span class="grammar-symbol">|</span><a href="#filename-escaped-char">filename-escaped-char</a><span class="grammar-symbol">)</span><span class="grammar-symbol">*</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="filename-text">filename-text</span><span class="grammar-usedby">(used by <a href="#filename-content">filename-content</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-regex">~[#;{} \n\r\\]+</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="filename-escaped-char">filename-escaped-char</span><span class="grammar-usedby">(used by <a href="#filename-content">filename-content</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">\</span>&nbsp;<span class="grammar-symbol">(</span><span class="grammar-literal">\</span><span class="grammar-symbol">|</span><span class="grammar-literal">b</span><span class="grammar-symbol">|</span><span class="grammar-literal">f</span><span class="grammar-symbol">|</span><span class="grammar-literal">n</span><span class="grammar-symbol">|</span><span class="grammar-literal">r</span><span class="grammar-symbol">|</span><span class="grammar-literal">t</span><span class="grammar-symbol">|</span><span class="grammar-literal">#</span><span class="grammar-symbol">|</span><span class="grammar-literal">;</span><span class="grammar-symbol">|</span><span class="grammar-literal"> </span><span class="grammar-symbol">|</span><span class="grammar-literal">{</span><span class="grammar-symbol">|</span><span class="grammar-literal">}</span><span class="grammar-symbol">|</span><span class="grammar-literal">u</span>&nbsp;<a href="#unicode-char">unicode-char</a><span class="grammar-symbol">)</span></div></div>
@@ -6271,7 +6435,6 @@ Short description:
 <span class="grammar-symbol">|</span><a href="#base64-url-safe-decode-filter">base64-url-safe-decode-filter</a><br>
 <span class="grammar-symbol">|</span><a href="#base64-url-safe-encode-filter">base64-url-safe-encode-filter</a><br>
 <span class="grammar-symbol">|</span><a href="#charset-decode-filter">charset-decode-filter</a><br>
-<span class="grammar-symbol">|</span><a href="#charset-encode-filter">charset-encode-filter</a><br>
 <span class="grammar-symbol">|</span><a href="#count-filter">count-filter</a><br>
 <span class="grammar-symbol">|</span><a href="#days-after-now-filter">days-after-now-filter</a><br>
 <span class="grammar-symbol">|</span><a href="#days-before-now-filter">days-before-now-filter</a><br>
@@ -6303,7 +6466,6 @@ Short description:
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="base64-url-safe-decode-filter">base64-url-safe-decode-filter</span><span class="grammar-usedby">(used by <a href="#filter">filter</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">base64UrlSafeDecode</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="base64-url-safe-encode-filter">base64-url-safe-encode-filter</span><span class="grammar-usedby">(used by <a href="#filter">filter</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">base64UrlSafeEncode</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="charset-decode-filter">charset-decode-filter</span><span class="grammar-usedby">(used by <a href="#filter">filter</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">charsetDecode</span>&nbsp;<a href="#sp">sp</a>&nbsp;<a href="#quoted-string">quoted-string</a></div></div>
-<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="charset-encode-filter">charset-encode-filter</span><span class="grammar-usedby">(used by <a href="#filter">filter</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">charsetEncode</span>&nbsp;<a href="#sp">sp</a>&nbsp;<a href="#quoted-string">quoted-string</a></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="count-filter">count-filter</span><span class="grammar-usedby">(used by <a href="#filter">filter</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">count</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="days-after-now-filter">days-after-now-filter</span><span class="grammar-usedby">(used by <a href="#filter">filter</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">daysAfterNow</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="days-before-now-filter">days-before-now-filter</span><span class="grammar-usedby">(used by <a href="#filter">filter</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">daysBeforeNow</span></div></div>
@@ -6340,8 +6502,8 @@ Short description:
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="hexdigit">hexdigit</span><span class="grammar-usedby">(used by <a href="#oneline-hex">oneline-hex</a>,&nbsp;<a href="#unicode-char">unicode-char</a>,&nbsp;<a href="#json-string-escaped-char">json-string-escaped-char</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-regex">[0-9A-Fa-f]</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="fraction">fraction</span><span class="grammar-usedby">(used by <a href="#json-number">json-number</a>,&nbsp;<a href="#float">float</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">.</span>&nbsp;<a href="#digit">digit</a><span class="grammar-symbol">+</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="exponent">exponent</span><span class="grammar-usedby">(used by <a href="#json-number">json-number</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><span class="grammar-literal">e</span><span class="grammar-symbol">|</span><span class="grammar-literal">E</span><span class="grammar-symbol">)</span>&nbsp;<span class="grammar-symbol">(</span><span class="grammar-literal">+</span><span class="grammar-symbol">|</span><span class="grammar-literal">-</span><span class="grammar-symbol">)</span><span class="grammar-symbol">?</span>&nbsp;<a href="#digit">digit</a><span class="grammar-symbol">+</span></div></div>
-<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="sp">sp</span><span class="grammar-usedby">(used by <a href="#request">request</a>,&nbsp;<a href="#response">response</a>,&nbsp;<a href="#capture">capture</a>,&nbsp;<a href="#assert">assert</a>,&nbsp;<a href="#header-query">header-query</a>,&nbsp;<a href="#certificate-query">certificate-query</a>,&nbsp;<a href="#cookie-query">cookie-query</a>,&nbsp;<a href="#xpath-query">xpath-query</a>,&nbsp;<a href="#jsonpath-query">jsonpath-query</a>,&nbsp;<a href="#regex-query">regex-query</a>,&nbsp;<a href="#variable-query">variable-query</a>,&nbsp;<a href="#predicate">predicate</a>,&nbsp;<a href="#equal-predicate">equal-predicate</a>,&nbsp;<a href="#contain-predicate">contain-predicate</a>,&nbsp;<a href="#end-with-predicate">end-with-predicate</a>,&nbsp;<a href="#greater-or-equal-predicate">greater-or-equal-predicate</a>,&nbsp;<a href="#greater-predicate">greater-predicate</a>,&nbsp;<a href="#include-predicate">include-predicate</a>,&nbsp;<a href="#less-or-equal-predicate">less-or-equal-predicate</a>,&nbsp;<a href="#less-predicate">less-predicate</a>,&nbsp;<a href="#match-predicate">match-predicate</a>,&nbsp;<a href="#not-equal-predicate">not-equal-predicate</a>,&nbsp;<a href="#start-with-predicate">start-with-predicate</a>,&nbsp;<a href="#expr">expr</a>,&nbsp;<a href="#charset-decode-filter">charset-decode-filter</a>,&nbsp;<a href="#charset-encode-filter">charset-encode-filter</a>,&nbsp;<a href="#date-format-filter">date-format-filter</a>,&nbsp;<a href="#jsonpath-filter">jsonpath-filter</a>,&nbsp;<a href="#nth-filter">nth-filter</a>,&nbsp;<a href="#regex-filter">regex-filter</a>,&nbsp;<a href="#replace-filter">replace-filter</a>,&nbsp;<a href="#replace-regex-filter">replace-regex-filter</a>,&nbsp;<a href="#split-filter">split-filter</a>,&nbsp;<a href="#to-date-filter">to-date-filter</a>,&nbsp;<a href="#url-query-param-filter">url-query-param-filter</a>,&nbsp;<a href="#xpath-filter">xpath-filter</a>,&nbsp;<a href="#lt">lt</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-regex">[ \t]</span></div></div>
-<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="lt">lt</span><span class="grammar-usedby">(used by <a href="#hurl-file">hurl-file</a>,&nbsp;<a href="#request">request</a>,&nbsp;<a href="#response">response</a>,&nbsp;<a href="#header">header</a>,&nbsp;<a href="#body">body</a>,&nbsp;<a href="#query-string-params-section">query-string-params-section</a>,&nbsp;<a href="#form-params-section">form-params-section</a>,&nbsp;<a href="#multipart-form-data-section">multipart-form-data-section</a>,&nbsp;<a href="#cookies-section">cookies-section</a>,&nbsp;<a href="#captures-section">captures-section</a>,&nbsp;<a href="#asserts-section">asserts-section</a>,&nbsp;<a href="#basic-auth-section">basic-auth-section</a>,&nbsp;<a href="#options-section">options-section</a>,&nbsp;<a href="#filename-param">filename-param</a>,&nbsp;<a href="#capture">capture</a>,&nbsp;<a href="#assert">assert</a>,&nbsp;<a href="#option">option</a>,&nbsp;<a href="#aws-sigv4-option">aws-sigv4-option</a>,&nbsp;<a href="#ca-certificate-option">ca-certificate-option</a>,&nbsp;<a href="#client-certificate-option">client-certificate-option</a>,&nbsp;<a href="#client-key-option">client-key-option</a>,&nbsp;<a href="#compressed-option">compressed-option</a>,&nbsp;<a href="#connect-to-option">connect-to-option</a>,&nbsp;<a href="#connect-timeout-option">connect-timeout-option</a>,&nbsp;<a href="#delay-option">delay-option</a>,&nbsp;<a href="#follow-redirect-option">follow-redirect-option</a>,&nbsp;<a href="#follow-redirect-trusted-option">follow-redirect-trusted-option</a>,&nbsp;<a href="#header-option">header-option</a>,&nbsp;<a href="#http10-option">http10-option</a>,&nbsp;<a href="#http11-option">http11-option</a>,&nbsp;<a href="#http2-option">http2-option</a>,&nbsp;<a href="#http3-option">http3-option</a>,&nbsp;<a href="#insecure-option">insecure-option</a>,&nbsp;<a href="#ipv4-option">ipv4-option</a>,&nbsp;<a href="#ipv6-option">ipv6-option</a>,&nbsp;<a href="#limit-rate-option">limit-rate-option</a>,&nbsp;<a href="#max-redirs-option">max-redirs-option</a>,&nbsp;<a href="#max-time-option">max-time-option</a>,&nbsp;<a href="#netrc-option">netrc-option</a>,&nbsp;<a href="#netrc-file-option">netrc-file-option</a>,&nbsp;<a href="#netrc-optional-option">netrc-optional-option</a>,&nbsp;<a href="#output-option">output-option</a>,&nbsp;<a href="#path-as-is-option">path-as-is-option</a>,&nbsp;<a href="#pinned-public-key-option">pinned-public-key-option</a>,&nbsp;<a href="#proxy-option">proxy-option</a>,&nbsp;<a href="#resolve-option">resolve-option</a>,&nbsp;<a href="#repeat-option">repeat-option</a>,&nbsp;<a href="#retry-option">retry-option</a>,&nbsp;<a href="#retry-interval-option">retry-interval-option</a>,&nbsp;<a href="#skip-option">skip-option</a>,&nbsp;<a href="#unix-socket-option">unix-socket-option</a>,&nbsp;<a href="#user-option">user-option</a>,&nbsp;<a href="#variable-option">variable-option</a>,&nbsp;<a href="#verbose-option">verbose-option</a>,&nbsp;<a href="#very-verbose-option">very-verbose-option</a>,&nbsp;<a href="#multiline-string">multiline-string</a>)</span></div><div class="grammar-rule-expression"><a href="#sp">sp</a><span class="grammar-symbol">*</span>&nbsp;<a href="#comment">comment</a><span class="grammar-symbol">?</span>&nbsp;<span class="grammar-regex">[\n]?</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="sp">sp</span><span class="grammar-usedby">(used by <a href="#request">request</a>,&nbsp;<a href="#response">response</a>,&nbsp;<a href="#capture">capture</a>,&nbsp;<a href="#assert">assert</a>,&nbsp;<a href="#header-query">header-query</a>,&nbsp;<a href="#certificate-query">certificate-query</a>,&nbsp;<a href="#cookie-query">cookie-query</a>,&nbsp;<a href="#xpath-query">xpath-query</a>,&nbsp;<a href="#jsonpath-query">jsonpath-query</a>,&nbsp;<a href="#regex-query">regex-query</a>,&nbsp;<a href="#variable-query">variable-query</a>,&nbsp;<a href="#predicate">predicate</a>,&nbsp;<a href="#equal-predicate">equal-predicate</a>,&nbsp;<a href="#contain-predicate">contain-predicate</a>,&nbsp;<a href="#end-with-predicate">end-with-predicate</a>,&nbsp;<a href="#greater-or-equal-predicate">greater-or-equal-predicate</a>,&nbsp;<a href="#greater-predicate">greater-predicate</a>,&nbsp;<a href="#include-predicate">include-predicate</a>,&nbsp;<a href="#less-or-equal-predicate">less-or-equal-predicate</a>,&nbsp;<a href="#less-predicate">less-predicate</a>,&nbsp;<a href="#match-predicate">match-predicate</a>,&nbsp;<a href="#not-equal-predicate">not-equal-predicate</a>,&nbsp;<a href="#start-with-predicate">start-with-predicate</a>,&nbsp;<a href="#expr">expr</a>,&nbsp;<a href="#charset-decode-filter">charset-decode-filter</a>,&nbsp;<a href="#date-format-filter">date-format-filter</a>,&nbsp;<a href="#jsonpath-filter">jsonpath-filter</a>,&nbsp;<a href="#nth-filter">nth-filter</a>,&nbsp;<a href="#regex-filter">regex-filter</a>,&nbsp;<a href="#replace-filter">replace-filter</a>,&nbsp;<a href="#replace-regex-filter">replace-regex-filter</a>,&nbsp;<a href="#split-filter">split-filter</a>,&nbsp;<a href="#to-date-filter">to-date-filter</a>,&nbsp;<a href="#url-query-param-filter">url-query-param-filter</a>,&nbsp;<a href="#xpath-filter">xpath-filter</a>,&nbsp;<a href="#lt">lt</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-regex">[ \t]</span></div></div>
+<div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="lt">lt</span><span class="grammar-usedby">(used by <a href="#hurl-file">hurl-file</a>,&nbsp;<a href="#request">request</a>,&nbsp;<a href="#response">response</a>,&nbsp;<a href="#header">header</a>,&nbsp;<a href="#body">body</a>,&nbsp;<a href="#query-string-params-section">query-string-params-section</a>,&nbsp;<a href="#form-params-section">form-params-section</a>,&nbsp;<a href="#multipart-form-data-section">multipart-form-data-section</a>,&nbsp;<a href="#cookies-section">cookies-section</a>,&nbsp;<a href="#captures-section">captures-section</a>,&nbsp;<a href="#asserts-section">asserts-section</a>,&nbsp;<a href="#basic-auth-section">basic-auth-section</a>,&nbsp;<a href="#options-section">options-section</a>,&nbsp;<a href="#filename-param">filename-param</a>,&nbsp;<a href="#capture">capture</a>,&nbsp;<a href="#assert">assert</a>,&nbsp;<a href="#option">option</a>,&nbsp;<a href="#aws-sigv4-option">aws-sigv4-option</a>,&nbsp;<a href="#ca-certificate-option">ca-certificate-option</a>,&nbsp;<a href="#client-certificate-option">client-certificate-option</a>,&nbsp;<a href="#client-key-option">client-key-option</a>,&nbsp;<a href="#compressed-option">compressed-option</a>,&nbsp;<a href="#connect-to-option">connect-to-option</a>,&nbsp;<a href="#connect-timeout-option">connect-timeout-option</a>,&nbsp;<a href="#delay-option">delay-option</a>,&nbsp;<a href="#digest-option">digest-option</a>,&nbsp;<a href="#fail-with-body-option">fail-with-body-option</a>,&nbsp;<a href="#follow-redirect-option">follow-redirect-option</a>,&nbsp;<a href="#follow-redirect-trusted-option">follow-redirect-trusted-option</a>,&nbsp;<a href="#header-option">header-option</a>,&nbsp;<a href="#http10-option">http10-option</a>,&nbsp;<a href="#http11-option">http11-option</a>,&nbsp;<a href="#http2-option">http2-option</a>,&nbsp;<a href="#http3-option">http3-option</a>,&nbsp;<a href="#insecure-option">insecure-option</a>,&nbsp;<a href="#ipv4-option">ipv4-option</a>,&nbsp;<a href="#ipv6-option">ipv6-option</a>,&nbsp;<a href="#limit-rate-option">limit-rate-option</a>,&nbsp;<a href="#max-redirs-option">max-redirs-option</a>,&nbsp;<a href="#max-time-option">max-time-option</a>,&nbsp;<a href="#negotiate-option">negotiate-option</a>,&nbsp;<a href="#netrc-option">netrc-option</a>,&nbsp;<a href="#netrc-file-option">netrc-file-option</a>,&nbsp;<a href="#netrc-optional-option">netrc-optional-option</a>,&nbsp;<a href="#output-option">output-option</a>,&nbsp;<a href="#path-as-is-option">path-as-is-option</a>,&nbsp;<a href="#pinned-public-key-option">pinned-public-key-option</a>,&nbsp;<a href="#proxy-option">proxy-option</a>,&nbsp;<a href="#resolve-option">resolve-option</a>,&nbsp;<a href="#repeat-option">repeat-option</a>,&nbsp;<a href="#retry-option">retry-option</a>,&nbsp;<a href="#retry-interval-option">retry-interval-option</a>,&nbsp;<a href="#skip-option">skip-option</a>,&nbsp;<a href="#unix-socket-option">unix-socket-option</a>,&nbsp;<a href="#user-option">user-option</a>,&nbsp;<a href="#variable-option">variable-option</a>,&nbsp;<a href="#variables-file-option">variables-file-option</a>,&nbsp;<a href="#verbose-option">verbose-option</a>,&nbsp;<a href="#very-verbose-option">very-verbose-option</a>,&nbsp;<a href="#multiline-string">multiline-string</a>)</span></div><div class="grammar-rule-expression"><a href="#sp">sp</a><span class="grammar-symbol">*</span>&nbsp;<a href="#comment">comment</a><span class="grammar-symbol">?</span>&nbsp;<span class="grammar-regex">[\n]?</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="comment">comment</span><span class="grammar-usedby">(used by <a href="#lt">lt</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">#</span>&nbsp;<span class="grammar-regex">~[\n]*</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="regex">regex</span><span class="grammar-usedby">(used by <a href="#regex-query">regex-query</a>,&nbsp;<a href="#match-predicate">match-predicate</a>,&nbsp;<a href="#regex-filter">regex-filter</a>,&nbsp;<a href="#replace-regex-filter">replace-regex-filter</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-literal">/</span>&nbsp;<a href="#regex-content">regex-content</a>&nbsp;<span class="grammar-literal">/</span></div></div>
 <div class="grammar-rule"><div class="grammar-rule-declaration"><span class="grammar-rule-id" id="regex-content">regex-content</span><span class="grammar-usedby">(used by <a href="#regex">regex</a>)</span></div><div class="grammar-rule-expression"><span class="grammar-symbol">(</span><a href="#regex-text">regex-text</a><span class="grammar-symbol">|</span><a href="#regex-escaped-char">regex-escaped-char</a><span class="grammar-symbol">)</span><span class="grammar-symbol">*</span></div></div>
