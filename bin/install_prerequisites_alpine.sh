@@ -18,11 +18,8 @@ apk add --quiet \
     python3 \
     python3-dev \
     cargo \
-    squid \
+    mitmproxy \
     jq
 
 # libxml crate >= 0.3.4 uses bindgen
 apk add --quiet clang-dev
-
-sudo squid -k shutdown || true
-sudo rm -v /dev/shm/squid*.shm >/dev/null 2>&1 || true

@@ -72,7 +72,6 @@ To run unit tests, you can run:
 $ cargo test --lib
 ```
 
-
 Hurl has a big suite of [integration tests]. To run the integration tests, you'll need Python 3.9+. You can use a [virtual environment] and install the dependencies needed
 by the tests suite:
 
@@ -86,20 +85,19 @@ Then, you can launch our local server (used to test Hurl features):
 
 ```shell
 $ cd integration/hurl
-$ python3 server.py > server.log 2>&1 &
+$ python3 server.py --host 127.0.0.1 --port 8000 > server.log 2>&1 &
+$ python3 server.py --host "::1" --port 8004 > server-ipv6.log 2>&1 &
 $ python3 tests_ssl/ssl_server.py 8001 tests_ssl/certs/server/cert.selfsigned.pem false > server-ssl-selfsigned.log 2>&1 &
 $ python3 tests_ssl/ssl_server.py 8002 tests_ssl/certs/server/cert.pem false > server-ssl-signedbyca.log 2>&1 &
 $ python3 tests_ssl/ssl_server.py 8003 tests_ssl/certs/server/cert.selfsigned.pem true > server-ssl-client-authent.log 2>&1 &
 $ python3 tests_unix_socket/unix_socket_server.py > server-unix-socket.log 2>&1 &
-$ squid_conf="cache deny all\ncache_log /dev/null\naccess_log /dev/null\nhttp_access allow all\nhttp_port 127.0.0.1:3128\nrequest_header_add From-Proxy Hello\nreply_header_add From-Proxy Hello"
-$ (echo -e "${squid_conf}" | sudo squid -d 2 -N -f /dev/stdin | sudo tee proxy.log 2>&1) &
-$ jobs
+$ mitmdump --listen-host 127.0.0.1 --listen-port 3128 --ignore-hosts '^127\.0\.0\.1:800[123]$' --modify-headers '/~q/From-Proxy/Hello' --modify-headers '/~s/From-Proxy/Hello' > proxy.log 2>&1 &
+```
 
-[1] Running ( echo -e "${squid_conf}" | sudo squid -d 2 -N -f /dev/stdin | sudo tee build/proxy.log 2>&1 ) &
-[2] Running python3 server.py > server.log 2>&1 &
-[3] Running python3 tests_ssl/ssl_server.py 8001 tests_ssl/certs/server/cert.selfsigned.pem false > server-ssl-selfsigned.log 2>&1 &
-[4]-Running python3 tests_ssl/ssl_server.py 8002 tests_ssl/certs/server/cert.pem false > server-ssl-signedbyca.log 2>&1 &
-[5]+Running python3 tests_ssl/ssl_server.py 8003 tests_ssl/certs/server/cert.selfsigned.pem true > server-ssl-client-authent.log 2>&1 &
+or use our setup script:
+
+```shell
+$ bin/test/test_prerequisites.sh
 ```
 
 You can check [the integration `README`] for more details

@@ -13,11 +13,10 @@ yum install -y \
     libcurl-devel \
     python3.11-devel \
     nc \
-    squid \
     jq
 ln -sf /usr/bin/python3.11 /usr/bin/python3
-sudo squid -k shutdown || true
-sudo rm -v /dev/shm/squid*.shm >/dev/null 2>&1 || true
+
+"$(dirname "$0")"/install_mitmproxy.sh
 
 # libxml crate >= 0.3.4 uses bindgen
 yum install -y clang-devel

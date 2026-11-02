@@ -8,31 +8,16 @@ choco install --confirm --no-progress python311
 if ($LASTEXITCODE) { Throw }
 
 # install proxy
-echo "==== install Squid"
-$squid_msi = Join-Path $env:TEMP 'squid.msi'
-Invoke-WebRequest 'https://www.diladele.com/pkg/squid/4.14/squid.msi' -OutFile $squid_msi
-$process = Start-Process -FilePath 'msiexec.exe' -ArgumentList @(
-    '/i', $squid_msi,
-    '/qn',
-    '/norestart',
-    'TARGETDIR=C:\'
-) -Wait -PassThru
-if ($process.ExitCode) { Throw "Squid installation fails with exit code $($process.ExitCode)" }
+echo "==== install mitmproxy"
+$mitmproxy_version = '12.3.1'
+$mitmproxy_zip = Join-Path $env:TEMP 'mitmproxy.zip'
+Invoke-WebRequest "https://downloads.mitmproxy.org/$mitmproxy_version/mitmproxy-$mitmproxy_version-windows-x86_64.zip" -OutFile $mitmproxy_zip
+Expand-Archive -Path $mitmproxy_zip -DestinationPath C:\mitmproxy -Force
 echo "==== create log dir integration\build"
 New-Item -ItemType Directory -Path integration\build -Force
-echo "==== Squid service status"
-sc queryex squidsrv | tee -Append -filepath integration\build\proxy.log
-echo "==== Squid process status"
-Get-Process | Where {$_.Name -eq "Squid"} | tee -Append -filepath integration\build\proxy.log
-echo "==== Squid version"
-C:\Squid\bin\squid --version | tee -Append -filepath integration\build\proxy.log
-echo "==== stop Squid service and kill child process"
-Get-Service -Name 'squidsrv' -ErrorAction SilentlyContinue | ForEach-Object {
-    if ($_.Status -ne 'Stopped') {
-        Stop-Service -Name $_.Name -Force -ErrorAction SilentlyContinue
-    }
-}
-Get-Process -Name 'squid' -ErrorAction SilentlyContinue | Stop-Process -Force
+echo "==== mitmproxy version"
+C:\mitmproxy\mitmdump.exe --version | tee -Append -filepath integration\build\proxy.log
+if ($LASTEXITCODE) { Throw "mitmproxy installation failed" }
 
 # install jq
 echo "==== install jq"

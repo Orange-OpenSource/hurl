@@ -39,9 +39,8 @@ if ($LASTEXITCODE) { Throw }
 sleep 5
 if (netstat -ano | Select-String LISTENING | Select-string 127.0.0.1:8003) {write-host -foregroundcolor Green "server-ssl-client-authent up"} else {write-host -foregroundcolor Red "server-ssl-client-authent is down" ; cat build\server-ssl-client-authent.log ; exit 1}
 
-Get-ChildItem -Force C:\Squid\bin
-write-output "cache deny all" "cache_log /dev/null" "access_log /dev/null" "http_access allow all" "http_port 0.0.0.0:3128" "request_header_add From-Proxy Hello" "reply_header_add From-Proxy Hello" > squid.conf
-C:\Squid\bin\squid -d 2 -N -f squid.conf 2>&1 | tee -Append -filepath build\proxy.log &
+Get-Process -Name 'mitmdump' -ErrorAction SilentlyContinue | Stop-Process -Force
+C:\mitmproxy\mitmdump.exe --listen-host 0.0.0.0 --listen-port 3128 --ignore-hosts '^127\.0\.0\.1:800[123]$' --modify-headers '/~q/From-Proxy/Hello' --modify-headers '/~s/From-Proxy/Hello' 2>&1 | tee -Append -filepath build\proxy.log &
 if ($LASTEXITCODE) { Throw }
 sleep 5
 if (netstat -ano | Select-String LISTENING | Select-string 0.0.0.0:3128) {write-host -foregroundcolor Green "proxy is up"} else {write-host -foregroundcolor Red "proxy is down" ; cat build\proxy.log ; exit 1}

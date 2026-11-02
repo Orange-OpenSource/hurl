@@ -24,11 +24,9 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get -y install \
     python3 \
     python3-venv \
     netcat-openbsd \
-    squid \
     jq
-sudo service squid stop || true
-sudo squid -k shutdown || true
-sudo rm -v /dev/shm/squid*.shm >/dev/null 2>&1 || true
+
+"$(dirname "$0")"/install_mitmproxy.sh
 
 # libxml crate >= 0.3.4 uses bindgen
 sudo DEBIAN_FRONTEND=noninteractive apt-get -y install libclang-dev

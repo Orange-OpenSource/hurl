@@ -13,10 +13,9 @@ pacman -Syu --noconfirm \
     libxml2 \
     glibc \
     openbsd-netcat \
-    squid \
     jq
-sudo squid -k shutdown || true
-sudo rm -v /dev/shm/squid*.shm >/dev/null 2>&1 || true
+
+"$(dirname "$0")"/install_mitmproxy.sh
 
 # libxml crate >= 0.3.4 uses bindgen
 pacman -Syu --noconfirm clang

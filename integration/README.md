@@ -30,7 +30,10 @@ $ pip install --requirement bin/requirements-frozen.txt
 
 ### Proxy
 
-Some integration tests need a proxy. Given our cross-platform needs, we selected [squid] rather than [mitmproxy].
+Some integration tests need a proxy: we use [mitmproxy] (`mitmdump`). On macOS, install it with `brew install mitmproxy`;
+on Alpine, with `apk add mitmproxy` (the standalone binaries need glibc); on other OS, download the standalone binaries
+following the [mitmproxy installation instructions] (see [`bin/install_mitmproxy.sh`]).
+Apart from Alpine, don't use the mitmproxy packages from Linux distributions: they are often outdated or broken.
 
 ### Start local server
 
@@ -189,7 +192,8 @@ curl 'http://localhost:8000/include'
 ```
 
 [mitmproxy]: https://mitmproxy.org
-[squid]: http://www.squid-cache.org
+[mitmproxy installation instructions]: https://docs.mitmproxy.org/stable/overview/installation/
+[`bin/install_mitmproxy.sh`]: /bin/install_mitmproxy.sh
 [`--json`]: /docs/manual.md#json
 [`bin/test/test_prerequisites.sh`]: /bin/test/test_prerequisites.sh
 [`bin/test/test_prerequisites.ps1`]: /bin/test/test_prerequisites.ps1

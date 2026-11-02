@@ -21,12 +21,10 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get -y install \
     libxml2-dev \
     libssl-dev \
     netcat-openbsd \
-    squid \
     jq \
     python3 \
     python3-venv \
     python3-dev
-sudo service squid stop || true
-sudo squid -k shutdown || true
-sudo rm -v /dev/shm/squid*.shm >/dev/null 2>&1 || true
+
+"$(dirname "$0")"/install_mitmproxy.sh
 

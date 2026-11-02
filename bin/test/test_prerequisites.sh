@@ -97,13 +97,14 @@ echo -e "\n------------------ Starting tests_unix_socket/unix_socket_server.py"
 python3 tests_unix_socket/unix_socket_server.py > build/server-unix-socket.log 2>&1 &
 check_unix_socket "tests_unix_socket/unix_socket_server.py" build/unix_socket.sock "GET /hello HTTP/1.0\r\n"
 
-echo -e "\n------------------ Starting squid (proxy)"
-if [ -f /var/run/squid.pid ] ; then
-  sudo squid -k shutdown || true
-  sudo kill -9 "$(cat /var/run/squid.pid || true)" || true
-  sudo rm -fr /var/run/squid.pid || true
-fi
-squid_conf="cache deny all\ncache_log /dev/null\naccess_log /dev/null\nhttp_access allow all\nhttp_port 127.0.0.1:3128\nrequest_header_add From-Proxy Hello\nreply_header_add From-Proxy Hello"
-(echo -e "${squid_conf}" | sudo squid -d 2 -N -f /dev/stdin | sudo tee build/proxy.log 2>&1) &
-check_listen_port "squid" 127.0.0.1 3128 || cat_and_exit_err build/proxy.log
+echo -e "\n------------------ Starting mitmdump (proxy)"
+pkill -f mitmdump || true
+mitmdump \
+  --listen-host 127.0.0.1 \
+  --listen-port 3128 \
+  --ignore-hosts '^127\.0\.0\.1:800[123]$' \
+  --modify-headers '/~q/From-Proxy/Hello' \
+  --modify-headers '/~s/From-Proxy/Hello' \
+  > build/proxy.log 2>&1 &
+check_listen_port "mitmdump" 127.0.0.1 3128 || cat_and_exit_err build/proxy.log
 
