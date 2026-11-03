@@ -1,4 +1,4 @@
-FROM alpine:3.23 AS builder
+FROM alpine:3 AS builder
 ARG TARGETPLATFORM
 WORKDIR /tmp/hurl-docker
 COPY . /tmp/hurl-docker
