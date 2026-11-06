@@ -94,8 +94,8 @@ fn extract_pem_from_certinfo(data: &[String]) -> Option<Pem> {
 /// Returns the connection identifier use by this libcurl handle.
 pub fn conn_id(easy: &Easy) -> Result<i64, Error> {
     unsafe {
-        let conn_id: curl_off_t = 0;
-        let rc = curl_sys::curl_easy_getinfo(easy.raw(), CURLINFO_CONN_ID, &conn_id);
+        let mut conn_id: curl_off_t = 0;
+        let rc = curl_sys::curl_easy_getinfo(easy.raw(), CURLINFO_CONN_ID, &mut conn_id);
         cvt(easy, rc)?;
         Ok(conn_id)
     }
