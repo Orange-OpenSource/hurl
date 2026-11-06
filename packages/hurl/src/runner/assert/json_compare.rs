@@ -158,6 +158,22 @@ pub fn compare(
                 )]
             }
         }
+        (JsonValueKind::Placeholder(placeholder), _) => {
+            let expected_value = expr::eval(&placeholder.expr, variables)?;
+            let actual_value = value_from_json(actual);
+            if expected_value == actual_value {
+                vec![]
+            } else {
+                vec![Mismatch::new(
+                    path.to_string(),
+                    *expected.source_info(),
+                    MismatchKind::Value {
+                        actual: actual_value,
+                        expected: expected_value,
+                    },
+                )]
+            }
+        }
         _ => vec![mismatch(path, expected, actual, variables)?],
     };
     Ok(mismatches)
@@ -206,12 +222,137 @@ mod tests {
         }
     }
 
+    // return {{value}} placeholder
+    fn value_placeholder() -> Placeholder {
+        let source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 5));
+        Placeholder {
+            space0: Whitespace {
+                value: String::new(),
+                source_info,
+            },
+            expr: Expr {
+                kind: ExprKind::Variable(Variable {
+                    name: "value".to_string(),
+                    source_info,
+                }),
+                source_info,
+            },
+            space1: Whitespace {
+                value: String::new(),
+                source_info,
+            },
+        }
+    }
+
     fn json_string(elements: Vec<TemplateElement>) -> JsonValue {
         json_value(JsonValueKind::String(Template::new(
             Some('"'),
             elements,
             SourceInfo::new(Pos::new(1, 1), Pos::new(1, 10)),
         )))
+    }
+
+    fn variables(value: Value) -> VariableSet {
+        let mut variables = VariableSet::new();
+        variables.insert("value".to_string(), value);
+        variables
+    }
+
+    #[test]
+    fn test_compare_placeholder_with_string() {
+        let expected = json_value(JsonValueKind::Placeholder(value_placeholder()));
+        assert!(
+            compare(
+                "$.value",
+                &expected,
+                &serde_json::json!("Alice"),
+                &variables(Value::String("Alice".to_string()))
+            )
+            .unwrap()
+            .is_empty()
+        );
+        assert_eq!(
+            compare(
+                "$.value",
+                &expected,
+                &serde_json::json!("Alice"),
+                &variables(Value::String("Bob".to_string()))
+            )
+            .unwrap(),
+            vec![Mismatch::new(
+                "$.value".to_string(),
+                *expected.source_info(),
+                MismatchKind::Value {
+                    actual: Value::String("Alice".to_string()),
+                    expected: Value::String("Bob".to_string()),
+                },
+            )]
+        );
+        assert_eq!(
+            compare(
+                "$.value",
+                &expected,
+                &serde_json::json!("Alice"),
+                &variables(Value::Bool(true))
+            )
+            .unwrap(),
+            vec![Mismatch::new(
+                "$.value".to_string(),
+                *expected.source_info(),
+                MismatchKind::Value {
+                    actual: Value::String("Alice".to_string()),
+                    expected: Value::Bool(true),
+                },
+            )]
+        );
+    }
+    #[test]
+    fn test_compare_placeholder_with_bool() {
+        let expected = json_value(JsonValueKind::Placeholder(value_placeholder()));
+        assert!(
+            compare(
+                "$.value",
+                &expected,
+                &serde_json::json!(true),
+                &variables(Value::Bool(true))
+            )
+            .unwrap()
+            .is_empty()
+        );
+        assert_eq!(
+            compare(
+                "$.value",
+                &expected,
+                &serde_json::json!(true),
+                &variables(Value::Bool(false))
+            )
+            .unwrap(),
+            vec![Mismatch::new(
+                "$.value".to_string(),
+                *expected.source_info(),
+                MismatchKind::Value {
+                    actual: Value::Bool(true),
+                    expected: Value::Bool(false),
+                },
+            )]
+        );
+        assert_eq!(
+            compare(
+                "$.value",
+                &expected,
+                &serde_json::json!(true),
+                &variables(Value::Number(Number::Integer(1)))
+            )
+            .unwrap(),
+            vec![Mismatch::new(
+                "$.value".to_string(),
+                *expected.source_info(),
+                MismatchKind::Value {
+                    actual: Value::Bool(true),
+                    expected: Value::Number(Number::Integer(1)),
+                },
+            )]
+        );
     }
 
     #[test]
