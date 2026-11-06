@@ -132,6 +132,7 @@ option:
   | http10-option
   | http11-option
   | http2-option
+  | http2-prior-knowledge-option
   | http3-option
   | insecure-option
   | ipv4-option
@@ -143,6 +144,9 @@ option:
   | netrc-option
   | netrc-file-option
   | netrc-optional-option
+  | no-header-option
+  | no-jsonpath-coercion-option
+  | ntlm-option
   | output-option
   | path-as-is-option
   | pinned-public-key-option
@@ -152,6 +156,8 @@ option:
   | retry-option
   | retry-interval-option
   | skip-option
+  | tls-max-option
+  | tls-min-option
   | unix-socket-option
   | user-option
   | variable-option
@@ -192,6 +198,8 @@ http11-option: "http1.1" ":" boolean-option lt
 
 http2-option: "http2" ":" boolean-option lt
 
+http2-prior-knowledge-option: "http2-prior-knowledge" ":" boolean-option lt
+
 http3-option: "http3" ":" boolean-option lt
 
 insecure-option: "insecure" ":" boolean-option lt
@@ -214,6 +222,12 @@ netrc-file-option: "netrc-file" ":" value-string lt
 
 netrc-optional-option: "netrc-optional" ":" boolean-option lt
 
+no-header-option: "no-header" ":" boolean-option lt
+
+no-jsonpath-coercion-option: "no-jsonpath-coercion" ":" boolean-option lt
+
+ntlm-option: "ntlm" ":" boolean-option lt
+
 output-option: "output" ":" value-string lt
 
 path-as-is-option: "path-as-is" ":" boolean-option lt
@@ -231,6 +245,10 @@ retry-option: "retry" ":" count-option lt
 retry-interval-option: "retry-interval" ":" duration-option lt
 
 skip-option: "skip" ":" boolean-option lt
+
+tls-max-option: "tls-max" ":" tls-version-option lt
+
+tls-min-option: "tls-min" ":" tls-version-option lt
 
 unix-socket-option: "unix-socket" ":" value-string lt
 
@@ -255,6 +273,8 @@ integer-option: integer | placeholder
 duration-option: (integer duration-unit?)  | placeholder
 
 duration-unit: "ms" | "s" | "m" | "h"
+
+tls-version-option: "1.0" | "1.1" | "1.2" | "1.3" | placeholder
 
 variable-value:
     null
