@@ -204,7 +204,7 @@ limit-rate-option: "limit-rate" ":" integer-option lt
 
 max-redirs-option: "max-redirs" ":" integer-option lt
 
-max-time-option: "max-time" ":" integer-option lt
+max-time-option: "max-time" ":" duration-option lt
 
 negotiate-option: "negotiate" ":" boolean-option lt
 
