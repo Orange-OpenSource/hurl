@@ -223,10 +223,10 @@ pub mod tests {
     use hurl_core::reader::Pos;
     use hurl_core::types::ToSource;
 
-    use super::super::query;
     use super::*;
     use crate::http::xml_three_users_http_response;
     use crate::runner::Number;
+    use crate::runner::query;
 
     // `xpath "//user" count == 3`
     pub fn assert_count_user() -> Assert {

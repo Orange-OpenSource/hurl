@@ -20,14 +20,14 @@ use hurl_core::ast::{Placeholder, PredicateValue};
 
 use crate::util::path::ContextDir;
 
-use super::super::body::eval_file; // TODO move function out of body module
-use super::super::error::RunnerError;
-use super::super::expr;
-use super::super::multiline::eval_multiline;
-use super::super::number::Number;
-use super::super::template::eval_template;
-use super::super::value::Value;
-use super::super::variable::VariableSet;
+use crate::runner::body::eval_file; // TODO move function out of body module
+use crate::runner::error::RunnerError;
+use crate::runner::expr;
+use crate::runner::multiline::eval_multiline;
+use crate::runner::number::Number;
+use crate::runner::template::eval_template;
+use crate::runner::value::Value;
+use crate::runner::variable::VariableSet;
 
 pub fn eval_predicate_value(
     predicate_value: &PredicateValue,
