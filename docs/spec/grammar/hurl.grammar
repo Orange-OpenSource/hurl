@@ -252,7 +252,7 @@ integer-option: integer | placeholder
 
 duration-option: (integer duration-unit?)  | placeholder
 
-duration-unit: "ms" | "s" | "m"
+duration-unit: "ms" | "s" | "m" | "h"
 
 variable-value:
     null
