@@ -202,7 +202,7 @@ ipv6-option: "ipv6" ":" boolean-option lt
 
 limit-rate-option: "limit-rate" ":" integer-option lt
 
-max-redirs-option: "max-redirs" ":" integer-option lt
+max-redirs-option: "max-redirs" ":" count-option lt
 
 max-time-option: "max-time" ":" duration-option lt
 
@@ -224,9 +224,9 @@ proxy-option: "proxy" ":" value-string lt
 
 resolve-option: "resolve" ":" value-string lt
 
-repeat-option: "repeat" ":" integer-option lt
+repeat-option: "repeat" ":" count-option lt
 
-retry-option: "retry" ":" integer-option lt
+retry-option: "retry" ":" count-option lt
 
 retry-interval-option: "retry-interval" ":" duration-option lt
 
@@ -247,6 +247,8 @@ very-verbose-option: "very-verbose" ":" boolean-option lt
 variable-definition: variable-name "=" variable-value
 
 boolean-option: boolean | placeholder
+
+count-option: "-1" | integer | placeholder
 
 integer-option: integer | placeholder
 
