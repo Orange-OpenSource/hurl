@@ -59,6 +59,35 @@ fn number_from_str(number: &str) -> Number {
     }
 }
 
+fn value_from_json(value: &serde_json::Value) -> Value {
+    match value {
+        serde_json::Value::Null => Value::Null,
+        serde_json::Value::Bool(value) => Value::Bool(*value),
+        serde_json::Value::Number(value) => Value::Number(number_from_str(&value.to_string())),
+        _ => todo!(),
+    }
+}
+
+fn value_from_expected(expected: &JsonValue) -> Value {
+    match expected.kind() {
+        JsonValueKind::Number(number) => Value::Number(number_from_str(number)),
+        JsonValueKind::Boolean(value) => Value::Bool(*value),
+        JsonValueKind::Null => Value::Null,
+        _ => todo!(),
+    }
+}
+
+fn mismatch(path: &str, expected: &JsonValue, actual: &serde_json::Value) -> Mismatch {
+    Mismatch::new(
+        path.to_string(),
+        *expected.source_info(),
+        MismatchKind::Value {
+            actual: value_from_json(actual),
+            expected: value_from_expected(expected),
+        },
+    )
+}
+
 /// Compares a JSON value against an expected JSON value and returns a list of mismatches.
 ///
 /// # Arguments
@@ -80,15 +109,18 @@ pub fn compare(path: &str, expected: &JsonValue, actual: &serde_json::Value) -> 
                 .expect("actual JSON number is representable as f64");
 
             if expected_number_value != actual_number_value {
-                return vec![Mismatch::new(
-                    path.to_string(),
-                    *expected.source_info(),
-                    MismatchKind::Value {
-                        actual: Value::Number(number_from_str(&actual_number.to_string())),
-                        expected: Value::Number(number_from_str(expected_number)),
-                    },
-                )];
+                return vec![mismatch(path, expected, actual)];
             }
+            vec![]
+        }
+        (JsonValueKind::Boolean(expected_boolean), serde_json::Value::Bool(actual_boolean)) => {
+            if expected_boolean == actual_boolean {
+                vec![]
+            } else {
+                vec![mismatch(path, expected, actual)]
+            }
+        }
+        (JsonValueKind::Null, serde_json::Value::Null) => {
             vec![]
         }
         _ => todo!("Mismatch at path {}", path),
@@ -106,6 +138,10 @@ mod tests {
             SourceInfo::new(Pos::new(1, 1), Pos::new(1, 10)),
             JsonValueKind::Number(number.to_string()),
         )
+    }
+
+    fn json_value(kind: JsonValueKind) -> JsonValue {
+        JsonValue::new(SourceInfo::new(Pos::new(1, 1), Pos::new(1, 10)), kind)
     }
 
     #[test]
@@ -138,6 +174,46 @@ mod tests {
                     expected: Value::Number(Number::Float(20.0)),
                 }
             )]
+        );
+    }
+
+    #[test]
+    fn test_compare_boolean() {
+        assert!(
+            compare(
+                "$.enabled",
+                &json_value(JsonValueKind::Boolean(true)),
+                &serde_json::json!(true)
+            )
+            .is_empty()
+        );
+
+        assert_eq!(
+            compare(
+                "$.enabled",
+                &json_value(JsonValueKind::Boolean(true)),
+                &serde_json::json!(false)
+            ),
+            vec![Mismatch::new(
+                "$.enabled".to_string(),
+                SourceInfo::new(Pos::new(1, 1), Pos::new(1, 10)),
+                MismatchKind::Value {
+                    actual: Value::Bool(false),
+                    expected: Value::Bool(true),
+                }
+            )]
+        );
+    }
+
+    #[test]
+    fn test_compare_null() {
+        assert!(
+            compare(
+                "$.value",
+                &json_value(JsonValueKind::Null),
+                &serde_json::Value::Null
+            )
+            .is_empty()
         );
     }
 }
