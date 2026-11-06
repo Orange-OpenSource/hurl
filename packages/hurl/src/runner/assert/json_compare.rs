@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-use crate::runner::Number;
-use crate::runner::Value;
+use crate::runner::expr;
+use crate::runner::template::eval_template;
+use crate::runner::{Number, RunnerError, Value, VariableSet};
 use hurl_core::ast::{JsonValue, JsonValueKind, SourceInfo};
 use serde_json;
 
@@ -64,28 +65,40 @@ fn value_from_json(value: &serde_json::Value) -> Value {
         serde_json::Value::Null => Value::Null,
         serde_json::Value::Bool(value) => Value::Bool(*value),
         serde_json::Value::Number(value) => Value::Number(number_from_str(&value.to_string())),
+        serde_json::Value::String(value) => Value::String(value.clone()),
         _ => todo!(),
     }
 }
 
-fn value_from_expected(expected: &JsonValue) -> Value {
-    match expected.kind() {
+fn value_from_expected(
+    expected: &JsonValue,
+    variables: &VariableSet,
+) -> Result<Value, RunnerError> {
+    let value = match expected.kind() {
+        JsonValueKind::Placeholder(placeholder) => expr::eval(&placeholder.expr, variables)?,
+        JsonValueKind::String(template) => Value::String(eval_template(template, variables)?),
         JsonValueKind::Number(number) => Value::Number(number_from_str(number)),
         JsonValueKind::Boolean(value) => Value::Bool(*value),
         JsonValueKind::Null => Value::Null,
         _ => todo!(),
-    }
+    };
+    Ok(value)
 }
 
-fn mismatch(path: &str, expected: &JsonValue, actual: &serde_json::Value) -> Mismatch {
-    Mismatch::new(
+fn mismatch(
+    path: &str,
+    expected: &JsonValue,
+    actual: &serde_json::Value,
+    variables: &VariableSet,
+) -> Result<Mismatch, RunnerError> {
+    Ok(Mismatch::new(
         path.to_string(),
         *expected.source_info(),
         MismatchKind::Value {
             actual: value_from_json(actual),
-            expected: value_from_expected(expected),
+            expected: value_from_expected(expected, variables)?,
         },
-    )
+    ))
 }
 
 /// Compares a JSON value against an expected JSON value and returns a list of mismatches.
@@ -94,11 +107,17 @@ fn mismatch(path: &str, expected: &JsonValue, actual: &serde_json::Value) -> Mis
 /// * `path` - The JSON path to the value being compared.
 /// * `expected` - The expected JSON value.
 /// * `actual` - The actual JSON value.
+/// * `variables` - The variables used to evaluate placeholders and string templates.
 ///
 /// # Returns
-/// A vector of `Mismatch` instances representing the differences between the expected and actual JSON values.
-pub fn compare(path: &str, expected: &JsonValue, actual: &serde_json::Value) -> Vec<Mismatch> {
-    match (expected.kind(), actual) {
+/// A vector of mismatches, or an error if evaluating the expected value fails.
+pub fn compare(
+    path: &str,
+    expected: &JsonValue,
+    actual: &serde_json::Value,
+    variables: &VariableSet,
+) -> Result<Vec<Mismatch>, RunnerError> {
+    let mismatches = match (expected.kind(), actual) {
         (JsonValueKind::Number(expected_number), serde_json::Value::Number(actual_number)) => {
             // TODO: avoid f64 equality
             let expected_number_value = expected_number
@@ -108,30 +127,51 @@ pub fn compare(path: &str, expected: &JsonValue, actual: &serde_json::Value) -> 
                 .as_f64()
                 .expect("actual JSON number is representable as f64");
 
-            if expected_number_value != actual_number_value {
-                return vec![mismatch(path, expected, actual)];
+            if expected_number_value == actual_number_value {
+                vec![]
+            } else {
+                vec![mismatch(path, expected, actual, variables)?]
             }
-            vec![]
         }
         (JsonValueKind::Boolean(expected_boolean), serde_json::Value::Bool(actual_boolean)) => {
             if expected_boolean == actual_boolean {
                 vec![]
             } else {
-                vec![mismatch(path, expected, actual)]
+                vec![mismatch(path, expected, actual, variables)?]
             }
         }
         (JsonValueKind::Null, serde_json::Value::Null) => {
             vec![]
         }
-        _ => todo!("Mismatch at path {}", path),
-    }
+        (JsonValueKind::String(expected_string), serde_json::Value::String(actual_string)) => {
+            let expected_string = eval_template(expected_string, variables)?;
+            if expected_string == *actual_string {
+                vec![]
+            } else {
+                vec![Mismatch::new(
+                    path.to_string(),
+                    *expected.source_info(),
+                    MismatchKind::Value {
+                        actual: Value::String(actual_string.clone()),
+                        expected: Value::String(expected_string),
+                    },
+                )]
+            }
+        }
+        _ => vec![mismatch(path, expected, actual, variables)?],
+    };
+    Ok(mismatches)
 }
 
 #[cfg(test)]
 mod tests {
 
     use super::*;
+    use hurl_core::ast::{
+        Expr, ExprKind, Placeholder, Template, TemplateElement, Variable, Whitespace,
+    };
     use hurl_core::reader::Pos;
+    use hurl_core::types::ToSource;
 
     fn json_number(number: &str) -> JsonValue {
         JsonValue::new(
@@ -144,17 +184,103 @@ mod tests {
         JsonValue::new(SourceInfo::new(Pos::new(1, 1), Pos::new(1, 10)), kind)
     }
 
+    // return {{name}} placeholder
+    fn name_placeholder() -> Placeholder {
+        let source_info = SourceInfo::new(Pos::new(1, 1), Pos::new(1, 1));
+        Placeholder {
+            space0: Whitespace {
+                value: String::new(),
+                source_info,
+            },
+            expr: Expr {
+                kind: ExprKind::Variable(Variable {
+                    name: "name".to_string(),
+                    source_info,
+                }),
+                source_info,
+            },
+            space1: Whitespace {
+                value: String::new(),
+                source_info,
+            },
+        }
+    }
+
+    fn json_string(elements: Vec<TemplateElement>) -> JsonValue {
+        json_value(JsonValueKind::String(Template::new(
+            Some('"'),
+            elements,
+            SourceInfo::new(Pos::new(1, 1), Pos::new(1, 10)),
+        )))
+    }
+
+    #[test]
+    fn test_compare_string_template() {
+        // Hello {{name}}
+        let expected = json_string(vec![
+            TemplateElement::String {
+                value: "Hello ".to_string(),
+                source: "Hello ".to_source(),
+            },
+            TemplateElement::Placeholder(name_placeholder()),
+        ]);
+        let mut variables = VariableSet::new();
+        variables.insert("name".to_string(), Value::String("Alice".to_string()));
+        assert!(
+            compare(
+                "$.name",
+                &expected,
+                &serde_json::json!("Hello Alice"),
+                &variables
+            )
+            .unwrap()
+            .is_empty()
+        );
+        assert_eq!(
+            compare(
+                "$.name",
+                &expected,
+                &serde_json::json!("Hello Bob"),
+                &variables
+            )
+            .unwrap(),
+            vec![Mismatch::new(
+                "$.name".to_string(),
+                *expected.source_info(),
+                MismatchKind::Value {
+                    actual: Value::String("Hello Bob".to_string()),
+                    expected: Value::String("Hello Alice".to_string()),
+                },
+            )]
+        );
+    }
+
     #[test]
     fn test_compare_number_as_equal() {
-        assert!(compare("$.age", &json_number("22"), &serde_json::json!(22)).is_empty());
-        assert!(compare("$.age", &json_number("1.0"), &serde_json::json!(1)).is_empty());
-        assert!(compare("$.age", &json_number("1"), &serde_json::json!(1.0)).is_empty());
+        let variables = VariableSet::new();
+        for (expected, actual) in [
+            ("22", serde_json::json!(22)),
+            ("1.0", serde_json::json!(1)),
+            ("1", serde_json::json!(1.0)),
+        ] {
+            assert!(
+                compare("$.age", &json_number(expected), &actual, &variables)
+                    .unwrap()
+                    .is_empty()
+            );
+        }
     }
 
     #[test]
     fn test_compare_number_as_not_equal() {
         assert_eq!(
-            compare("$.age", &json_number("20"), &serde_json::json!(22)),
+            compare(
+                "$.age",
+                &json_number("20"),
+                &serde_json::json!(22),
+                &VariableSet::new()
+            )
+            .unwrap(),
             vec![Mismatch::new(
                 "$.age".to_string(),
                 SourceInfo::new(Pos::new(1, 1), Pos::new(1, 10)),
@@ -165,7 +291,13 @@ mod tests {
             )]
         );
         assert_eq!(
-            compare("$.age", &json_number("20.0"), &serde_json::json!(22.0)),
+            compare(
+                "$.age",
+                &json_number("20.0"),
+                &serde_json::json!(22.0),
+                &VariableSet::new()
+            )
+            .unwrap(),
             vec![Mismatch::new(
                 "$.age".to_string(),
                 SourceInfo::new(Pos::new(1, 1), Pos::new(1, 10)),
@@ -183,8 +315,10 @@ mod tests {
             compare(
                 "$.enabled",
                 &json_value(JsonValueKind::Boolean(true)),
-                &serde_json::json!(true)
+                &serde_json::json!(true),
+                &VariableSet::new()
             )
+            .unwrap()
             .is_empty()
         );
 
@@ -192,8 +326,10 @@ mod tests {
             compare(
                 "$.enabled",
                 &json_value(JsonValueKind::Boolean(true)),
-                &serde_json::json!(false)
-            ),
+                &serde_json::json!(false),
+                &VariableSet::new()
+            )
+            .unwrap(),
             vec![Mismatch::new(
                 "$.enabled".to_string(),
                 SourceInfo::new(Pos::new(1, 1), Pos::new(1, 10)),
@@ -211,8 +347,10 @@ mod tests {
             compare(
                 "$.value",
                 &json_value(JsonValueKind::Null),
-                &serde_json::Value::Null
+                &serde_json::Value::Null,
+                &VariableSet::new()
             )
+            .unwrap()
             .is_empty()
         );
     }
