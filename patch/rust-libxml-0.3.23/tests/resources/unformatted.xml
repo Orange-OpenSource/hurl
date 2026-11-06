@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="UTF-8"?><r:root xmlns:h="http://example.com/ns/hello" xmlns:f="http://example.com/ns/farewell" xmlns:r="http://example.com/ns/root"><h:table><h:tr><h:td>col 1</h:td><h:td>col 2</h:td></h:tr></h:table><f:mock><f:doublemock /></f:mock><f:footer><h:table><h:tr><h:td>col 3</h:td><f:footer> nested f</f:footer></h:tr></h:table></f:footer></r:root>

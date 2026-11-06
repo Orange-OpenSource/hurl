@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <!--
+        According to the Namespaces in XML 1.1 (Second Edition) specification, https://www.w3.org/TR/xml-names11/#uniqAttrs, we should not have a node like this
+        <child xmlns:foo="http://www.example.com/myns" xmlns:bar="http://www.example.com/myns" attribute="value1" foo:attribute="foo1" bar:attribute="bar1">some text</child>
+        as both `foo` and `bar` have been bound to identical namespace names.
+    -->
+    <child xmlns:foo="http://www.example.com/myns" xmlns:bar="http://www.example.com/myns" attribute="value1" foo:attribute="foo1" bar:attr="bar1">some text</child>
+    <child xmlns:foo="http://www.example.com/myns" attribute="value2" foo:attribute="foo2" />
+    <child xmlns:bar="http://www.example.com/myns" attribute="value3" bar:attribute="bar3">more text</child>
+</root>

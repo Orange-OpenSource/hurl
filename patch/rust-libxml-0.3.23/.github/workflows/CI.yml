@@ -1,0 +1,84 @@
+on: [push, pull_request]
+
+name: CI Linux
+
+# Least privilege: this workflow only reads the repo and runs tests.
+permissions:
+  contents: read
+
+jobs:
+  test-amd64:
+    name: rust-libxml amd64 CI
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        with_default_bindings: [false, true]
+    steps:
+      - name: install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxml2-dev
+      - name: Set up LIBXML2 env var if compiling with the default bindings
+        run: echo "LIBXML2=$(pkg-config libxml-2.0 --variable=libdir)/libxml2.so" >> "$GITHUB_ENV"
+        if: ${{ matrix.with_default_bindings }}
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+      - name: run tests
+        run: cargo test
+
+  test-valgrind:
+    name: rust-libxml valgrind
+    runs-on: ubuntu-latest
+    steps:
+      - name: install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxml2-dev valgrind
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+      - name: run tests under valgrind
+        # Memory errors only (invalid reads/writes, uses of freed memory).
+        # Leaks do not fail the job yet: the suite still has definite leaks
+        # (base_tests::create_pi, base_tests::document_can_import_node).
+        run: cargo test
+        env:
+          CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUNNER: valgrind -q --error-exitcode=101
+
+  test-arm64:
+    name: rust-libxml arm64 CI
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxml2-dev
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+      - name: run tests
+        run: cargo test
+
+  test-newer-libxml2:
+    strategy:
+      matrix:
+        libxml_version: ["2.12.9", "2.13.8", "2.14.1", "2.15.1"]
+    name: With libxml ${{ matrix.libxml_version }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpython3-dev
+      - uses: actions/checkout@v6
+      - name: Install libxml ${{ matrix.libxml_version }} by hand
+        run: |
+          wget https://download.gnome.org/sources/libxml2/$(echo ${{ matrix.libxml_version }} | sed -e 's/\.[0-9]*$//')/libxml2-${{ matrix.libxml_version }}.tar.xz
+          tar xf libxml2-${{ matrix.libxml_version }}.tar.xz
+          cd libxml2-${{ matrix.libxml_version }}
+          ./configure
+          make
+          sudo make install
+      - uses: dtolnay/rust-toolchain@stable
+      - name: run tests
+        run: cargo test
+        env:
+          LD_LIBRARY_PATH: /usr/local/lib

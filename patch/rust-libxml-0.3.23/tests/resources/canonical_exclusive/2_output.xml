@@ -1,0 +1,3 @@
+<n1:elem2 xmlns:n1="http://example.net" xmlns:stay1="http://foo.example" xmlns:stay2="http://foo2.example" xml:lang="en" xml:space="retain">
+    <n3:stuff xmlns:n3="ftp://example.org"></n3:stuff>
+</n1:elem2>

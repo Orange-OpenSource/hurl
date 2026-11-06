@@ -1,0 +1,61 @@
+[package]
+name = "libxml"
+version = "0.3.23"
+edition = "2024"
+rust-version = "1.88"
+authors = ["Andreas Franzén <andreas@devil.se>", "Deyan Ginev <deyan.ginev@gmail.com>","Jan Frederik Schaefer <j.schaefer@jacobs-university.de>"]
+description = "A Rust wrapper for libxml2 - the XML C parser and toolkit developed for the Gnome project"
+repository = "https://github.com/KWARC/rust-libxml"
+documentation = "https://kwarc.github.io/rust-libxml/libxml/index.html"
+readme = "README.md"
+license = "MIT"
+keywords = ["xml", "libxml","xpath", "parser", "html"]
+build = "build.rs"
+exclude = [
+  "scripts/*"
+]
+
+[lib]
+name = "libxml"
+
+[features]
+# How bindgen locates libclang to generate the FFI bindings at BUILD time.
+# Orthogonal to the `LIBXML2_STATIC` env var, which controls how libxml2 itself is
+# linked into your binary (see build.rs). Together they let you build a fully
+# static / musl / Alpine binary — see issue #110.
+default = ["runtime"]
+# clang-sys loads libclang dynamically (dlopen) at build time — the usual desktop
+# setup; needs a libclang shared library available while building.
+runtime = ["bindgen/runtime"]
+# clang-sys links libclang statically — required for fully static / musl / Alpine
+# build environments where dlopen of libclang is unavailable. Select it WITHOUT
+# the default feature:  cargo build --no-default-features --features static
+# (clang-sys then needs a static libclang, e.g. via LLVM_CONFIG_PATH).
+static = ["bindgen/static"]
+
+[dependencies]
+libc = "0.2"
+
+[target.'cfg(all(target_family = "windows", target_env = "msvc"))'.build-dependencies]
+vcpkg = "0.2"
+
+[target.'cfg(all(target_family = "windows", target_env = "gnu"))'.build-dependencies]
+pkg-config = "0.3.2"
+
+[target.'cfg(macos)'.build-dependencies]
+pkg-config = "0.3.2"
+
+[target.'cfg(unix)'.build-dependencies]
+pkg-config = "0.3.2"
+
+[build-dependencies.bindgen]
+version = "0.73.1"
+default-features = false
+
+[dev-dependencies]
+rayon = "1.0.0"
+criterion = "0.8.0"
+
+[[bench]]
+name = "parsing_benchmarks"
+harness = false

@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <child attribute="value">some text</child>
+    <child attribute="empty">more text</child>
+</root>

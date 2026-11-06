@@ -1,0 +1,16 @@
+sudo: false
+dist: trusty
+language: rust
+rust:
+- stable
+- beta
+- nightly
+addons:
+  apt:
+    packages: libxml2-dev
+after_success: ./scripts/doc-upload.sh
+env:
+  global:
+    - RUST_TEST_THREADS=1
+    - SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+    - secure: "kuvtFj8UpLj0NQhk3a9PDLRhXq4cDhd9UNT9Sn0S2TBFF23AsOX2ffXN+5ey/2mfYEk18d5MpUM15Ha/7PbxTebkqZxhFeZimrqAHTC6605AUICmuJv06tmLYetoqgNvyU0Tgt4MCYblja8oJCs/TkEFtbVxZX0uZ2lgsyLG8PQyROEyiaPQyeld7rd4k6s+13w4EOFO0kGh992BmOAUiICqsDqKYddaI7KL49b4AwkGrfaXAf/mtlJT7E4NlloI/5AmCYlQdYwQui3SJojvzd9lDBF7syuPesgPz3S6dlzr80uKVuI0rVx6K6Xo+vzZLWP4HZExIjF12G8DuBKAWLmoN/QfR+ipkXGrTau78+8Jp0qCQsy4ti4rY8PvhwipkdGS+pUV8a06UwTZARLnknnhfqKFoNvIUjLwdu1HVwftXtIgdFtU7RZMJfUxdq8/dNdXNerAm4c3kdwcKl4nP6Fnus4OWkeekuuCCObcBI1qlTFQT2pp5ae+3oe3kq1Srq8/HrLGlQkcWlbYsB9/mKuSxqRQxTbGli3eWBALecpeCQPdrxygFarX6q18HTwoqprvbcCp9BM4soADv5gVUeiOuYmvn2DbREMMZJKd6cpcXpXem4epK+MxpXh7jhQ60xw9GuIIeZxcgyKf+pP3lRoII3nPZKoecUoDcJct1l4="

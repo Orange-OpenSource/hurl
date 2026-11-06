@@ -1,0 +1,46 @@
+# Based on the "trust" template v0.1.2
+# https://github.com/japaric/trust/tree/v0.1.2
+
+environment:
+  global:
+    RUST_VERSION: stable
+    CRATE_NAME: rust-libxml
+
+  matrix:
+    - CHANNEL: stable
+      ARCH: x86_64
+      TOOLCHAIN: msvc
+      FEATURES: vcpkg
+      VCPKG_DEFAULT_TRIPLET: x64-windows
+      VCPKGRS_DYNAMIC: 1
+      TARGET: x86_64-pc-windows-msvc
+
+install:
+  - vcpkg install libxml2
+  - curl -sSf -o rustup-init.exe https://win.rustup.rs/
+  - rustup-init.exe -y --default-host %TARGET% --default-toolchain %RUST_VERSION%
+  - set PATH=%PATH%;C:\Users\appveyor\.cargo\bin
+  - rustc -Vv
+  - cargo -V
+
+test_script:
+  - if [%APPVEYOR_REPO_TAG%]==[false] (
+      cargo build --target %TARGET% &&
+      cargo test --target %TARGET%
+    )
+
+cache:
+  - '%USERPROFILE%\.cargo\registry'
+  - C:\tools\vcpkg\installed
+  - target
+
+branches:
+  only:
+    - master
+
+notifications:
+  - provider: Email
+    on_build_success: false
+
+# Building is done in the test phase, so we disable Appveyor's build phase.
+build: false

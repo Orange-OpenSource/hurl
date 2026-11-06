@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<document>
+  <test>
+    <empty/>
+  </test>
+  <test>
+    <p xml:id="start">Hello</p>
+    <deeper>
+      <p xml:id="mid"> </p>
+    </deeper>
+    <deeper>
+      <still>
+        <p xml:id="end">World!</p>
+      </still>
+    </deeper>
+  </test>
+</document>

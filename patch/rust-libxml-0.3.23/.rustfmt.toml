@@ -1,0 +1,2 @@
+# Detailed instructions at: https://github.com/rust-lang-nursery/rustfmt/blob/master/Configurations.md
+tab_spaces = 2

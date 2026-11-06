@@ -28,3 +28,7 @@ enum_variant_added = { level = "allow" }
 enum_no_repr_variant_discriminant_changed = { level = "allow" }
 enum_discriminants_undefined_non_unit_variant = { level = "allow" }  # Remove before next minor release
 
+# Test a patched libxml crate (pkg-config on Windows msvc, see <https://github.com/KWARC/rust-libxml/issues/179>)
+[patch.crates-io]
+libxml = { path = "patch/rust-libxml-0.3.23" }
+
