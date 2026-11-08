@@ -4,7 +4,7 @@ set -Eeuo pipefail
 case $(uname -m) in
     x86_64) arch="amd64" ;;
     aarch64) arch="arm64" ;;
-    *) echo "Unkown arch" ; uname -m  ;;
+    *) echo "Unknown arch" ; uname -m  ;;
 esac
 
 sudo rm -rf target/debian

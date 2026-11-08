@@ -1371,7 +1371,7 @@ GET http://example.org/endpoint2
 
 ### Capturing values
 
-A value from an HTTP response can be-reused for successive HTTP requests.
+A value from an HTTP response can be reused for successive HTTP requests.
 
 A typical example occurs with CSRF tokens.
 
