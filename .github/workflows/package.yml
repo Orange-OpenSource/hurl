@@ -777,7 +777,7 @@ jobs:
       - package-macos-aarch64
       - package-windows-x64
     name: package-anatomy
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: Validate branch input for workflow_call
       if: ${{ github.event_name == 'workflow_call' }}
