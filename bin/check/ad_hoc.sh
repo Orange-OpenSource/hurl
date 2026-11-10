@@ -66,7 +66,7 @@ check_shell_function_snake_case(){
 	                echo "${color_red}${script}: function ${function}${color_reset} have to be: $(echo "${function}" | tr '-' '_')"
 	                errors_count=$((errors_count+1))
 	            else
-	                echo "${script}: function ${function} ${color_green}well formated${color_reset}"
+	                echo "${script}: function ${function} ${color_green}well formatted${color_reset}"
 	            fi
 	        done < <(echo "${kebab_case_function_list}")
 	    fi

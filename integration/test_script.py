@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Test integration scripts.
 
-This script run an integrations script and asserts it against exepcted exit code, standard output and
+This script run an integrations script and asserts it against expected exit code, standard output and
  standard error.
 
 Examples:
