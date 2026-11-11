@@ -24,6 +24,7 @@ use winres::WindowsResource;
 #[cfg(windows)]
 fn set_icon() {
     let icon = "../../bin/windows/logo.ico";
+    println!("cargo:rerun-if-changed={icon}");
     if !Path::new(icon).exists() {
         return;
     }
@@ -40,9 +41,11 @@ fn set_icon() {}
 fn main() {
     let project_root = Path::new(env!("CARGO_MANIFEST_DIR"));
     let native_src = project_root.join("native");
+    println!("cargo:rerun-if-changed=build.rs");
+    println!("cargo:rerun-if-changed=native");
     set_icon();
     Build::new()
         .file(native_src.join("libxml.c"))
         .flag_if_supported("-Wno-unused-parameter") // unused parameter in silent callback
-        .compile("mylib");
+        .compile("hurl_libxml");
 }
