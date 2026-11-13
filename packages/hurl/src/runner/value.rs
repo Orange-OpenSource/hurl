@@ -91,7 +91,7 @@ impl PartialEq for Value {
             (Value::List(v1), Value::List(v2)) => v1 == v2,
             (Value::Nodeset(v1), Value::Nodeset(v2)) => v1 == v2,
             (Value::Null, Value::Null) => true,
-            (Value::Object(v1), Value::Object(v2)) => v1 == v2,
+            (Value::Object(v1), Value::Object(v2)) => objects_eq(v1, v2),
             (Value::String(v1), Value::String(v2)) => v1 == v2,
             (Value::Unit, Value::Unit) => true,
             _ => false,
@@ -100,6 +100,13 @@ impl PartialEq for Value {
 }
 
 impl Eq for Value {}
+
+/// Compares two objects as unordered sets of key/value pairs.
+fn objects_eq(v1: &[(String, Value)], v2: &[(String, Value)]) -> bool {
+    v1.len() == v2.len()
+        && v1.iter().all(|entry| v2.contains(entry))
+        && v2.iter().all(|entry| v1.contains(entry))
+}
 
 impl fmt::Display for Value {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -259,6 +266,26 @@ mod tests {
         assert!(!(Value::Bool(true) == Value::Bool(false)));
         assert!(Value::Number(Number::Integer(1)) == Value::Number(Number::Float(1.0)));
         assert!(!(Value::Bool(true) == Value::String("Hello".to_string())));
+    }
+
+    #[test]
+    fn test_object_eq() {
+        let obj1 = Value::Object(vec![
+            ("a".to_string(), Value::Number(Number::Integer(1))),
+            ("b".to_string(), Value::String("b".to_string())),
+        ]);
+        let obj2 = Value::Object(vec![
+            ("b".to_string(), Value::String("b".to_string())),
+            ("a".to_string(), Value::Number(Number::Integer(1))),
+        ]);
+        let obj3 = Value::Object(vec![
+            ("a".to_string(), Value::Number(Number::Integer(1))),
+            ("b".to_string(), Value::String("b".to_string())),
+        ]);
+
+        assert!(obj1 == obj1);
+        assert!(obj2 == obj1);
+        assert!(obj3 == obj1);
     }
 
     #[test]
