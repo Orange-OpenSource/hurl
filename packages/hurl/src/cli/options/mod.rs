@@ -52,7 +52,7 @@ pub use error::CliOptionsError;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CliOptions {
     pub aws_sigv4: Option<String>,
-    pub cacert_file: Option<String>,
+    pub cacert_file: Option<PathBuf>,
     pub client_cert_file: Option<String>,
     pub client_key_file: Option<String>,
     pub color_stdout: BoolOpt,

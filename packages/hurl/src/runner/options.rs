@@ -15,6 +15,8 @@
  * limitations under the License.
  *
  */
+use std::path::PathBuf;
+
 use hurl_core::ast::{
     BooleanOption, CountOption, DurationOption, Entry, NaturalOption, Number as AstNumber,
     OptionKind, Placeholder, Template, VariableDefinition, VariableValue, VerbosityOption,
@@ -66,7 +68,7 @@ pub fn get_entry_options(
             }
             OptionKind::CaCertificate(filename) => {
                 let value = eval_template(filename, variables)?;
-                entry_options.cacert_file = Some(value);
+                entry_options.cacert_file = Some(PathBuf::from(value));
             }
             OptionKind::ClientCert(filename) => {
                 let value = eval_template(filename, variables)?;

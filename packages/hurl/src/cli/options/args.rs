@@ -337,14 +337,14 @@ fn parse_arg_matches(
 
 fn cacert_file(
     arg_matches: &ArgMatches,
-    default_value: Option<String>,
-) -> Result<Option<String>, CliOptionsError> {
+    default_value: Option<PathBuf>,
+) -> Result<Option<PathBuf>, CliOptionsError> {
     match get_string(arg_matches, "cacert_file") {
         None => Ok(default_value),
         Some(filename) => {
-            let path = Path::new(&filename);
+            let path = PathBuf::from(&filename);
             if path.exists() {
-                Ok(Some(filename))
+                Ok(Some(path))
             } else {
                 Err(CliOptionsError::Error(format!(
                     "Input file {} does not exist",

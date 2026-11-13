@@ -466,7 +466,7 @@ impl ClientOptions {
         }
         if let Some(ref cacert_file) = self.cacert_file {
             args.push(Arg::plain("--cacert"));
-            args.push(Arg::plain(cacert_file));
+            args.push(Arg::plain(&cacert_file.to_string_lossy()));
         }
         if let Some(ref client_cert_file) = self.client_cert_file {
             args.push(Arg::plain("--cert"));

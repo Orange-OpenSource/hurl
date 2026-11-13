@@ -1227,7 +1227,7 @@ mod tests {
         let output = Some(&file);
         let options = ClientOptions {
             aws_sigv4: Some("aws:amz:sts".to_string()),
-            cacert_file: Some("/etc/cert.pem".to_string()),
+            cacert_file: Some(PathBuf::from("/etc/cert.pem")),
             compressed: true,
             connects_to: vec!["example.com:443:host-47.example.com:443".to_string()],
             insecure: true,

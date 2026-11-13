@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use std::path::PathBuf;
 use std::time::Duration;
 
 use hurl_core::types::{BytesPerSec, Count};
@@ -29,7 +30,7 @@ use super::output::Output;
 pub struct RunnerOptionsBuilder {
     allow_reuse: bool,
     aws_sigv4: Option<String>,
-    cacert_file: Option<String>,
+    cacert_file: Option<PathBuf>,
     client_cert_file: Option<String>,
     client_key_file: Option<String>,
     color_stdout: bool,
@@ -169,7 +170,7 @@ impl RunnerOptionsBuilder {
 
     /// Specifies the certificate file for peer verification.
     /// The file may contain multiple CA certificates and must be in PEM format.
-    pub fn cacert_file(&mut self, cacert_file: Option<String>) -> &mut Self {
+    pub fn cacert_file(&mut self, cacert_file: Option<PathBuf>) -> &mut Self {
         self.cacert_file = cacert_file;
         self
     }
@@ -586,7 +587,7 @@ pub struct RunnerOptions {
     /// Specifies the AWS SigV4 option.
     pub(crate) aws_sigv4: Option<String>,
     /// Specifies the certificate file for peer verification.
-    pub(crate) cacert_file: Option<String>,
+    pub(crate) cacert_file: Option<PathBuf>,
     /// Sets Client certificate file and password.
     pub(crate) client_cert_file: Option<String>,
     /// Sets private key file name.

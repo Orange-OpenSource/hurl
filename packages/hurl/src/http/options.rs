@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+use std::path::PathBuf;
 use std::time::Duration;
 
 use hurl_core::types::{BytesPerSec, Count};
@@ -30,7 +31,7 @@ pub struct ClientOptions {
     /// and [`CURLOPT_FORBID_REUSE`](https://curl.se/libcurl/c/CURLOPT_FORBID_REUSE.html).
     pub allow_reuse: bool,
     pub aws_sigv4: Option<String>,
-    pub cacert_file: Option<String>,
+    pub cacert_file: Option<PathBuf>,
     pub client_cert_file: Option<String>,
     pub client_key_file: Option<String>,
     pub compressed: bool,
