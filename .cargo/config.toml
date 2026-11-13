@@ -8,3 +8,7 @@ rustflags = ["-Ctarget-feature=-crt-static"]
 # Should be only activated for Alpine but I don't know how to set it...
 [build]
 rustdocflags = ["-Ctarget-feature=-crt-static"]
+
+# We use 7 days of minimum age for dependency versions
+[registry]
+global-min-publish-age = "7 days"
