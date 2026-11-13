@@ -15,11 +15,13 @@
  * limitations under the License.
  *
  */
+use std::collections::HashSet;
+
+use hurl_core::ast::{JsonObjectElement, JsonValue, JsonValueKind, SourceInfo};
+
 use crate::runner::expr;
 use crate::runner::template::eval_template;
 use crate::runner::{Number, RunnerError, Value, VariableSet};
-use hurl_core::ast::{JsonValue, JsonValueKind, SourceInfo};
-use serde_json;
 
 /// Represents a mismatch between an expected and actual JSON value.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -40,8 +42,14 @@ impl Mismatch {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[allow(clippy::large_enum_variant)]
 pub enum MismatchKind {
+    /// The actual value differs from the expected value (including type mismatches).
     Value { actual: Value, expected: Value },
+    /// A key of the expected object is absent from the actual object.
+    MissingKey,
+    /// A key of the actual object is absent from the expected object.
+    UnexpectedKey,
 }
 
 fn number_from_str(number: &str) -> Number {
@@ -66,7 +74,13 @@ fn value_from_json(value: &serde_json::Value) -> Value {
         serde_json::Value::Bool(value) => Value::Bool(*value),
         serde_json::Value::Number(value) => Value::Number(number_from_str(&value.to_string())),
         serde_json::Value::String(value) => Value::String(value.clone()),
-        _ => todo!(),
+        serde_json::Value::Array(_) => todo!(),
+        serde_json::Value::Object(values) => Value::Object(
+            values
+                .iter()
+                .map(|(key, value)| (key.clone(), value_from_json(value)))
+                .collect(),
+        ),
     }
 }
 
@@ -80,7 +94,18 @@ fn value_from_expected(
         JsonValueKind::Number(number) => Value::Number(number_from_str(number)),
         JsonValueKind::Boolean(value) => Value::Bool(*value),
         JsonValueKind::Null => Value::Null,
-        _ => todo!(),
+        JsonValueKind::List { .. } => todo!(),
+        JsonValueKind::Object { elements, .. } => Value::Object(
+            elements
+                .iter()
+                .map(|element| {
+                    Ok((
+                        eval_template(&element.name, variables)?,
+                        value_from_expected(&element.value, variables)?,
+                    ))
+                })
+                .collect::<Result<_, RunnerError>>()?,
+        ),
     };
     Ok(value)
 }
@@ -174,8 +199,60 @@ pub fn compare(
                 )]
             }
         }
+        (JsonValueKind::Object { elements, .. }, serde_json::Value::Object(actual_elements)) => {
+            compare_objects(
+                path,
+                elements,
+                actual_elements,
+                *expected.source_info(),
+                variables,
+            )?
+        }
         _ => vec![mismatch(path, expected, actual, variables)?],
     };
+    Ok(mismatches)
+}
+
+/// Compares two objects key by key
+///
+/// Missing keys and value mismatches are reported first,
+/// then keys present only in the actual object.
+fn compare_objects(
+    path: &str,
+    expected_elements: &[JsonObjectElement],
+    actual_elements: &serde_json::Map<String, serde_json::Value>,
+    source_info: SourceInfo,
+    variables: &VariableSet,
+) -> Result<Vec<Mismatch>, RunnerError> {
+    let mut mismatches = vec![];
+    let mut expected_keys = HashSet::new();
+    for expected_element in expected_elements {
+        let key = eval_template(&expected_element.name, variables)?;
+        let key_path = format!("{path}.{key}");
+        match actual_elements.get(&key) {
+            Some(actual_value) => mismatches.extend(compare(
+                &key_path,
+                &expected_element.value,
+                actual_value,
+                variables,
+            )?),
+            None => mismatches.push(Mismatch::new(
+                key_path,
+                expected_element.name.source_info,
+                MismatchKind::MissingKey,
+            )),
+        }
+        expected_keys.insert(key);
+    }
+    for key in actual_elements.keys() {
+        if !expected_keys.contains(key) {
+            mismatches.push(Mismatch::new(
+                format!("{path}.{key}"),
+                source_info,
+                MismatchKind::UnexpectedKey,
+            ));
+        }
+    }
     Ok(mismatches)
 }
 
@@ -256,6 +333,151 @@ mod tests {
         let mut variables = VariableSet::new();
         variables.insert("value".to_string(), value);
         variables
+    }
+
+    fn source_info() -> SourceInfo {
+        SourceInfo::new(Pos::new(1, 1), Pos::new(1, 10))
+    }
+
+    fn json_object(entries: Vec<(&str, JsonValue)>) -> JsonValue {
+        json_value(JsonValueKind::Object {
+            space0: String::new(),
+            elements: entries
+                .into_iter()
+                .map(|(key, value)| JsonObjectElement {
+                    space0: String::new(),
+                    name: Template::new(
+                        Some('"'),
+                        vec![TemplateElement::String {
+                            value: key.to_string(),
+                            source: key.to_source(),
+                        }],
+                        source_info(),
+                    ),
+                    space1: String::new(),
+                    space2: String::new(),
+                    value,
+                    space3: String::new(),
+                })
+                .collect(),
+        })
+    }
+
+    #[test]
+    fn test_compare_object() {
+        let variables = VariableSet::new();
+        let expected = json_object(vec![
+            ("id", json_number("1")),
+            ("enabled", json_value(JsonValueKind::Boolean(true))),
+        ]);
+
+        assert!(
+            compare(
+                "$",
+                &expected,
+                &serde_json::json!({"enabled": true, "id": 1}),
+                &variables
+            )
+            .unwrap()
+            .is_empty()
+        );
+
+        // Missing key, mismatched value and unexpected key
+        assert_eq!(
+            compare(
+                "$",
+                &expected,
+                &serde_json::json!({"enabled": false, "name": "Alice"}),
+                &variables
+            )
+            .unwrap(),
+            vec![
+                Mismatch::new("$.id".to_string(), source_info(), MismatchKind::MissingKey),
+                Mismatch::new(
+                    "$.enabled".to_string(),
+                    source_info(),
+                    MismatchKind::Value {
+                        actual: Value::Bool(false),
+                        expected: Value::Bool(true),
+                    },
+                ),
+                Mismatch::new(
+                    "$.name".to_string(),
+                    source_info(),
+                    MismatchKind::UnexpectedKey
+                ),
+            ]
+        );
+    }
+
+    #[test]
+    fn test_compare_nested() {
+        let variables = VariableSet::new();
+        let expected = json_object(vec![(
+            "user",
+            json_object(vec![
+                ("name", json_string_literal("Bob")),
+                (
+                    "address",
+                    json_object(vec![("city", json_string_literal("Paris"))]),
+                ),
+            ]),
+        )]);
+        let actual = serde_json::json!({"user": {"name": "Bobby", "address": {"city": "Paris"}}});
+        assert_eq!(
+            compare("$", &expected, &actual, &variables).unwrap(),
+            vec![Mismatch::new(
+                "$.user.name".to_string(),
+                source_info(),
+                MismatchKind::Value {
+                    actual: Value::String("Bobby".to_string()),
+                    expected: Value::String("Bob".to_string()),
+                },
+            )]
+        );
+    }
+
+    #[test]
+    fn test_compare_type_mismatch() {
+        let variables = VariableSet::new();
+
+        // Expected object, actual scalar
+        let expected = json_object(vec![("id", json_number("1"))]);
+        assert_eq!(
+            compare("$", &expected, &serde_json::json!(1), &variables).unwrap(),
+            vec![Mismatch::new(
+                "$".to_string(),
+                source_info(),
+                MismatchKind::Value {
+                    actual: Value::Number(Number::Integer(1)),
+                    expected: Value::Object(vec![(
+                        "id".to_string(),
+                        Value::Number(Number::Integer(1))
+                    )]),
+                },
+            )]
+        );
+
+        // Expected scalar, actual object
+        let expected = json_number("1");
+        assert_eq!(
+            compare("$", &expected, &serde_json::json!({"a": null}), &variables).unwrap(),
+            vec![Mismatch::new(
+                "$".to_string(),
+                source_info(),
+                MismatchKind::Value {
+                    actual: Value::Object(vec![("a".to_string(), Value::Null)]),
+                    expected: Value::Number(Number::Integer(1)),
+                },
+            )]
+        );
+    }
+
+    fn json_string_literal(value: &str) -> JsonValue {
+        json_string(vec![TemplateElement::String {
+            value: value.to_string(),
+            source: value.to_source(),
+        }])
     }
 
     #[test]
