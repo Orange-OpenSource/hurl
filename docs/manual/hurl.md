@@ -182,6 +182,8 @@ To use temporary session credentials (e.g. for an AWS IAM Role), add the `X-Amz-
 Specifies the certificate file for peer verification. The file may contain multiple CA certificates and must be in PEM format.
 Normally Hurl is built to use a default file for this, so this option is typically used to alter that default file.
 
+See also [`--insecure`](#insecure).
+
 #### -E, --cert <CERTIFICATE[:PASSWORD]> {#cert}
 
 Client certificate file and password.
