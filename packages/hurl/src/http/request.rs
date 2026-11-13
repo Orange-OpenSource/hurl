@@ -16,6 +16,7 @@
  *
  */
 use std::fmt;
+use std::path::PathBuf;
 use std::str::FromStr;
 
 use super::header::{COOKIE, HeaderVec};
@@ -117,6 +118,62 @@ pub enum IpResolve {
     Default,
     IpV4,
     IpV6,
+}
+
+/// A certificate file with an optional password.
+#[derive(Clone, Debug, PartialEq, Eq, Default)]
+pub struct CertFile {
+    pub path: PathBuf,
+    pub password: Option<String>,
+}
+
+impl From<&str> for CertFile {
+    /// Parses a certificate file from a "curl" option string `PATH:PASSWORD`
+    fn from(value: &str) -> Self {
+        let mut iter = value.chars();
+        let mut cert = String::new();
+        let mut password = String::new();
+        // The state of the parser:
+        // - `true` if we're parsing the certificate portion of `cert_and_pass`
+        // - `false` if we're parsing the password portion of `cert_and_pass`
+        let mut parse_cert = true;
+        while let Some(c) = iter.next() {
+            if parse_cert {
+                // We're parsing the certificate, do some escaping
+                match c {
+                    '\\' => {
+                        // We read the next escaped char, if we failed, we're at the end of this string,
+                        // the read char is not an escaping \.
+                        match iter.next() {
+                            Some(c) => cert.push(c),
+                            None => {
+                                cert.push('\\');
+                                break;
+                            }
+                        }
+                    }
+                    ':' if parse_cert => parse_cert = false,
+                    c => cert.push(c),
+                }
+            } else {
+                // We have already found a cert/password separator, we don't need to escape anything now
+                // we just update the password
+                password.push(c);
+            }
+        }
+        let cert = PathBuf::from(cert);
+        let password = if parse_cert { None } else { Some(password) };
+        CertFile {
+            path: cert,
+            password,
+        }
+    }
+}
+
+impl From<String> for CertFile {
+    fn from(value: String) -> Self {
+        CertFile::from(value.as_str())
+    }
 }
 
 /// Do the HTTP client follow redirection, or not?
@@ -272,5 +329,85 @@ mod tests {
         assert_eq!("1.3".parse(), Ok(TlsVersion::Tls13));
         assert!("1.4".parse::<TlsVersion>().is_err());
         assert_eq!(TlsVersion::Tls12.to_string(), "1.2");
+    }
+
+    #[test]
+    fn test_parse_cert() {
+        assert_eq!(
+            CertFile::from("foobar"),
+            CertFile {
+                path: "foobar".into(),
+                password: None
+            }
+        );
+        assert_eq!(
+            CertFile::from("foobar:toto"),
+            CertFile {
+                path: "foobar".into(),
+                password: Some("toto".to_string())
+            }
+        );
+        assert_eq!(
+            CertFile::from("foobar:toto:tata"),
+            CertFile {
+                path: "foobar".into(),
+                password: Some("toto:tata".to_string())
+            }
+        );
+        assert_eq!(
+            CertFile::from("foobar:"),
+            CertFile {
+                path: "foobar".into(),
+                password: Some(String::new())
+            }
+        );
+        assert_eq!(
+            CertFile::from("foobar\\"),
+            CertFile {
+                path: "foobar\\".into(),
+                password: None
+            }
+        );
+        assert_eq!(
+            CertFile::from("foo\\:bar\\:baz:toto:tata\\:tutu"),
+            CertFile {
+                path: "foo:bar:baz".into(),
+                password: Some("toto:tata\\:tutu".to_string())
+            }
+        );
+        assert_eq!(
+            CertFile::from("foo\\\\:toto\\:tata:tutu"),
+            CertFile {
+                path: "foo\\".into(),
+                password: Some("toto\\:tata:tutu".to_string())
+            }
+        );
+    }
+
+    fn cert(path: &str, password: Option<&str>) -> CertFile {
+        CertFile {
+            path: PathBuf::from(path),
+            password: password.map(|p| p.to_string()),
+        }
+    }
+
+    #[test]
+    fn parse_cert_option() {
+        assert_eq!(CertFile::from("foobar"), cert("foobar", None));
+        assert_eq!(CertFile::from("foobar:toto"), cert("foobar", Some("toto")));
+        assert_eq!(
+            CertFile::from("foobar:toto:tata"),
+            cert("foobar", Some("toto:tata"))
+        );
+        assert_eq!(CertFile::from("foobar:"), cert("foobar", Some("")));
+        assert_eq!(CertFile::from("foobar\\"), cert("foobar\\", None));
+        assert_eq!(
+            CertFile::from("foo\\:bar\\:baz:toto:tata\\:tutu"),
+            cert("foo:bar:baz", Some("toto:tata\\:tutu"))
+        );
+        assert_eq!(
+            CertFile::from("foo\\\\:toto\\:tata:tutu"),
+            cert("foo\\", Some("toto\\:tata:tutu"))
+        );
     }
 }

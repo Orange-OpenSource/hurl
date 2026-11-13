@@ -31,14 +31,13 @@ pub use self::header::{
 pub(crate) use self::options::{ClientOptions, Verbosity};
 pub(crate) use self::param::Param;
 pub use self::request::{
-    CredentialForwarding, FollowLocation, IpResolve, Request, RequestedHttpVersion, TlsVersion,
+    CertFile, CredentialForwarding, FollowLocation, IpResolve, Request, RequestedHttpVersion,
+    TlsVersion,
 };
 pub(crate) use self::request_cookie::RequestCookie;
 pub(crate) use self::request_spec::{Body, FileParam, Method, MultipartParam, RequestSpec};
 pub use self::response::{HttpVersion, Response};
 pub use self::response_cookie::{CookieAttribute, ResponseCookie};
-#[cfg(test)]
-pub use self::tests::*;
 pub use self::timings::Timings;
 pub use self::url::{Url, UrlError};
 pub use self::version::libcurl_version_info;
@@ -64,9 +63,12 @@ mod response;
 mod response_cookie;
 mod response_debug;
 mod response_decoding;
-#[cfg(test)]
-mod tests;
 mod timings;
 mod timings_debug;
 mod url;
 mod version;
+
+#[cfg(test)]
+pub use self::tests::*;
+#[cfg(test)]
+mod tests;

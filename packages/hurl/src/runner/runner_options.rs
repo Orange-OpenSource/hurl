@@ -20,7 +20,9 @@ use std::time::Duration;
 
 use hurl_core::types::{BytesPerSec, Count};
 
-use crate::http::{FollowLocation, HeaderVec, IpResolve, RequestedHttpVersion, TlsVersion};
+use crate::http::{
+    CertFile, FollowLocation, HeaderVec, IpResolve, RequestedHttpVersion, TlsVersion,
+};
 use crate::pretty::PrettyMode;
 use crate::util::path::ContextDir;
 
@@ -31,7 +33,7 @@ pub struct RunnerOptionsBuilder {
     allow_reuse: bool,
     aws_sigv4: Option<String>,
     cacert_file: Option<PathBuf>,
-    client_cert_file: Option<String>,
+    client_cert_file: Option<CertFile>,
     client_key_file: Option<String>,
     color_stdout: bool,
     compressed: bool,
@@ -176,7 +178,7 @@ impl RunnerOptionsBuilder {
     }
 
     /// Sets Client certificate file and password.
-    pub fn client_cert_file(&mut self, client_cert_file: Option<String>) -> &mut Self {
+    pub fn client_cert_file(&mut self, client_cert_file: Option<CertFile>) -> &mut Self {
         self.client_cert_file = client_cert_file;
         self
     }
@@ -588,8 +590,8 @@ pub struct RunnerOptions {
     pub(crate) aws_sigv4: Option<String>,
     /// Specifies the certificate file for peer verification.
     pub(crate) cacert_file: Option<PathBuf>,
-    /// Sets Client certificate file and password.
-    pub(crate) client_cert_file: Option<String>,
+    /// Sets client certificate file and password.
+    pub(crate) client_cert_file: Option<CertFile>,
     /// Sets private key file name.
     pub(crate) client_key_file: Option<String>,
     /// Whether we use color in stdout, or not. This property is used when response is outputted
