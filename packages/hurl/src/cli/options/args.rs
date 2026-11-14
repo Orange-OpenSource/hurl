@@ -378,16 +378,17 @@ fn client_cert_file(
 
 fn client_key_file(
     arg_matches: &ArgMatches,
-    default_value: Option<String>,
-) -> Result<Option<String>, CliOptionsError> {
+    default_value: Option<PathBuf>,
+) -> Result<Option<PathBuf>, CliOptionsError> {
     match get::<String>(arg_matches, "client_key_file") {
         None => Ok(default_value),
         Some(filename) => {
-            if !Path::new(&filename).is_file() {
+            let path = PathBuf::from(&filename);
+            if !path.is_file() {
                 let message = format!("File {filename} does not exist");
                 Err(CliOptionsError::Error(message))
             } else {
-                Ok(Some(filename))
+                Ok(Some(path))
             }
         }
     }

@@ -63,9 +63,8 @@ pub use error::CliOptionsError;
 pub struct CliOptions {
     pub aws_sigv4: Option<String>,
     pub cacert_file: Option<PathBuf>,
-    /// Client certificate file with optional password `certificate(:password)`
     pub client_cert_file: Option<String>,
-    pub client_key_file: Option<String>,
+    pub client_key_file: Option<PathBuf>,
     pub color_stdout: BoolOpt,
     pub color_stderr: BoolOpt,
     pub compressed: bool,

@@ -78,7 +78,7 @@ pub fn get_entry_options(
             }
             OptionKind::ClientKey(filename) => {
                 let value = eval_template(filename, variables)?;
-                entry_options.client_key_file = Some(value);
+                entry_options.client_key_file = Some(PathBuf::from(value));
             }
             OptionKind::Compressed(value) => {
                 let value = eval_boolean_option(value, variables)?;

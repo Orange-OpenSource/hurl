@@ -34,7 +34,7 @@ pub struct RunnerOptionsBuilder {
     aws_sigv4: Option<String>,
     cacert_file: Option<PathBuf>,
     client_cert_file: Option<CertFile>,
-    client_key_file: Option<String>,
+    client_key_file: Option<PathBuf>,
     color_stdout: bool,
     compressed: bool,
     connect_timeout: Duration,
@@ -184,7 +184,7 @@ impl RunnerOptionsBuilder {
     }
 
     /// Sets private key file name.
-    pub fn client_key_file(&mut self, client_key_file: Option<String>) -> &mut Self {
+    pub fn client_key_file(&mut self, client_key_file: Option<PathBuf>) -> &mut Self {
         self.client_key_file = client_key_file;
         self
     }
@@ -593,7 +593,7 @@ pub struct RunnerOptions {
     /// Sets client certificate file and password.
     pub(crate) client_cert_file: Option<CertFile>,
     /// Sets private key file name.
-    pub(crate) client_key_file: Option<String>,
+    pub(crate) client_key_file: Option<PathBuf>,
     /// Whether we use color in stdout, or not. This property is used when response is outputted
     /// to a file or to standard output through `[Options]` section.
     pub(crate) color_stdout: bool,
