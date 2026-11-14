@@ -21,7 +21,7 @@ use std::time::Duration;
 use hurl_core::types::{BytesPerSec, Count};
 
 use super::header::HeaderVec;
-use super::request::{FollowLocation, IpResolve, RequestedHttpVersion, TlsVersion};
+use super::request::{CertFile, FollowLocation, IpResolve, RequestedHttpVersion, TlsVersion};
 
 #[derive(Debug, Clone)]
 pub struct ClientOptions {
@@ -32,7 +32,7 @@ pub struct ClientOptions {
     pub allow_reuse: bool,
     pub aws_sigv4: Option<String>,
     pub cacert_file: Option<PathBuf>,
-    pub client_cert_file: Option<String>,
+    pub client_cert_file: Option<CertFile>,
     pub client_key_file: Option<String>,
     pub compressed: bool,
     pub connect_timeout: Duration,

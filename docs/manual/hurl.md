@@ -186,7 +186,7 @@ See also [`--insecure`](#insecure).
 
 #### -E, --cert <CERTIFICATE[:PASSWORD]> {#cert}
 
-Client certificate file and password.
+Client certificate file and password. The certificate must be PEM format.
 
 See also [`--key`](#key).
 
