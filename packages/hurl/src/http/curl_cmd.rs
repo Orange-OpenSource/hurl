@@ -474,7 +474,7 @@ impl ClientOptions {
         }
         if let Some(ref client_key_file) = self.client_key_file {
             args.push(Arg::plain("--key"));
-            args.push(Arg::plain(client_key_file));
+            args.push(Arg::plain(&client_key_file.to_string_lossy()));
         }
         if self.compressed {
             args.push(Arg::plain("--compressed"));

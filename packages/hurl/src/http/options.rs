@@ -33,7 +33,7 @@ pub struct ClientOptions {
     pub aws_sigv4: Option<String>,
     pub cacert_file: Option<PathBuf>,
     pub client_cert_file: Option<CertFile>,
-    pub client_key_file: Option<String>,
+    pub client_key_file: Option<PathBuf>,
     pub compressed: bool,
     pub connect_timeout: Duration,
     pub connects_to: Vec<String>,
