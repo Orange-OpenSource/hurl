@@ -20,6 +20,6 @@ attr     user_group  type  file
 -------  ---         file  iconv-2.dll
 -------  ---         file  libcurl.dll
 -------  ---         file  libxml2.dll
+-------  ---         file  libz.dll
 -------  ---         file  nghttp2.dll
 -------  ---         file  version.txt
--------  ---         file  z.dll
