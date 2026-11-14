@@ -37,7 +37,7 @@ use hurl::http::{
     CertFile, CredentialForwarding, FollowLocation, Header, HeaderVec, RequestedHttpVersion,
 };
 use hurl::pretty::PrettyMode;
-use hurl::runner::Output;
+use hurl::runner::{Output, RunnerOptions, RunnerOptionsBuilder, Value};
 use hurl::util::logger;
 use hurl::util::logger::{LoggerOptions, LoggerOptionsBuilder};
 use hurl::util::path::ContextDir;
@@ -45,16 +45,25 @@ use hurl_core::input::{Input, InputKind};
 use hurl_core::types::{BytesPerSec, Count};
 
 use crate::cli::CliError;
-pub use crate::cli::options::context::RunContext;
-pub use crate::cli::options::env_vars::EnvVars;
-use crate::runner::{RunnerOptions, RunnerOptionsBuilder, Value};
+pub use context::RunContext;
+pub use env_vars::EnvVars;
 pub use error::CliOptionsError;
 
-/// Represents the list of all options that can be used in Hurl command line.
+/// All the options that can be used with the Hurl command line.
+///
+/// Values come from the config file, environment variables and command line arguments, in
+/// increasing order of priority (see [`parse`]).
+///
+/// Each field maps one-to-one to a command line option and holds its value with as little
+/// processing as possible. By contrast, [`RunnerOptions`] holds structured, validated data. For
+/// instance, `--header "name: value"` is stored as a `Vec<String>` in [`CliOptions`] and as a
+/// [`HeaderVec`] in [`RunnerOptions`]. Use [`CliOptions::to_runner_options`] to convert between
+/// the two.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CliOptions {
     pub aws_sigv4: Option<String>,
     pub cacert_file: Option<PathBuf>,
+    /// Client certificate file with optional password `certificate(:password)`
     pub client_cert_file: Option<String>,
     pub client_key_file: Option<String>,
     pub color_stdout: BoolOpt,
@@ -129,7 +138,7 @@ pub struct CliOptions {
 /// determined automatically.
 #[derive(Copy, Clone, Debug, Default, PartialEq, Eq)]
 pub enum BoolOpt {
-    /// This option has been set explicitely (by user, or by the running context)
+    /// This option has been set explicitly (by user, or by the running context)
     Set(bool),
     /// This option has not been set yet and will be valued latter
     #[default]
@@ -154,7 +163,7 @@ impl BoolOpt {
     }
 }
 
-/// Log verbosity level
+/// Log verbosity level.
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum Verbosity {
     Brief,
@@ -180,10 +189,12 @@ impl FromStr for Verbosity {
     }
 }
 
-/// Error format: long or rich.
+/// Error format: short or long.
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum ErrorFormat {
+    /// Default brief error.
     Short,
+    /// Add response to the error, with debug curl command.
     Long,
 }
 
@@ -296,7 +307,7 @@ fn get_version() -> String {
     )
 }
 
-/// Parse the Hurl CLI options and returns a [`CliOptions`] result, given list of command line arguments,
+/// Parses the Hurl CLI options and returns a [`CliOptions`] result, given list of command line arguments,
 /// a run `context` and environment variables.
 pub fn parse<I>(
     args: I,
@@ -611,7 +622,7 @@ impl CliOptions {
             .build())
     }
 
-    /// Converts this instance of [`ClipOptions`] to an instance of [`LoggerOptions`]
+    /// Converts this instance of [`CliOptions`] to an instance of [`LoggerOptions`]
     pub fn to_logger_options(&self) -> LoggerOptions {
         let verbosity = self.verbosity.map(|v| match v {
             Verbosity::Brief => logger::Verbosity::LowVerbose,
