@@ -99,10 +99,10 @@ SectionGroup "dlls"
     SetOutPath $INSTDIR
     File "libxml2.dll"
   SectionEnd
-  Section "z.dll"
+  Section "libz.dll"
     SectionIn RO
     SetOutPath $INSTDIR
-    File "z.dll"
+    File "libz.dll"
   SectionEnd
   Section "libcurl.dll"
     SectionIn RO
