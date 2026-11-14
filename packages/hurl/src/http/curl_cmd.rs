@@ -470,11 +470,11 @@ impl ClientOptions {
         }
         if let Some(ref client_cert_file) = self.client_cert_file {
             args.push(Arg::plain("--cert"));
-            args.push(Arg::plain(client_cert_file));
+            args.push(Arg::plain(&client_cert_file.path.to_string_lossy()));
         }
         if let Some(ref client_key_file) = self.client_key_file {
             args.push(Arg::plain("--key"));
-            args.push(Arg::plain(client_key_file));
+            args.push(Arg::plain(&client_key_file.to_string_lossy()));
         }
         if self.compressed {
             args.push(Arg::plain("--compressed"));

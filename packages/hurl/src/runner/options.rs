@@ -23,7 +23,9 @@ use hurl_core::ast::{
 };
 use hurl_core::types::{BytesPerSec, Count, DurationUnit};
 
-use crate::http::{CredentialForwarding, FollowLocation, Header, IpResolve, RequestedHttpVersion};
+use crate::http::{
+    CertFile, CredentialForwarding, FollowLocation, Header, IpResolve, RequestedHttpVersion,
+};
 use crate::pretty::PrettyMode;
 use crate::util::logger::{Logger, Verbosity};
 
@@ -72,11 +74,11 @@ pub fn get_entry_options(
             }
             OptionKind::ClientCert(filename) => {
                 let value = eval_template(filename, variables)?;
-                entry_options.client_cert_file = Some(value);
+                entry_options.client_cert_file = Some(CertFile::from(value));
             }
             OptionKind::ClientKey(filename) => {
                 let value = eval_template(filename, variables)?;
-                entry_options.client_key_file = Some(value);
+                entry_options.client_key_file = Some(PathBuf::from(value));
             }
             OptionKind::Compressed(value) => {
                 let value = eval_boolean_option(value, variables)?;

@@ -186,7 +186,7 @@ See also [`--insecure`](#insecure).
 
 #### -E, --cert <CERTIFICATE[:PASSWORD]> {#cert}
 
-Client certificate file and password.
+Client certificate file and password. The certificate must be PEM format.
 
 See also [`--key`](#key).
 
@@ -276,7 +276,9 @@ Environment variables: HURL_IPV6
 
 #### --key <KEY> {#key}
 
-Private key file name.
+Private key file name. Allows you to provide your private key in this separate file.
+
+See also [`--cert`](#cert).
 
 #### --limit-rate <SPEED> {#limit-rate}
 
