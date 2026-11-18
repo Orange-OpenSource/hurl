@@ -83,6 +83,14 @@ class Crate:
         ]
         return max(aged, key=semver_key, default=None)
 
+    def version_age_days(self, version: str) -> int | None:
+        """Returns the age in days of a given version, or `None` if unknown."""
+        now = datetime.now(dt.timezone.utc)
+        for num, created in self.versions:
+            if num == version:
+                return (now - created).days
+        return None
+
     def get_release_body(self, version: str, token: str) -> str | None:
         """Get the release body for a given version"""
         headers = {"Accept": "application/vnd.github+json"}
@@ -301,20 +309,22 @@ def update_local_crates(
                 min_publish_age_days=min_publish_age_days
             )
 
+            latest_age_days = dep.version_age_days(latest_version)
+
             # No version older than the minimum publish age is newer than the actual version:
             # don't update and process the next crate
             if latest_compat_version is None or semver_key(
                 latest_compat_version
             ) <= semver_key(actual_version):
                 print(
-                    f"- {dep.name} {actual_version} {Color.YELLOW}update {latest_version} too recent, minimum age {min_publish_age_days} days{Color.RESET}"
+                    f"- {dep.name} {actual_version} {Color.YELLOW}update {latest_version} too recent ({latest_age_days} days, minimum age {min_publish_age_days} days){Color.RESET}"
                 )
                 continue
             # A version older than the minimum publish age is newer than the actual version: update to it.
             # If it's not the latest version, the latest version is too recent.
             if latest_compat_version != latest_version:
                 print(
-                    f"- {dep.name} {actual_version} {Color.YELLOW}update {latest_version} too recent, minimum age {min_publish_age_days} days, using {latest_compat_version}{Color.RESET}"
+                    f"- {dep.name} {actual_version} {Color.YELLOW}update {latest_version} too recent ({latest_age_days} days, minimum age {min_publish_age_days} days), using {latest_compat_version}{Color.RESET}"
                 )
             latest_version = latest_compat_version
             local_crate.update_dependency(
