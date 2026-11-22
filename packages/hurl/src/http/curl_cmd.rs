@@ -274,7 +274,7 @@ fn cookies_params(request_spec: &RequestSpec, cookie_store: &CookieStore) -> Vec
     let mut cookies_from_store = cookie_store
         .cookies()
         .filter(|c| !c.is_expired())
-        .filter(|c| c.match_domain(&request_spec.url))
+        .filter(|c| c.match_url(&request_spec.url))
         .map(|c| (c.name(), c.value()))
         .collect::<Vec<_>>();
 

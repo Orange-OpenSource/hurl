@@ -229,20 +229,41 @@ impl Cookie {
         self.include_subdomain
     }
 
-    pub fn match_domain(&self, url: &Url) -> bool {
-        // We remove the legacy optional dot in cookie domain.
-        let cookie_domain = self.domain.strip_prefix(".").unwrap_or(&self.domain);
-        if let Some(url_domain) = url.domain() {
-            if !self.include_subdomain() {
-                if url_domain != cookie_domain {
-                    return false;
-                }
-            } else if !url_domain.ends_with(&cookie_domain) {
-                return false;
-            }
-        }
-        url.path().starts_with(&self.path)
+    /// Returns `true` if this cookie applies to `url`, based on the host and the path of the URL.
+    pub fn match_url(&self, url: &Url) -> bool {
+        self.match_host(url) && url.path().starts_with(&self.path)
     }
+
+    /// Returns `true` if the host of `url` matches this cookie domain.
+    fn match_host(&self, url: &Url) -> bool {
+        // The host of `url` must be equal to the cookie domain (case-insensitive) or, if the cookie
+        // includes subdomains, be a subdomain of the cookie domain. Subdomain matching is only done
+        // for domain names: an IP address must be strictly equal to the cookie domain. The path of
+        // `url` must start with the cookie path.
+
+        // We remove the legacy optional dot in cookie domain.
+        let cookie_domain = self.domain.strip_prefix('.').unwrap_or(&self.domain);
+        let cookie_domain = cookie_domain.to_ascii_lowercase();
+        // The host of an IPv6 URL is bracketed, while libcurl stores (and only matches) the
+        // cookie domain without brackets.
+        let host = url.host();
+        let host = trim_brackets(&host).to_ascii_lowercase();
+        if host == cookie_domain {
+            return true;
+        }
+        // Subdomain matching only applies to domain names, never to IP addresses. When `url` is
+        // an IP address, `domain()` is `None`.
+        self.include_subdomain
+            && url.domain().is_some()
+            && host.ends_with(&format!(".{cookie_domain}"))
+    }
+}
+
+/// Removes the optional brackets around an IPv6 address host.
+fn trim_brackets(host: &str) -> &str {
+    host.strip_prefix('[')
+        .and_then(|h| h.strip_suffix(']'))
+        .unwrap_or(host)
 }
 
 impl fmt::Display for Cookie {
@@ -330,6 +351,19 @@ mod tests {
     use super::*;
     use std::str::FromStr;
 
+    fn new_cookie(domain: &str, include_subdomain: bool, path: &str) -> Cookie {
+        Cookie {
+            domain: domain.to_string(),
+            include_subdomain,
+            path: path.to_string(),
+            https: true,
+            expires: 0,
+            name: String::new(),
+            value: String::new(),
+            http_only: false,
+        }
+    }
+
     #[test]
     pub fn parse_cookie_from_str() {
         assert_eq!(
@@ -395,49 +429,66 @@ mod tests {
 
     #[test]
     fn test_match_cookie() {
-        let cookie = Cookie {
-            domain: "example.com".to_string(),
-            include_subdomain: false,
-            path: "/".to_string(),
-            https: true,
-            expires: 0,
-            name: String::new(),
-            value: String::new(),
-            http_only: false,
-        };
-        assert!(cookie.match_domain(&Url::from_str("http://example.com/toto").unwrap()));
-        assert!(!cookie.match_domain(&Url::from_str("http://sub.example.com/tata").unwrap()));
-        assert!(!cookie.match_domain(&Url::from_str("http://toto/tata").unwrap()));
+        let cookie = new_cookie("example.com", false, "/");
+        assert!(cookie.match_url(&Url::from_str("http://example.com/toto").unwrap()));
+        assert!(!cookie.match_url(&Url::from_str("http://sub.example.com/tata").unwrap()));
+        assert!(!cookie.match_url(&Url::from_str("http://toto/tata").unwrap()));
 
-        let cookie = Cookie {
-            domain: "example.com".to_string(),
-            include_subdomain: true,
-            path: "/toto".to_string(),
-            https: true,
-            expires: 0,
-            name: String::new(),
-            value: String::new(),
-            http_only: false,
-        };
-        assert!(cookie.match_domain(&Url::from_str("http://example.com/toto").unwrap()));
-        assert!(cookie.match_domain(&Url::from_str("http://sub.example.com/toto").unwrap()));
-        assert!(!cookie.match_domain(&Url::from_str("http://example.com/tata").unwrap()));
+        let cookie = new_cookie("example.com", true, "/toto");
+        assert!(cookie.match_url(&Url::from_str("http://example.com/toto").unwrap()));
+        assert!(cookie.match_url(&Url::from_str("http://sub.example.com/toto").unwrap()));
+        assert!(!cookie.match_url(&Url::from_str("http://example.com/tata").unwrap()));
 
         // Legacy cookie domain with dot prefix
-        let cookie = Cookie {
-            domain: ".example.com".to_string(),
-            include_subdomain: true,
-            path: "/foo".to_string(),
-            https: true,
-            expires: 0,
-            name: String::new(),
-            value: String::new(),
-            http_only: false,
-        };
-        assert!(cookie.match_domain(&Url::from_str("http://example.com/foo").unwrap()));
-        assert!(cookie.match_domain(&Url::from_str("http://sub.example.com/foo").unwrap()));
-        assert!(!cookie.match_domain(&Url::from_str("http://example.com/tata").unwrap()));
-        assert!(!cookie.match_domain(&Url::from_str("http://sub.example.com/tata").unwrap()));
+        let cookie = new_cookie(".example.com", true, "/foo");
+        assert!(cookie.match_url(&Url::from_str("http://example.com/foo").unwrap()));
+        assert!(cookie.match_url(&Url::from_str("http://sub.example.com/foo").unwrap()));
+        assert!(!cookie.match_url(&Url::from_str("http://example.com/tata").unwrap()));
+        assert!(!cookie.match_url(&Url::from_str("http://sub.example.com/tata").unwrap()));
+    }
+
+    #[test]
+    fn test_match_url_ip_address() {
+        let cookie = new_cookie("localhost", false, "/");
+        assert!(cookie.match_url(&Url::from_str("http://localhost:8000/foo").unwrap()));
+        assert!(!cookie.match_url(&Url::from_str("http://127.0.0.1:8000/foo").unwrap()));
+        assert!(!cookie.match_url(&Url::from_str("http://[::1]:8000/foo").unwrap()));
+
+        let cookie = new_cookie("127.0.0.1", false, "/");
+        assert!(cookie.match_url(&Url::from_str("http://127.0.0.1:8000/foo").unwrap()));
+        assert!(!cookie.match_url(&Url::from_str("http://localhost:8000/foo").unwrap()));
+        assert!(!cookie.match_url(&Url::from_str("http://127.0.0.2/foo").unwrap()));
+
+        // No subdomain matching on IP addresses.
+        let cookie = new_cookie("0.0.1", true, "/");
+        assert!(!cookie.match_url(&Url::from_str("http://127.0.0.1/foo").unwrap()));
+
+        let cookie = new_cookie("::1", false, "/");
+        assert!(cookie.match_url(&Url::from_str("http://[::1]:8000/foo").unwrap()));
+        assert!(!cookie.match_url(&Url::from_str("http://[::2]:8000/foo").unwrap()));
+        // libcurl doesn't match a bracketed cookie domain.
+        let cookie = new_cookie("[::1]", false, "/");
+        assert!(!cookie.match_url(&Url::from_str("http://[::1]:8000/foo").unwrap()));
+    }
+
+    #[test]
+    fn test_match_url_subdomain_boundary() {
+        let cookie = new_cookie("example.com", true, "/");
+        assert!(cookie.match_url(&Url::from_str("http://example.com/").unwrap()));
+        assert!(cookie.match_url(&Url::from_str("http://a.b.example.com/").unwrap()));
+        assert!(!cookie.match_url(&Url::from_str("http://badexample.com/").unwrap()));
+        assert!(!cookie.match_url(&Url::from_str("http://example.com.evil.org/").unwrap()));
+        assert!(!cookie.match_url(&Url::from_str("http://com/").unwrap()));
+    }
+
+    #[test]
+    fn test_match_url_case_insensitive() {
+        let cookie = new_cookie("Example.COM", false, "/");
+        assert!(cookie.match_url(&Url::from_str("http://example.com/").unwrap()));
+        assert!(cookie.match_url(&Url::from_str("http://EXAMPLE.com/").unwrap()));
+
+        let cookie = new_cookie(".Example.COM", true, "/");
+        assert!(cookie.match_url(&Url::from_str("http://sub.example.com/").unwrap()));
     }
 
     #[test]
