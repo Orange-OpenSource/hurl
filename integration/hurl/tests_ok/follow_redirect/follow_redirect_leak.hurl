@@ -1,4 +1,4 @@
-GET http://localhost:8000/follow-redirect-leak/host-a-step-1?trusted={{trusted}}
+GET http://localhost:8000/follow-redirect-leak/host-a-step-1?expect_auth_forwarded={{expect_auth_forwarded}}&expect_cookie_forwarded={{expect_cookie_forwarded}}
 HTTP 200
 [Asserts]
 redirects count == 2
@@ -7,5 +7,4 @@ redirects nth 1 location startsWith "http://localhost:8000/follow-redirect-leak/
 url == "http://localhost:8000/follow-redirect-leak/host-a-step-3"
 header "Location" not exists
 `Followed redirect!`
-
 
