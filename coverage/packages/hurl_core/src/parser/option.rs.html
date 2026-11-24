@@ -7,7 +7,7 @@
     <body>
         <div class="container">
     <nav class="breadcrumb is-right" aria-label="breadcrumbs">
-        <ul><li><a href="../../../../index.html">top_level</a></li><li><a href="./index.html">packages&#x2F;hurl_core&#x2F;src&#x2F;parser</a></li><li class="is-active"><a href="#">option.rs</a></li>
+        <ul><li><a href="../../../../index.html">top_level</a></li><li><a href="./index.html">packages/hurl_core/src/parser</a></li><li class="is-active"><a href="#">option.rs</a></li>
         </ul>
     </nav>
     <nav class="level">
@@ -32,7 +32,7 @@
         <div>
             <p class="heading">Branches</p>
             <p class="title has-text-success">
-                <abbr title="0 / 0">100 %</abbr></p>
+                <abbr title="0 / 0">100.0 %</abbr></p>
         </div>
     </div>
 
@@ -53,7 +53,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;*</pre>
+                <pre class="has-background-white py-0 px-2">/*</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -69,7 +69,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"> * Hurl (https:&#x2F;&#x2F;hurl.dev)</pre>
+                <pre class="has-background-white py-0 px-2"> * Hurl (https://hurl.dev)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -181,7 +181,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"> *          http:&#x2F;&#x2F;www.apache.org&#x2F;licenses&#x2F;LICENSE-2.0</pre>
+                <pre class="has-background-white py-0 px-2"> *          http://www.apache.org/licenses/LICENSE-2.0</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -309,7 +309,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"> *&#x2F;</pre>
+                <pre class="has-background-white py-0 px-2"> */</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -613,7 +613,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Parse an option in an `[Options]` section.</pre>
+                <pre class="has-background-white py-0 px-2">/// Parse an option in an `[Options]` section.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -693,7 +693,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F; We accept &#x27;_&#x27; even if there is no option name with this character. We do this to be able to</pre>
+                <pre class="has-background-white py-0 px-2">    // We accept &#39;_&#39; even if there is no option name with this character. We do this to be able to</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -709,7 +709,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F; enter the parsing of the option name and to have better error description (ex: &#x27;max-redirs&#x27;</pre>
+                <pre class="has-background-white py-0 px-2">    // enter the parsing of the option name and to have better error description (ex: &#39;max-redirs&#39;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -725,7 +725,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F; vs &#x27;max_redirs&#x27;).</pre>
+                <pre class="has-background-white py-0 px-2">    // vs &#39;max_redirs&#39;).</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -757,7 +757,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        reader.read_while(|c| c.is_ascii_alphanumeric() || c == &#x27;-&#x27; || c == &#x27;.&#x27; || c == &#x27;_&#x27;);</pre>
+                <pre class="has-background-success-light py-0 px-2">        reader.read_while(|c| c.is_ascii_alphanumeric() || c == &#39;-&#39; || c == &#39;.&#39; || c == &#39;_&#39;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7717,7 +7717,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let name = reader.read_while(|c| c.is_alphanumeric() || c == &#x27;_&#x27; || c == &#x27;-&#x27;);</pre>
+                <pre class="has-background-success-light py-0 px-2">    let name = reader.read_while(|c| c.is_alphanumeric() || c == &#39;_&#39; || c == &#39;-&#39;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7957,7 +7957,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F; `null`, a boolean or a number is only a variable value when the literal spans the whole</pre>
+                <pre class="has-background-white py-0 px-2">// `null`, a boolean or a number is only a variable value when the literal spans the whole</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7973,7 +7973,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F; value. When more characters follow (as in `11aa` or `true_is_true`), the literal is just</pre>
+                <pre class="has-background-white py-0 px-2">// value. When more characters follow (as in `11aa` or `true_is_true`), the literal is just</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7989,7 +7989,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F; the start of an unquoted string, so return a recoverable error to fall back to it.</pre>
+                <pre class="has-background-white py-0 px-2">// the start of an unquoted string, so return a recoverable error to fall back to it.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8037,7 +8037,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        None | Some(&#x27; &#x27; | &#x27;\t&#x27; | &#x27;\r&#x27; | &#x27;\n&#x27; | &#x27;#&#x27;) =&gt; Ok(value),</pre>
+                <pre class="has-background-success-light py-0 px-2">        None | Some(&#39; &#39; | &#39;\t&#39; | &#39;\r&#39; | &#39;\n&#39; | &#39;#&#39;) =&gt; Ok(value),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10261,7 +10261,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;cacert: &#x2F;home&#x2F;foo&#x2F;cert.pem&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;cacert: /home/foo/cert.pem&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10741,7 +10741,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        value: &quot;&#x2F;home&#x2F;foo&#x2F;cert.pem&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                        value: &quot;/home/foo/cert.pem&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -10757,7 +10757,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                        source: &quot;&#x2F;home&#x2F;foo&#x2F;cert.pem&quot;.to_source()</pre>
+                <pre class="has-background-white py-0 px-2">                        source: &quot;/home/foo/cert.pem&quot;.to_source()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11589,7 +11589,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;&#x2F;etc&#x2F;client-cert.pem #foo&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;/etc/client-cert.pem #foo&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11701,7 +11701,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    value: &quot;&#x2F;etc&#x2F;client-cert.pem&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                    value: &quot;/etc/client-cert.pem&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -11717,7 +11717,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                    source: &quot;&#x2F;etc&#x2F;client-cert.pem&quot;.to_source()</pre>
+                <pre class="has-background-white py-0 px-2">                    source: &quot;/etc/client-cert.pem&quot;.to_source()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -13013,7 +13013,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                Some(&#x27;&quot;&#x27;),</pre>
+                <pre class="has-background-white py-0 px-2">                Some(&#39;&quot;&#39;),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -14044,7 +14044,7 @@
         <footer class="footer">
             
                 <div class="content has-text-centered">
-                    <p class="heading">Date: 2026-11-24 05:38</p>
+                    <p class="heading">Date: 2026-11-24 20:08</p>
                 </div>
             
         </footer>

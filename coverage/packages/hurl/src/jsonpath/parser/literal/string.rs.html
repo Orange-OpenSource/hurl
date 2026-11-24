@@ -7,7 +7,7 @@
     <body>
         <div class="container">
     <nav class="breadcrumb is-right" aria-label="breadcrumbs">
-        <ul><li><a href="../../../../../../index.html">top_level</a></li><li><a href="./index.html">packages&#x2F;hurl&#x2F;src&#x2F;jsonpath&#x2F;parser&#x2F;literal</a></li><li class="is-active"><a href="#">string.rs</a></li>
+        <ul><li><a href="../../../../../../index.html">top_level</a></li><li><a href="./index.html">packages/hurl/src/jsonpath/parser/literal</a></li><li class="is-active"><a href="#">string.rs</a></li>
         </ul>
     </nav>
     <nav class="level">
@@ -32,7 +32,7 @@
         <div>
             <p class="heading">Branches</p>
             <p class="title has-text-success">
-                <abbr title="0 / 0">100 %</abbr></p>
+                <abbr title="0 / 0">100.0 %</abbr></p>
         </div>
     </div>
 
@@ -53,7 +53,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;*</pre>
+                <pre class="has-background-white py-0 px-2">/*</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -69,7 +69,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"> * Hurl (https:&#x2F;&#x2F;hurl.dev)</pre>
+                <pre class="has-background-white py-0 px-2"> * Hurl (https://hurl.dev)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -181,7 +181,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"> *          http:&#x2F;&#x2F;www.apache.org&#x2F;licenses&#x2F;LICENSE-2.0</pre>
+                <pre class="has-background-white py-0 px-2"> *          http://www.apache.org/licenses/LICENSE-2.0</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -309,7 +309,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"> *&#x2F;</pre>
+                <pre class="has-background-white py-0 px-2"> */</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -405,7 +405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Try to parse a string literal</pre>
+                <pre class="has-background-white py-0 px-2">/// Try to parse a string literal</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -421,7 +421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; if it does not start with a quote it returns `None` rather than a `ParseError`</pre>
+                <pre class="has-background-white py-0 px-2">/// if it does not start with a quote it returns `None` rather than a `ParseError`</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -597,7 +597,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Try to parse a double-quoted string</pre>
+                <pre class="has-background-white py-0 px-2">/// Try to parse a double-quoted string</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -709,7 +709,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            let ch = reader.peek().unwrap_or(&#x27;\0&#x27;);</pre>
+                <pre class="has-background-success-light py-0 px-2">            let ch = reader.peek().unwrap_or(&#39;\0&#39;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -741,7 +741,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            if ch == &#x27;&quot;&#x27; {</pre>
+                <pre class="has-background-success-light py-0 px-2">            if ch == &#39;&quot;&#39; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -757,7 +757,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &#x2F;&#x2F; End of string</pre>
+                <pre class="has-background-white py-0 px-2">                // End of string</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -805,7 +805,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            } else if ch == &#x27;\&#x27;&#x27; {</pre>
+                <pre class="has-background-success-light py-0 px-2">            } else if ch == &#39;\&#39;&#39; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -821,7 +821,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &#x2F;&#x2F; Single quote is allowed in double-quoted strings</pre>
+                <pre class="has-background-white py-0 px-2">                // Single quote is allowed in double-quoted strings</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -869,7 +869,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            } else if ch == &#x27;\\&#x27; {</pre>
+                <pre class="has-background-success-light py-0 px-2">            } else if ch == &#39;\\&#39; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -885,7 +885,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &#x2F;&#x2F; Escape sequence</pre>
+                <pre class="has-background-white py-0 px-2">                // Escape sequence</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -901,7 +901,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                reader.read(); &#x2F;&#x2F; consume backslash</pre>
+                <pre class="has-background-danger-light py-0 px-2">                reader.read(); // consume backslash</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -917,7 +917,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                let escaped = parse_escape_sequence(reader, &#x27;&quot;&#x27;)?;</pre>
+                <pre class="has-background-danger-light py-0 px-2">                let escaped = parse_escape_sequence(reader, &#39;&quot;&#39;)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1237,7 +1237,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Try to parse a single-quoted string literal</pre>
+                <pre class="has-background-white py-0 px-2">/// Try to parse a single-quoted string literal</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1269,7 +1269,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    if match_str(&quot;\&#x27;&quot;, reader) {</pre>
+                <pre class="has-background-success-light py-0 px-2">    if match_str(&quot;\&#39;&quot;, reader) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1349,7 +1349,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            let ch = reader.peek().unwrap_or(&#x27;\0&#x27;);</pre>
+                <pre class="has-background-success-light py-0 px-2">            let ch = reader.peek().unwrap_or(&#39;\0&#39;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1381,7 +1381,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            if ch == &#x27;\&#x27;&#x27; {</pre>
+                <pre class="has-background-success-light py-0 px-2">            if ch == &#39;\&#39;&#39; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1397,7 +1397,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &#x2F;&#x2F; End of string</pre>
+                <pre class="has-background-white py-0 px-2">                // End of string</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1445,7 +1445,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            } else if ch == &#x27;&quot;&#x27; {</pre>
+                <pre class="has-background-success-light py-0 px-2">            } else if ch == &#39;&quot;&#39; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1461,7 +1461,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &#x2F;&#x2F; Double quote is allowed in single-quoted strings</pre>
+                <pre class="has-background-white py-0 px-2">                // Double quote is allowed in single-quoted strings</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1509,7 +1509,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            } else if ch == &#x27;\\&#x27; {</pre>
+                <pre class="has-background-success-light py-0 px-2">            } else if ch == &#39;\\&#39; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1525,7 +1525,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &#x2F;&#x2F; Escape sequence</pre>
+                <pre class="has-background-white py-0 px-2">                // Escape sequence</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1541,7 +1541,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                reader.read(); &#x2F;&#x2F; consume backslash</pre>
+                <pre class="has-background-success-light py-0 px-2">                reader.read(); // consume backslash</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1557,7 +1557,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">                let escaped = parse_escape_sequence(reader, &#x27;\&#x27;&#x27;)?;</pre>
+                <pre class="has-background-success-light py-0 px-2">                let escaped = parse_escape_sequence(reader, &#39;\&#39;&#39;)?;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1749,7 +1749,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">            ParseErrorKind::Expecting(&quot;&#x27;&quot;.to_string()),</pre>
+                <pre class="has-background-danger-light py-0 px-2">            ParseErrorKind::Expecting(&quot;&#39;&quot;.to_string()),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1861,7 +1861,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Check if character is unescaped according to the spec</pre>
+                <pre class="has-background-white py-0 px-2">/// Check if character is unescaped according to the spec</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1925,7 +1925,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F; unescaped = %x20-21 &#x2F; %x23-26 &#x2F; %x28-5B &#x2F; %x5D-D7FF &#x2F; %xE000-10FFFF</pre>
+                <pre class="has-background-white py-0 px-2">    // unescaped = %x20-21 / %x23-26 / %x28-5B / %x5D-D7FF / %xE000-10FFFF</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1941,7 +1941,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    (0x20..=0x21).contains(&amp;code) ||  &#x2F;&#x2F; omit 0x22 &quot;</pre>
+                <pre class="has-background-success-light py-0 px-2">    (0x20..=0x21).contains(&amp;code) ||  // omit 0x22 &quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1957,7 +1957,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    (0x23..=0x26).contains(&amp;code) ||  &#x2F;&#x2F; omit 0x27 &#x27;</pre>
+                <pre class="has-background-success-light py-0 px-2">    (0x23..=0x26).contains(&amp;code) ||  // omit 0x27 &#39;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1973,7 +1973,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    (0x28..=0x5B).contains(&amp;code) ||  &#x2F;&#x2F; omit 0x5C \</pre>
+                <pre class="has-background-success-light py-0 px-2">    (0x28..=0x5B).contains(&amp;code) ||  // omit 0x5C \</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1989,7 +1989,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    (0x5D..=0xD7FF).contains(&amp;code) || &#x2F;&#x2F; skip surrogate code points</pre>
+                <pre class="has-background-success-light py-0 px-2">    (0x5D..=0xD7FF).contains(&amp;code) || // skip surrogate code points</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2053,7 +2053,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Parse escape sequence after backslash</pre>
+                <pre class="has-background-white py-0 px-2">/// Parse escape sequence after backslash</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2277,7 +2277,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        &#x27;b&#x27; =&gt; Ok(&#x27;\u{0008}&#x27;),                  &#x2F;&#x2F; BS backspace</pre>
+                <pre class="has-background-danger-light py-0 px-2">        &#39;b&#39; =&gt; Ok(&#39;\u{0008}&#39;),                  // BS backspace</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2293,7 +2293,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        &#x27;f&#x27; =&gt; Ok(&#x27;\u{000C}&#x27;),                  &#x2F;&#x2F; FF form feed</pre>
+                <pre class="has-background-danger-light py-0 px-2">        &#39;f&#39; =&gt; Ok(&#39;\u{000C}&#39;),                  // FF form feed</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2309,7 +2309,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        &#x27;n&#x27; =&gt; Ok(&#x27;\n&#x27;),                        &#x2F;&#x2F; LF line feed</pre>
+                <pre class="has-background-danger-light py-0 px-2">        &#39;n&#39; =&gt; Ok(&#39;\n&#39;),                        // LF line feed</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2325,7 +2325,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        &#x27;r&#x27; =&gt; Ok(&#x27;\r&#x27;),                        &#x2F;&#x2F; CR carriage return</pre>
+                <pre class="has-background-danger-light py-0 px-2">        &#39;r&#39; =&gt; Ok(&#39;\r&#39;),                        // CR carriage return</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2341,7 +2341,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        &#x27;t&#x27; =&gt; Ok(&#x27;\t&#x27;),                        &#x2F;&#x2F; HT horizontal tab</pre>
+                <pre class="has-background-success-light py-0 px-2">        &#39;t&#39; =&gt; Ok(&#39;\t&#39;),                        // HT horizontal tab</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2357,7 +2357,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        &#x27;&#x2F;&#x27; =&gt; Ok(&#x27;&#x2F;&#x27;),                         &#x2F;&#x2F; slash</pre>
+                <pre class="has-background-danger-light py-0 px-2">        &#39;/&#39; =&gt; Ok(&#39;/&#39;),                         // slash</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2373,7 +2373,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        &#x27;\\&#x27; =&gt; Ok(&#x27;\\&#x27;),                       &#x2F;&#x2F; backslash</pre>
+                <pre class="has-background-success-light py-0 px-2">        &#39;\\&#39; =&gt; Ok(&#39;\\&#39;),                       // backslash</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2389,7 +2389,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        &#x27;&quot;&#x27; if quote_char == &#x27;&quot;&#x27; =&gt; Ok(&#x27;&quot;&#x27;),    &#x2F;&#x2F; escaped double quote in double-quoted string</pre>
+                <pre class="has-background-danger-light py-0 px-2">        &#39;&quot;&#39; if quote_char == &#39;&quot;&#39; =&gt; Ok(&#39;&quot;&#39;),    // escaped double quote in double-quoted string</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2405,7 +2405,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">        &#x27;\&#x27;&#x27; if quote_char == &#x27;\&#x27;&#x27; =&gt; Ok(&#x27;\&#x27;&#x27;), &#x2F;&#x2F; escaped single quote in single-quoted string</pre>
+                <pre class="has-background-danger-light py-0 px-2">        &#39;\&#39;&#39; if quote_char == &#39;\&#39;&#39; =&gt; Ok(&#39;\&#39;&#39;), // escaped single quote in single-quoted string</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2421,7 +2421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x27;u&#x27; =&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">        &#39;u&#39; =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2437,7 +2437,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &#x2F;&#x2F; Unicode escape sequence \uXXXX</pre>
+                <pre class="has-background-white py-0 px-2">            // Unicode escape sequence \uXXXX</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2597,7 +2597,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Parse Unicode escape sequence after \u</pre>
+                <pre class="has-background-white py-0 px-2">/// Parse Unicode escape sequence after \u</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2821,7 +2821,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Try to parse a non-surrogate Unicode code unit</pre>
+                <pre class="has-background-white py-0 px-2">/// Try to parse a non-surrogate Unicode code unit</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2901,7 +2901,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; D</pre>
+                <pre class="has-background-white py-0 px-2">        // D</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3381,7 +3381,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Try to parse a surrogate pair Unicode code unit</pre>
+                <pre class="has-background-white py-0 px-2">/// Try to parse a surrogate pair Unicode code unit</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3669,7 +3669,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Try to parse a high surrogate code unit</pre>
+                <pre class="has-background-white py-0 px-2">/// Try to parse a high surrogate code unit</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3685,7 +3685,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; If found, returns the value of the high surrogate 10 bits</pre>
+                <pre class="has-background-white py-0 px-2">/// If found, returns the value of the high surrogate 10 bits</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3941,7 +3941,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Parse a low surrogate code unit</pre>
+                <pre class="has-background-white py-0 px-2">/// Parse a low surrogate code unit</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -3957,7 +3957,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; If found, returns the value of the low surrogate 10 bits</pre>
+                <pre class="has-background-white py-0 px-2">/// If found, returns the value of the low surrogate 10 bits</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4261,7 +4261,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Parse a single hex digit and return its value</pre>
+                <pre class="has-background-white py-0 px-2">/// Parse a single hex digit and return its value</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -4741,7 +4741,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;&#x27;store&#x27;&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;&#39;store&#39;&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5077,7 +5077,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; Test escaped quotes</pre>
+                <pre class="has-background-white py-0 px-2">        // Test escaped quotes</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5093,7 +5093,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;&#x27;quoted\\&#x27; literal&#x27;&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;&#39;quoted\\&#39; literal&#39;&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5141,7 +5141,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;quoted&#x27; literal&quot;.to_string()</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;quoted&#39; literal&quot;.to_string()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5285,7 +5285,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; Test standard escape sequences</pre>
+                <pre class="has-background-white py-0 px-2">        // Test standard escape sequences</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5589,7 +5589,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;\&quot;slash\\&#x2F;here\&quot;&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;\&quot;slash\\/here\&quot;&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5637,7 +5637,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;slash&#x2F;here&quot;.to_string()</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;slash/here&quot;.to_string()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5733,7 +5733,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; Basic Unicode escape</pre>
+                <pre class="has-background-white py-0 px-2">        // Basic Unicode escape</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5845,7 +5845,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; Test valid 4-digit Unicode character (π - pi symbol)</pre>
+                <pre class="has-background-white py-0 px-2">        // Test valid 4-digit Unicode character (π - pi symbol)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5909,7 +5909,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; Test another valid 4-digit Unicode character (© - copyright symbol)</pre>
+                <pre class="has-background-white py-0 px-2">        // Test another valid 4-digit Unicode character (© - copyright symbol)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -5973,7 +5973,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; Unicode surrogate pair - emoji</pre>
+                <pre class="has-background-white py-0 px-2">        // Unicode surrogate pair - emoji</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6085,7 +6085,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; Single quote inside double-quoted string</pre>
+                <pre class="has-background-white py-0 px-2">        // Single quote inside double-quoted string</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6101,7 +6101,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;\&quot;it&#x27;s fine\&quot;&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;\&quot;it&#39;s fine\&quot;&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6149,7 +6149,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            &quot;it&#x27;s fine&quot;.to_string()</pre>
+                <pre class="has-background-white py-0 px-2">            &quot;it&#39;s fine&quot;.to_string()</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6197,7 +6197,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; Double quote inside single-quoted string</pre>
+                <pre class="has-background-white py-0 px-2">        // Double quote inside single-quoted string</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6213,7 +6213,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;&#x27;say \&quot;hello\&quot;&#x27;&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;&#39;say \&quot;hello\&quot;&#39;&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6357,7 +6357,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;&#x27;store&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;&#39;store&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6405,7 +6405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            ParseError::new(Pos::new(1, 7), ParseErrorKind::Expecting(&quot;&#x27;&quot;.to_string()))</pre>
+                <pre class="has-background-white py-0 px-2">            ParseError::new(Pos::new(1, 7), ParseErrorKind::Expecting(&quot;&#39;&quot;.to_string()))</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6789,7 +6789,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;&#x2F;&quot;);</pre>
+                <pre class="has-background-white py-0 px-2">        let mut reader = Reader::new(&quot;/&quot;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6805,7 +6805,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(parse_escape_sequence(&amp;mut reader, &#x27;&quot;&#x27;).unwrap(), &#x27;&#x2F;&#x27;);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(parse_escape_sequence(&amp;mut reader, &#39;&quot;&#39;).unwrap(), &#39;/&#39;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6853,7 +6853,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; Unicode Character &#x27;GRINNING FACE&#x27; (U+1F600)</pre>
+                <pre class="has-background-white py-0 px-2">        // Unicode Character &#39;GRINNING FACE&#39; (U+1F600)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6885,7 +6885,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(parse_escape_sequence(&amp;mut reader, &#x27;&quot;&#x27;).unwrap(), &#x27;😀&#x27;);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(parse_escape_sequence(&amp;mut reader, &#39;&quot;&#39;).unwrap(), &#39;😀&#39;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -6997,7 +6997,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(parse_unicode_escape(&amp;mut reader).unwrap(), &#x27;é&#x27;);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(parse_unicode_escape(&amp;mut reader).unwrap(), &#39;é&#39;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7045,7 +7045,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; Unicode Character &#x27;GRINNING FACE&#x27; (U+1F600)</pre>
+                <pre class="has-background-white py-0 px-2">        // Unicode Character &#39;GRINNING FACE&#39; (U+1F600)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7077,7 +7077,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(parse_unicode_escape(&amp;mut reader).unwrap(), &#x27;😀&#x27;);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(parse_unicode_escape(&amp;mut reader).unwrap(), &#39;😀&#39;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7189,7 +7189,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(try_non_surrogate(&amp;mut reader).unwrap().unwrap(), &#x27;é&#x27;);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(try_non_surrogate(&amp;mut reader).unwrap().unwrap(), &#39;é&#39;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7349,7 +7349,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        &#x2F;&#x2F; Unicode Character &#x27;GRINNING FACE&#x27; (U+1F600)</pre>
+                <pre class="has-background-white py-0 px-2">        // Unicode Character &#39;GRINNING FACE&#39; (U+1F600)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -7381,7 +7381,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">        assert_eq!(try_surrogate_pair(&amp;mut reader).unwrap().unwrap(), &#x27;😀&#x27;);</pre>
+                <pre class="has-background-white py-0 px-2">        assert_eq!(try_surrogate_pair(&amp;mut reader).unwrap().unwrap(), &#39;😀&#39;);</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -8332,7 +8332,7 @@
         <footer class="footer">
             
                 <div class="content has-text-centered">
-                    <p class="heading">Date: 2026-11-24 05:38</p>
+                    <p class="heading">Date: 2026-11-24 20:08</p>
                 </div>
             
         </footer>

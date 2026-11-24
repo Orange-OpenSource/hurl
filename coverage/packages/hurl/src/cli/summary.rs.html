@@ -7,7 +7,7 @@
     <body>
         <div class="container">
     <nav class="breadcrumb is-right" aria-label="breadcrumbs">
-        <ul><li><a href="../../../../index.html">top_level</a></li><li><a href="./index.html">packages&#x2F;hurl&#x2F;src&#x2F;cli</a></li><li class="is-active"><a href="#">summary.rs</a></li>
+        <ul><li><a href="../../../../index.html">top_level</a></li><li><a href="./index.html">packages/hurl/src/cli</a></li><li class="is-active"><a href="#">summary.rs</a></li>
         </ul>
     </nav>
     <nav class="level">
@@ -23,7 +23,7 @@
         <div>
             <p class="heading">Functions</p>
             <p class="title has-text-success">
-                <abbr title="6 / 6">100 %</abbr></p>
+                <abbr title="6 / 6">100.0 %</abbr></p>
         </div>
     </div>
 
@@ -32,7 +32,7 @@
         <div>
             <p class="heading">Branches</p>
             <p class="title has-text-success">
-                <abbr title="0 / 0">100 %</abbr></p>
+                <abbr title="0 / 0">100.0 %</abbr></p>
         </div>
     </div>
 
@@ -53,7 +53,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;*</pre>
+                <pre class="has-background-white py-0 px-2">/*</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -69,7 +69,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"> * Hurl (https:&#x2F;&#x2F;hurl.dev)</pre>
+                <pre class="has-background-white py-0 px-2"> * Hurl (https://hurl.dev)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -181,7 +181,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"> *          http:&#x2F;&#x2F;www.apache.org&#x2F;licenses&#x2F;LICENSE-2.0</pre>
+                <pre class="has-background-white py-0 px-2"> *          http://www.apache.org/licenses/LICENSE-2.0</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -309,7 +309,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"> *&#x2F;</pre>
+                <pre class="has-background-white py-0 px-2"> */</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -389,7 +389,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Returns the text summary of this Hurl `runs`.</pre>
+                <pre class="has-background-white py-0 px-2">/// Returns the text summary of this Hurl `runs`.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -405,7 +405,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F;</pre>
+                <pre class="has-background-white py-0 px-2">///</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -421,7 +421,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; This is used in `--test`mode.</pre>
+                <pre class="has-background-white py-0 px-2">/// This is used in `--test`mode.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -501,7 +501,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F; Guard against a zero duration to avoid producing `inf` or `NaN` in the rate.</pre>
+                <pre class="has-background-white py-0 px-2">    // Guard against a zero duration to avoid producing `inf` or `NaN` in the rate.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -533,7 +533,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        1000.0 * (total_requests as f64) &#x2F; duration_in_ms</pre>
+                <pre class="has-background-success-light py-0 px-2">        1000.0 * (total_requests as f64) / duration_in_ms</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -629,7 +629,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let success_percent = 100.0 * success_files as f32 &#x2F; total_files as f32;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let success_percent = 100.0 * success_files as f32 / total_files as f32;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -661,7 +661,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let failed_percent = 100.0 * failed as f32 &#x2F; total_files as f32;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let failed_percent = 100.0 * failed as f32 / total_files as f32;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -741,7 +741,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">             Executed requests: {total_requests} ({requests_rate:.1}&#x2F;s)\n\</pre>
+                <pre class="has-background-success-light py-0 px-2">             Executed requests: {total_requests} ({requests_rate:.1}/s)\n\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -853,7 +853,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Returns a formatted duration string (h:m:s:ms).</pre>
+                <pre class="has-background-white py-0 px-2">/// Returns a formatted duration string (h:m:s:ms).</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -901,7 +901,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let hours = total_ms &#x2F; 3600000;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let hours = total_ms / 3600000;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -917,7 +917,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let minutes = (total_ms % 3600000) &#x2F; 60000;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let minutes = (total_ms % 3600000) / 60000;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -933,7 +933,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">    let seconds = (total_ms % 60000) &#x2F; 1000;</pre>
+                <pre class="has-background-success-light py-0 px-2">    let seconds = (total_ms % 60000) / 1000;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1029,7 +1029,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Returns the total number of executed HTTP requests in this list of `runs`.</pre>
+                <pre class="has-background-white py-0 px-2">/// Returns the total number of executed HTTP requests in this list of `runs`.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1061,7 +1061,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F; Each entry has a list of calls. Each call is a pair of HTTP request &#x2F; response</pre>
+                <pre class="has-background-white py-0 px-2">    // Each entry has a list of calls. Each call is a pair of HTTP request / response</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1077,7 +1077,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F; so, for a given entry, the number of executed requests is the number of calls. This count</pre>
+                <pre class="has-background-white py-0 px-2">    // so, for a given entry, the number of executed requests is the number of calls. This count</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1093,7 +1093,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F; also the retries.</pre>
+                <pre class="has-background-white py-0 px-2">    // also the retries.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1957,7 +1957,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">             Executed requests: 0 (0.0&#x2F;s)\n\</pre>
+                <pre class="has-background-white py-0 px-2">             Executed requests: 0 (0.0/s)\n\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2165,7 +2165,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Executed requests: 0 (0.0&#x2F;s)\n\</pre>
+                <pre class="has-background-white py-0 px-2">            Executed requests: 0 (0.0/s)\n\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2373,7 +2373,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">             Executed requests: 0 (0.0&#x2F;s)\n\</pre>
+                <pre class="has-background-white py-0 px-2">             Executed requests: 0 (0.0/s)\n\</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -2476,7 +2476,7 @@
         <footer class="footer">
             
                 <div class="content has-text-centered">
-                    <p class="heading">Date: 2026-11-24 05:38</p>
+                    <p class="heading">Date: 2026-11-24 20:08</p>
                 </div>
             
         </footer>

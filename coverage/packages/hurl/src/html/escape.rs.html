@@ -7,7 +7,7 @@
     <body>
         <div class="container">
     <nav class="breadcrumb is-right" aria-label="breadcrumbs">
-        <ul><li><a href="../../../../index.html">top_level</a></li><li><a href="./index.html">packages&#x2F;hurl&#x2F;src&#x2F;html</a></li><li class="is-active"><a href="#">escape.rs</a></li>
+        <ul><li><a href="../../../../index.html">top_level</a></li><li><a href="./index.html">packages/hurl/src/html</a></li><li class="is-active"><a href="#">escape.rs</a></li>
         </ul>
     </nav>
     <nav class="level">
@@ -15,7 +15,7 @@
         <div>
             <p class="heading">Lines</p>
             <p class="title has-text-success">
-                <abbr title="18 / 18">100 %</abbr></p>
+                <abbr title="18 / 18">100.0 %</abbr></p>
         </div>
     </div>
 
@@ -23,7 +23,7 @@
         <div>
             <p class="heading">Functions</p>
             <p class="title has-text-success">
-                <abbr title="3 / 3">100 %</abbr></p>
+                <abbr title="3 / 3">100.0 %</abbr></p>
         </div>
     </div>
 
@@ -32,7 +32,7 @@
         <div>
             <p class="heading">Branches</p>
             <p class="title has-text-success">
-                <abbr title="0 / 0">100 %</abbr></p>
+                <abbr title="0 / 0">100.0 %</abbr></p>
         </div>
     </div>
 
@@ -53,7 +53,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;*</pre>
+                <pre class="has-background-white py-0 px-2">/*</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -69,7 +69,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"> * Hurl (https:&#x2F;&#x2F;hurl.dev)</pre>
+                <pre class="has-background-white py-0 px-2"> * Hurl (https://hurl.dev)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -181,7 +181,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"> *          http:&#x2F;&#x2F;www.apache.org&#x2F;licenses&#x2F;LICENSE-2.0</pre>
+                <pre class="has-background-white py-0 px-2"> *          http://www.apache.org/licenses/LICENSE-2.0</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -309,7 +309,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"> *&#x2F;</pre>
+                <pre class="has-background-white py-0 px-2"> */</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -341,7 +341,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; A trait for transforming a characters sequence to HTML-safe sequence.</pre>
+                <pre class="has-background-white py-0 px-2">/// A trait for transforming a characters sequence to HTML-safe sequence.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -565,7 +565,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Replaces special characters &quot;&amp;&quot;, &quot;&lt;&quot; and &quot;&gt;&quot; to HTML-safe sequences.</pre>
+                <pre class="has-background-white py-0 px-2">/// Replaces special characters &quot;&amp;&quot;, &quot;&lt;&quot; and &quot;&gt;&quot; to HTML-safe sequences.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -581,7 +581,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F;</pre>
+                <pre class="has-background-white py-0 px-2">///</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -597,7 +597,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;&#x2F;&#x2F; Both double quote (&quot;) and single quote (&#x27;) characters are also translated.</pre>
+                <pre class="has-background-white py-0 px-2">/// Both double quote (&quot;) and single quote (&#39;) characters are also translated.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -645,7 +645,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F; Every character that must be escaped is ASCII so if we match it, we know we are in a char</pre>
+                <pre class="has-background-white py-0 px-2">    // Every character that must be escaped is ASCII so if we match it, we know we are in a char</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -661,7 +661,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F; boundary and never inside a multi-byte UTF-8. We can copy safely slices instead of copying</pre>
+                <pre class="has-background-white py-0 px-2">    // boundary and never inside a multi-byte UTF-8. We can copy safely slices instead of copying</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -677,7 +677,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F; chars to chars.</pre>
+                <pre class="has-background-white py-0 px-2">    // chars to chars.</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -741,7 +741,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            b&#x27;&amp;&#x27; =&gt; &quot;&amp;amp;&quot;,</pre>
+                <pre class="has-background-success-light py-0 px-2">            b&#39;&amp;&#39; =&gt; &quot;&amp;amp;&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -757,7 +757,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            b&#x27;&lt;&#x27; =&gt; &quot;&amp;lt;&quot;,</pre>
+                <pre class="has-background-success-light py-0 px-2">            b&#39;&lt;&#39; =&gt; &quot;&amp;lt;&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -773,7 +773,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            b&#x27;&gt;&#x27; =&gt; &quot;&amp;gt;&quot;,</pre>
+                <pre class="has-background-success-light py-0 px-2">            b&#39;&gt;&#39; =&gt; &quot;&amp;gt;&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -789,7 +789,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            b&#x27;&quot;&#x27; =&gt; &quot;&amp;quot;&quot;,</pre>
+                <pre class="has-background-success-light py-0 px-2">            b&#39;&quot;&#39; =&gt; &quot;&amp;quot;&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -805,7 +805,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">            b&#x27;\&#x27;&#x27; =&gt; &quot;&amp;#x27;&quot;,</pre>
+                <pre class="has-background-success-light py-0 px-2">            b&#39;\&#39;&#39; =&gt; &quot;&amp;#x27;&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1221,7 +1221,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                &quot;string with single quote: &#x27;baz&#x27;&quot;,</pre>
+                <pre class="has-background-white py-0 px-2">                &quot;string with single quote: &#39;baz&#39;&quot;,</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1420,7 +1420,7 @@
         <footer class="footer">
             
                 <div class="content has-text-centered">
-                    <p class="heading">Date: 2026-11-24 05:38</p>
+                    <p class="heading">Date: 2026-11-24 20:08</p>
                 </div>
             
         </footer>

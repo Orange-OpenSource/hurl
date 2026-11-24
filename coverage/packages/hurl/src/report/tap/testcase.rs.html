@@ -7,7 +7,7 @@
     <body>
         <div class="container">
     <nav class="breadcrumb is-right" aria-label="breadcrumbs">
-        <ul><li><a href="../../../../../index.html">top_level</a></li><li><a href="./index.html">packages&#x2F;hurl&#x2F;src&#x2F;report&#x2F;tap</a></li><li class="is-active"><a href="#">testcase.rs</a></li>
+        <ul><li><a href="../../../../../index.html">top_level</a></li><li><a href="./index.html">packages/hurl/src/report/tap</a></li><li class="is-active"><a href="#">testcase.rs</a></li>
         </ul>
     </nav>
     <nav class="level">
@@ -15,7 +15,7 @@
         <div>
             <p class="heading">Lines</p>
             <p class="title has-text-danger">
-                <abbr title="21 / 30">70 %</abbr></p>
+                <abbr title="21 / 30">70.0 %</abbr></p>
         </div>
     </div>
 
@@ -23,7 +23,7 @@
         <div>
             <p class="heading">Functions</p>
             <p class="title has-text-success">
-                <abbr title="2 / 2">100 %</abbr></p>
+                <abbr title="2 / 2">100.0 %</abbr></p>
         </div>
     </div>
 
@@ -32,7 +32,7 @@
         <div>
             <p class="heading">Branches</p>
             <p class="title has-text-success">
-                <abbr title="0 / 0">100 %</abbr></p>
+                <abbr title="0 / 0">100.0 %</abbr></p>
         </div>
     </div>
 
@@ -53,7 +53,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">&#x2F;*</pre>
+                <pre class="has-background-white py-0 px-2">/*</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -69,7 +69,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"> * Hurl (https:&#x2F;&#x2F;hurl.dev)</pre>
+                <pre class="has-background-white py-0 px-2"> * Hurl (https://hurl.dev)</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -181,7 +181,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"> *          http:&#x2F;&#x2F;www.apache.org&#x2F;licenses&#x2F;LICENSE-2.0</pre>
+                <pre class="has-background-white py-0 px-2"> *          http://www.apache.org/licenses/LICENSE-2.0</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -309,7 +309,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2"> *&#x2F;</pre>
+                <pre class="has-background-white py-0 px-2"> */</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -517,7 +517,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F;&#x2F; Creates an Tap &amp;lt;testcase&amp;gt; from an [`HurlResult`].</pre>
+                <pre class="has-background-white py-0 px-2">    /// Creates an Tap &amp;lt;testcase&amp;gt; from an [`HurlResult`].</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -677,7 +677,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F;&#x2F; Creates an Tap &amp;lt;testcase&amp;gt; from a TAP line</pre>
+                <pre class="has-background-white py-0 px-2">    /// Creates an Tap &amp;lt;testcase&amp;gt; from a TAP line</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -693,7 +693,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F;&#x2F; ok 1 - this is the first test</pre>
+                <pre class="has-background-white py-0 px-2">    /// ok 1 - this is the first test</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -709,7 +709,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">    &#x2F;&#x2F;&#x2F; nok 2 - this is the second test</pre>
+                <pre class="has-background-white py-0 px-2">    /// nok 2 - this is the second test</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -949,7 +949,7 @@
             </div>
             <div class="column has-background-success-light p-0"
                  role="cell">
-                <pre class="has-background-success-light py-0 px-2">        let description = match line.find(&#x27;-&#x27;) {</pre>
+                <pre class="has-background-success-light py-0 px-2">        let description = match line.find(&#39;-&#39;) {</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -997,7 +997,7 @@
             </div>
             <div class="column has-background-danger-light p-0"
                  role="cell">
-                <pre class="has-background-danger-light py-0 px-2">                    &quot;Invalid TAP line &lt;{line}&gt; - missing &#x27;-&#x27; separator&quot;</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    &quot;Invalid TAP line &lt;{line}&gt; - missing &#39;-&#39; separator&quot;</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1493,7 +1493,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">            Testcase::parse(&quot;ok 1 - tests_ok&#x2F;test.1.hurl&quot;).unwrap(),</pre>
+                <pre class="has-background-white py-0 px-2">            Testcase::parse(&quot;ok 1 - tests_ok/test.1.hurl&quot;).unwrap(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1525,7 +1525,7 @@
             </div>
             <div class="column has-background-white p-0"
                  role="cell">
-                <pre class="has-background-white py-0 px-2">                description: &quot;tests_ok&#x2F;test.1.hurl&quot;.to_string(),</pre>
+                <pre class="has-background-white py-0 px-2">                description: &quot;tests_ok/test.1.hurl&quot;.to_string(),</pre>
             </div>
         </div><div class="columns p-0 m-0" role="row">
             <div
@@ -1612,7 +1612,7 @@
         <footer class="footer">
             
                 <div class="content has-text-centered">
-                    <p class="heading">Date: 2026-11-24 05:38</p>
+                    <p class="heading">Date: 2026-11-24 20:08</p>
                 </div>
             
         </footer>
