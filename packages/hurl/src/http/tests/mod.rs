@@ -170,14 +170,8 @@ pub fn custom_http_request() -> RequestSpec {
         url: Url::from_str("http://localhost/custom").unwrap(),
         headers,
         cookies: vec![
-            RequestCookie {
-                name: String::from("theme"),
-                value: String::from("light"),
-            },
-            RequestCookie {
-                name: String::from("sessionToken"),
-                value: String::from("abc123"),
-            },
+            RequestCookie::new("theme", "light"),
+            RequestCookie::new("sessionToken", "abc123"),
         ],
         ..Default::default()
     }

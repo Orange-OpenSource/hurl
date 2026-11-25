@@ -1351,10 +1351,10 @@ mod tests {
         let request = RequestSpec {
             method: Method("GET".to_string()),
             url: Url::from_str("http://localhost:8000/hello").unwrap(),
-            cookies: vec![crate::http::RequestCookie {
-                name: "cookie1".to_string(),
-                value: "value'with'quotes".to_string(),
-            }],
+            cookies: vec![crate::http::RequestCookie::new(
+                "cookie1",
+                "value'with'quotes",
+            )],
             ..Default::default()
         };
 

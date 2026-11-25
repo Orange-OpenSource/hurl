@@ -94,7 +94,7 @@ pub fn eval_request(
     for cookie in request.cookies() {
         let name = template::eval_template(&cookie.name, variables)?;
         let value = template::eval_template(&cookie.value, variables)?;
-        let cookie = RequestCookie { name, value };
+        let cookie = RequestCookie::new(&name, &value);
         cookies.push(cookie);
     }
     for cookie in option_cookies {
@@ -439,13 +439,6 @@ mod tests {
         hurl_file.entries[0].request.clone()
     }
 
-    fn new_cookie(name: &str, value: &str) -> RequestCookie {
-        RequestCookie {
-            name: name.to_string(),
-            value: value.to_string(),
-        }
-    }
-
     fn eval_cookies(content: &str, option_cookies: &[RequestCookie]) -> Vec<RequestCookie> {
         let request = parse_request(content);
         let variables = VariableSet::new();
@@ -463,17 +456,23 @@ fruit: lemon
 ";
         assert_eq!(
             eval_cookies(content, &[]),
-            vec![new_cookie("fruit", "lemon")]
+            vec![RequestCookie::new("fruit", "lemon")]
         );
     }
 
     #[test]
     fn test_eval_cookies_only_option_cookies() {
         let content = "GET http://localhost:8000/hello\n";
-        let option_cookies = [new_cookie("fruit", "lemon"), new_cookie("color", "green")];
+        let option_cookies = [
+            RequestCookie::new("fruit", "lemon"),
+            RequestCookie::new("color", "green"),
+        ];
         assert_eq!(
             eval_cookies(content, &option_cookies),
-            vec![new_cookie("fruit", "lemon"), new_cookie("color", "green")]
+            vec![
+                RequestCookie::new("fruit", "lemon"),
+                RequestCookie::new("color", "green")
+            ]
         );
     }
 
@@ -484,10 +483,13 @@ GET http://localhost:8000/hello
 [Cookies]
 fruit: lemon
 ";
-        let option_cookies = [new_cookie("color", "green")];
+        let option_cookies = [RequestCookie::new("color", "green")];
         assert_eq!(
             eval_cookies(content, &option_cookies),
-            vec![new_cookie("fruit", "lemon"), new_cookie("color", "green")]
+            vec![
+                RequestCookie::new("fruit", "lemon"),
+                RequestCookie::new("color", "green")
+            ]
         );
     }
 
@@ -498,10 +500,16 @@ GET http://localhost:8000/hello
 [Cookies]
 fruit: lemon
 ";
-        let option_cookies = [new_cookie("fruit", "apple"), new_cookie("color", "green")];
+        let option_cookies = [
+            RequestCookie::new("fruit", "apple"),
+            RequestCookie::new("color", "green"),
+        ];
         assert_eq!(
             eval_cookies(content, &option_cookies),
-            vec![new_cookie("fruit", "lemon"), new_cookie("color", "green")]
+            vec![
+                RequestCookie::new("fruit", "lemon"),
+                RequestCookie::new("color", "green")
+            ]
         );
     }
 
@@ -512,10 +520,13 @@ GET http://localhost:8000/hello
 [Cookies]
 Fruit: lemon
 ";
-        let option_cookies = [new_cookie("fruit", "apple")];
+        let option_cookies = [RequestCookie::new("fruit", "apple")];
         assert_eq!(
             eval_cookies(content, &option_cookies),
-            vec![new_cookie("Fruit", "lemon"), new_cookie("fruit", "apple")]
+            vec![
+                RequestCookie::new("Fruit", "lemon"),
+                RequestCookie::new("fruit", "apple")
+            ]
         );
     }
 
@@ -530,7 +541,7 @@ GET http://localhost:8000/hello
         let mut variables = VariableSet::new();
         variables.insert("name".to_string(), Value::String("fruit".to_string()));
         variables.insert("value".to_string(), Value::String("lemon".to_string()));
-        let option_cookies = [new_cookie("fruit", "apple")];
+        let option_cookies = [RequestCookie::new("fruit", "apple")];
         let cookies = eval_request(
             &request,
             &option_cookies,
@@ -539,7 +550,7 @@ GET http://localhost:8000/hello
         )
         .unwrap()
         .cookies;
-        assert_eq!(cookies, vec![new_cookie("fruit", "lemon")]);
+        assert_eq!(cookies, vec![RequestCookie::new("fruit", "lemon")]);
     }
 
     #[test]

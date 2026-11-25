@@ -220,20 +220,9 @@ impl Request {
 }
 
 fn parse_cookies(s: &str) -> Vec<RequestCookie> {
-    s.split(';').map(|t| parse_cookie(t.trim())).collect()
-}
-
-fn parse_cookie(s: &str) -> RequestCookie {
-    match s.find('=') {
-        Some(i) => RequestCookie {
-            name: s.split_at(i).0.to_string(),
-            value: s.split_at(i + 1).1.to_string(),
-        },
-        None => RequestCookie {
-            name: s.to_string(),
-            value: String::new(),
-        },
-    }
+    s.split(';')
+        .map(|t| RequestCookie::from_str(t.trim()))
+        .collect()
 }
 
 #[cfg(test)]
@@ -281,14 +270,8 @@ mod tests {
         assert_eq!(
             cookies_request().cookies(),
             vec![
-                RequestCookie {
-                    name: "cookie1".to_string(),
-                    value: "value1".to_string(),
-                },
-                RequestCookie {
-                    name: "cookie2".to_string(),
-                    value: "value2".to_string(),
-                },
+                RequestCookie::new("cookie1", "value1"),
+                RequestCookie::new("cookie2", "value2"),
             ]
         );
     }
@@ -298,26 +281,9 @@ mod tests {
         assert_eq!(
             parse_cookies("cookie1=value1; cookie2=value2"),
             vec![
-                RequestCookie {
-                    name: "cookie1".to_string(),
-                    value: "value1".to_string(),
-                },
-                RequestCookie {
-                    name: "cookie2".to_string(),
-                    value: "value2".to_string(),
-                },
+                RequestCookie::new("cookie1", "value1"),
+                RequestCookie::new("cookie2", "value2"),
             ]
-        );
-    }
-
-    #[test]
-    fn test_parse_cookie() {
-        assert_eq!(
-            parse_cookie("cookie1=value1"),
-            RequestCookie {
-                name: "cookie1".to_string(),
-                value: "value1".to_string(),
-            },
         );
     }
 

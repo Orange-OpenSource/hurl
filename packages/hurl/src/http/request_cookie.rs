@@ -24,8 +24,43 @@ pub struct RequestCookie {
     pub value: String,
 }
 
+impl RequestCookie {
+    /// Creates a new request cookie.
+    pub fn new(name: &str, value: &str) -> Self {
+        RequestCookie {
+            name: name.to_string(),
+            value: value.to_string(),
+        }
+    }
+
+    /// Creates a new instance from a string with format `name=value`.
+    pub fn from_str(s: &str) -> Self {
+        match s.find('=') {
+            Some(i) => {
+                let name = s.split_at(i).0;
+                let value = s.split_at(i + 1).1;
+                RequestCookie::new(name, value)
+            }
+            None => RequestCookie::new(s, ""),
+        }
+    }
+}
+
 impl fmt::Display for RequestCookie {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}={}", self.name, self.value)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::http::RequestCookie;
+
+    #[test]
+    fn test_parse_cookie() {
+        assert_eq!(
+            RequestCookie::from_str("cookie1=value1"),
+            RequestCookie::new("cookie1", "value1"),
+        );
     }
 }
