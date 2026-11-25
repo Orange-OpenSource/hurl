@@ -21,7 +21,7 @@ use std::time::Duration;
 use hurl_core::types::{BytesPerSec, Count};
 
 use crate::http::{
-    CertFile, FollowLocation, HeaderVec, IpResolve, RequestedHttpVersion, TlsVersion,
+    CertFile, FollowLocation, HeaderVec, IpResolve, RequestCookie, RequestedHttpVersion, TlsVersion,
 };
 use crate::pretty::PrettyMode;
 use crate::util::path::ContextDir;
@@ -41,6 +41,7 @@ pub struct RunnerOptionsBuilder {
     connects_to: Vec<String>,
     context_dir: ContextDir,
     continue_on_error: bool,
+    cookies: Vec<RequestCookie>,
     cookie_input_file: Option<String>,
     delay: Duration,
     digest: bool,
@@ -100,6 +101,7 @@ impl Default for RunnerOptionsBuilder {
             connects_to: vec![],
             context_dir: ContextDir::default(),
             continue_on_error: false,
+            cookies: vec![],
             cookie_input_file: None,
             delay: Duration::from_millis(0),
             digest: false,
@@ -242,6 +244,18 @@ impl RunnerOptionsBuilder {
     /// not affect the behavior with multiple input Hurl files.
     pub fn continue_on_error(&mut self, continue_on_error: bool) -> &mut Self {
         self.continue_on_error = continue_on_error;
+        self
+    }
+
+    /// Set cookies for all the requests. These cookies are not domain scoped and can be stripped on
+    /// redirects (see also Hurl `[Cookies]` section).
+    ///
+    /// Cookies can be set using different methods:
+    /// - either within Hurl file
+    /// - with an input cookie file (see [`Self::cookie_input_file`])
+    /// - using this method
+    pub fn cookies(&mut self, cookies: &[RequestCookie]) -> &mut Self {
+        self.cookies = cookies.to_vec();
         self
     }
 
@@ -532,6 +546,7 @@ impl RunnerOptionsBuilder {
             delay: self.delay,
             context_dir: self.context_dir.clone(),
             continue_on_error: self.continue_on_error,
+            cookies: self.cookies.clone(),
             cookie_input_file: self.cookie_input_file.clone(),
             digest: self.digest,
             fail_with_body: self.fail_with_body,
@@ -610,6 +625,9 @@ pub struct RunnerOptions {
     pub(crate) context_dir: ContextDir,
     /// Sets stopping or continuing executing requests to the end of the Hurl file even when an error occurs.
     pub(crate) continue_on_error: bool,
+    /// Add cookies for all requests. These cookies are not domain scoped and can be stripped on
+    /// redirects (see also Hurl `[Cookies]` section).
+    pub(crate) cookies: Vec<RequestCookie>,
     /// Reads cookies from this file (using the Netscape cookie file format).
     pub(crate) cookie_input_file: Option<String>,
     /// Enables HTTP Digest authentication.

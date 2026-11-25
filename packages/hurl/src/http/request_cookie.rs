@@ -17,6 +17,7 @@
  */
 use core::fmt;
 
+/// A cookie sent in a request, as a name/value pair. It is not scoped to a domain.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RequestCookie {
     pub name: String,

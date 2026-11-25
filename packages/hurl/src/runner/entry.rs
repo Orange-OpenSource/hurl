@@ -76,7 +76,12 @@ pub fn run(
     }
 
     // Evaluates our source requests given our set of variables
-    let http_request = match request::eval_request(&entry.request, variables, context_dir) {
+    let http_request = match request::eval_request(
+        &entry.request,
+        &runner_options.cookies,
+        variables,
+        context_dir,
+    ) {
         Ok(r) => r,
         Err(error) => {
             return EntryResult {

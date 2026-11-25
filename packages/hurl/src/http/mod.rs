@@ -34,7 +34,7 @@ pub use self::request::{
     CertFile, CredentialForwarding, FollowLocation, IpResolve, Request, RequestedHttpVersion,
     TlsVersion,
 };
-pub(crate) use self::request_cookie::RequestCookie;
+pub use self::request_cookie::RequestCookie;
 pub(crate) use self::request_spec::{Body, FileParam, Method, MultipartParam, RequestSpec};
 pub use self::response::{HttpVersion, Response};
 pub use self::response_cookie::{CookieAttribute, ResponseCookie};

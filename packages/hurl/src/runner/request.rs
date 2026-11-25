@@ -36,8 +36,12 @@ use super::template;
 use super::variable::VariableSet;
 
 /// Transforms an AST `request` to a spec request given a set of `variables`.
+///
+/// Cookies can come from the Hurl AST (i.e. the `request` instance), but users can also
+/// provide optional `option_cookies` (for instance, from the command line using `--cookie`).
 pub fn eval_request(
     request: &Request,
+    option_cookies: &[RequestCookie],
     variables: &VariableSet,
     context_dir: &ContextDir,
 ) -> Result<RequestSpec, RunnerError> {
@@ -83,13 +87,20 @@ pub fn eval_request(
         form.push(param);
     }
 
-    // Cookies
+    // Cookies: they come from the command line using `--cookie` and from the AST in `request`.
+    // We give priority to the AST, so we load the cookies from the AST, and add remaining optional
+    // cookies.
     let mut cookies = vec![];
     for cookie in request.cookies() {
         let name = template::eval_template(&cookie.name, variables)?;
         let value = template::eval_template(&cookie.value, variables)?;
         let cookie = RequestCookie { name, value };
         cookies.push(cookie);
+    }
+    for cookie in option_cookies {
+        if !cookies.iter().any(|c| c.name == cookie.name) {
+            cookies.push(cookie.clone());
+        }
     }
 
     let body = match &request.body {
@@ -365,9 +376,15 @@ mod tests {
     #[test]
     fn test_error_variable() {
         let variables = VariableSet::new();
-        let error = eval_request(&hello_request(), &variables, &ContextDir::default())
-            .err()
-            .unwrap();
+        let cookies = vec![];
+        let error = eval_request(
+            &hello_request(),
+            &cookies,
+            &variables,
+            &ContextDir::default(),
+        )
+        .err()
+        .unwrap();
         assert_eq!(
             error.source_info,
             SourceInfo::new(Pos::new(1, 7), Pos::new(1, 15))
@@ -383,24 +400,36 @@ mod tests {
     #[test]
     fn test_hello_request() {
         let mut variables = VariableSet::new();
+        let cookies = vec![];
         variables.insert(
             String::from("base_url"),
             Value::String(String::from("http://localhost:8000")),
         );
-        let http_request =
-            eval_request(&hello_request(), &variables, &ContextDir::default()).unwrap();
+        let http_request = eval_request(
+            &hello_request(),
+            &cookies,
+            &variables,
+            &ContextDir::default(),
+        )
+        .unwrap();
         assert_eq!(http_request, http::hello_http_request());
     }
 
     #[test]
     fn test_query_request() {
         let mut variables = VariableSet::new();
+        let cookies = vec![];
         variables.insert(
             String::from("param1"),
             Value::String(String::from("value1")),
         );
-        let http_request =
-            eval_request(&query_request(), &variables, &ContextDir::default()).unwrap();
+        let http_request = eval_request(
+            &query_request(),
+            &cookies,
+            &variables,
+            &ContextDir::default(),
+        )
+        .unwrap();
         assert_eq!(http_request, http::query_http_request());
     }
 
