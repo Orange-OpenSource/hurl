@@ -111,8 +111,8 @@ pub fn cookies_input_file() -> clap::Arg {
     clap::Arg::new("cookies_input_file")
         .long("cookie")
         .short('b')
-        .value_name("FILE")
-        .help("Read cookies from FILE")
+        .value_name("FILE|DATA")
+        .help("Add cookies to send to the server, from a file or a string")
         .help_heading("Other options")
         .num_args(1)
 }

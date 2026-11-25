@@ -60,6 +60,7 @@ def process_table(
             name = f'<a href="#{_id}" id="{_id}"><code>{text}</code></a>'
         else:
             name = f"`{name_raw}`"
+        name = name.replace("|", "&#124;")
 
         next_h = doc.find_first(
             lambda it: isinstance(it, Header), start=doc.next_node(header)

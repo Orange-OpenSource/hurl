@@ -720,9 +720,11 @@ This is a cli-only option.
 
 ### Other options
 
-#### -b, --cookie <FILE> {#cookie}
+#### -b, --cookie <FILE|DATA> {#cookie}
 
-Read cookies from FILE (using the Netscape cookie file format).
+If no "=" symbol is used in the argument, read cookies from FILE (using the Netscape cookie file format).
+
+If the argument has the format "NAME1=VALUE1; NAME2=VALUE2", then the data is sent to the HTTP server in the Cookie header.
 
 Combined with [`-c, --cookie-jar`](#cookie-jar), you can simulate a cookie storage between successive Hurl runs.
 

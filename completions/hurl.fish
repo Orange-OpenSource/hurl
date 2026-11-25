@@ -7,7 +7,7 @@ complete -c hurl -l compressed -d 'Request compressed response (using deflate or
 complete -c hurl -l connect-timeout -d 'Maximum time allowed for connection'
 complete -c hurl -l connect-to -d 'For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead'
 complete -c hurl -l continue-on-error -d 'Continue executing requests even if an error occurs'
-complete -c hurl -l cookie -d 'Read cookies from FILE'
+complete -c hurl -l cookie -d 'Add cookies to send to the server, from a file or a string'
 complete -c hurl -l cookie-jar -d 'Write cookies to FILE after running the session'
 complete -c hurl -l curl -d 'Export each request to a list of curl commands'
 complete -c hurl -l delay -d 'Sets delay before each request (aka sleep)'
