@@ -433,6 +433,115 @@ mod tests {
         assert_eq!(http_request, http::query_http_request());
     }
 
+    /// Parses a Hurl `content` and returns its first request.
+    fn parse_request(content: &str) -> Request {
+        let hurl_file = hurl_core::parser::parse_hurl_file(content).unwrap();
+        hurl_file.entries[0].request.clone()
+    }
+
+    fn new_cookie(name: &str, value: &str) -> RequestCookie {
+        RequestCookie {
+            name: name.to_string(),
+            value: value.to_string(),
+        }
+    }
+
+    fn eval_cookies(content: &str, option_cookies: &[RequestCookie]) -> Vec<RequestCookie> {
+        let request = parse_request(content);
+        let variables = VariableSet::new();
+        eval_request(&request, option_cookies, &variables, &ContextDir::default())
+            .unwrap()
+            .cookies
+    }
+
+    #[test]
+    fn test_eval_cookies_without_option_cookies() {
+        let content = "\
+GET http://localhost:8000/hello
+[Cookies]
+fruit: lemon
+";
+        assert_eq!(
+            eval_cookies(content, &[]),
+            vec![new_cookie("fruit", "lemon")]
+        );
+    }
+
+    #[test]
+    fn test_eval_cookies_only_option_cookies() {
+        let content = "GET http://localhost:8000/hello\n";
+        let option_cookies = [new_cookie("fruit", "lemon"), new_cookie("color", "green")];
+        assert_eq!(
+            eval_cookies(content, &option_cookies),
+            vec![new_cookie("fruit", "lemon"), new_cookie("color", "green")]
+        );
+    }
+
+    #[test]
+    fn test_eval_cookies_merge_option_cookies() {
+        let content = "\
+GET http://localhost:8000/hello
+[Cookies]
+fruit: lemon
+";
+        let option_cookies = [new_cookie("color", "green")];
+        assert_eq!(
+            eval_cookies(content, &option_cookies),
+            vec![new_cookie("fruit", "lemon"), new_cookie("color", "green")]
+        );
+    }
+
+    #[test]
+    fn test_eval_cookies_hurl_file_takes_precedence() {
+        let content = "\
+GET http://localhost:8000/hello
+[Cookies]
+fruit: lemon
+";
+        let option_cookies = [new_cookie("fruit", "apple"), new_cookie("color", "green")];
+        assert_eq!(
+            eval_cookies(content, &option_cookies),
+            vec![new_cookie("fruit", "lemon"), new_cookie("color", "green")]
+        );
+    }
+
+    #[test]
+    fn test_eval_cookies_names_are_case_sensitive() {
+        let content = "\
+GET http://localhost:8000/hello
+[Cookies]
+Fruit: lemon
+";
+        let option_cookies = [new_cookie("fruit", "apple")];
+        assert_eq!(
+            eval_cookies(content, &option_cookies),
+            vec![new_cookie("Fruit", "lemon"), new_cookie("fruit", "apple")]
+        );
+    }
+
+    #[test]
+    fn test_eval_cookies_with_template() {
+        let content = "\
+GET http://localhost:8000/hello
+[Cookies]
+{{name}}: {{value}}
+";
+        let request = parse_request(content);
+        let mut variables = VariableSet::new();
+        variables.insert("name".to_string(), Value::String("fruit".to_string()));
+        variables.insert("value".to_string(), Value::String("lemon".to_string()));
+        let option_cookies = [new_cookie("fruit", "apple")];
+        let cookies = eval_request(
+            &request,
+            &option_cookies,
+            &variables,
+            &ContextDir::default(),
+        )
+        .unwrap()
+        .cookies;
+        assert_eq!(cookies, vec![new_cookie("fruit", "lemon")]);
+    }
+
     #[test]
     fn clear_cookie_store() {
         assert!(!get_cmd_cookie_storage_clear(&hello_request()));
