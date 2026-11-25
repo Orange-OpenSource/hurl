@@ -42,7 +42,7 @@ pub struct RunnerOptionsBuilder {
     context_dir: ContextDir,
     continue_on_error: bool,
     cookies: Vec<RequestCookie>,
-    cookie_input_file: Option<String>,
+    cookie_input_file: Option<PathBuf>,
     delay: Duration,
     digest: bool,
     fail_with_body: bool,
@@ -260,7 +260,7 @@ impl RunnerOptionsBuilder {
     }
 
     /// Reads cookies from this file (using the Netscape cookie file format).
-    pub fn cookie_input_file(&mut self, cookie_input_file: Option<String>) -> &mut Self {
+    pub fn cookie_input_file(&mut self, cookie_input_file: Option<PathBuf>) -> &mut Self {
         self.cookie_input_file = cookie_input_file;
         self
     }
@@ -629,7 +629,7 @@ pub struct RunnerOptions {
     /// redirects (see also Hurl `[Cookies]` section).
     pub(crate) cookies: Vec<RequestCookie>,
     /// Reads cookies from this file (using the Netscape cookie file format).
-    pub(crate) cookie_input_file: Option<String>,
+    pub(crate) cookie_input_file: Option<PathBuf>,
     /// Enables HTTP Digest authentication.
     pub(crate) digest: bool,
     /// Outputs response body on standard output if there are any run errors.

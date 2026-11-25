@@ -489,7 +489,7 @@ impl ClientOptions {
         }
         if let Some(ref cookie_file) = self.cookie_input_file {
             args.push(Arg::plain("--cookie"));
-            args.push(Arg::plain(cookie_file));
+            args.push(Arg::plain(&cookie_file.to_string_lossy()));
         }
         if self.digest {
             args.push(Arg::plain("--digest"));
@@ -645,7 +645,7 @@ fn quote(s: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-    use std::path::Path;
+    use std::path::{Path, PathBuf};
     use std::str::FromStr;
     use std::time::Duration;
 
@@ -771,7 +771,7 @@ mod tests {
             compressed: true,
             connect_timeout: Duration::from_secs(20),
             connects_to: vec!["example.com:443:host-47.example.com:443".to_string()],
-            cookie_input_file: Some("cookie_file".to_string()),
+            cookie_input_file: Some(PathBuf::from("cookie_file")),
             digest: false,
             follow_location: FollowLocation::Follow(CredentialForwarding::OnlyInitialHost),
             headers,

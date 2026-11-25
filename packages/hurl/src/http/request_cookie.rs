@@ -33,16 +33,19 @@ impl RequestCookie {
         }
     }
 
-    /// Creates a new instance from a string with format `name=value`.
-    pub fn from_str(s: &str) -> Self {
-        match s.find('=') {
-            Some(i) => {
-                let name = s.split_at(i).0;
-                let value = s.split_at(i + 1).1;
-                RequestCookie::new(name, value)
-            }
-            None => RequestCookie::new(s, ""),
-        }
+    /// Parses a list of cookies from a `Cookie` header value, with format `name1=value1; name2=value2`.
+    ///
+    /// A cookie without `=` is parsed as a cookie with an empty value. Empty pieces (for instance,
+    /// a trailing `;`) are ignored.
+    pub fn from_header(s: &str) -> Vec<RequestCookie> {
+        s.split(';')
+            .map(str::trim)
+            .filter(|t| !t.is_empty())
+            .map(|t| match t.split_once('=') {
+                Some((name, value)) => RequestCookie::new(name, value),
+                None => RequestCookie::new(t, ""),
+            })
+            .collect()
     }
 }
 
@@ -57,10 +60,44 @@ mod tests {
     use crate::http::RequestCookie;
 
     #[test]
-    fn test_parse_cookie() {
+    fn test_from_header() {
         assert_eq!(
-            RequestCookie::from_str("cookie1=value1"),
-            RequestCookie::new("cookie1", "value1"),
+            RequestCookie::from_header("cookie1=value1"),
+            vec![RequestCookie::new("cookie1", "value1")]
         );
+        assert_eq!(
+            RequestCookie::from_header("cookie1=value1; cookie2=value2"),
+            vec![
+                RequestCookie::new("cookie1", "value1"),
+                RequestCookie::new("cookie2", "value2"),
+            ]
+        );
+        assert_eq!(
+            RequestCookie::from_header("cookie1=value1;cookie2=value2"),
+            vec![
+                RequestCookie::new("cookie1", "value1"),
+                RequestCookie::new("cookie2", "value2"),
+            ]
+        );
+        assert_eq!(
+            RequestCookie::from_header("token=a=b; cookie2"),
+            vec![
+                RequestCookie::new("token", "a=b"),
+                RequestCookie::new("cookie2", ""),
+            ]
+        );
+        assert_eq!(
+            RequestCookie::from_header("cookie1=value1;"),
+            vec![RequestCookie::new("cookie1", "value1")]
+        );
+        assert_eq!(
+            RequestCookie::from_header(" ; cookie1=value1;; cookie2=value2 ; "),
+            vec![
+                RequestCookie::new("cookie1", "value1"),
+                RequestCookie::new("cookie2", "value2"),
+            ]
+        );
+        assert_eq!(RequestCookie::from_header(""), vec![]);
+        assert_eq!(RequestCookie::from_header(" ; "), vec![]);
     }
 }

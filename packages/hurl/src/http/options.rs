@@ -37,7 +37,7 @@ pub struct ClientOptions {
     pub compressed: bool,
     pub connect_timeout: Duration,
     pub connects_to: Vec<String>,
-    pub cookie_input_file: Option<String>,
+    pub cookie_input_file: Option<PathBuf>,
     pub digest: bool,
     pub follow_location: FollowLocation,
     pub headers: HeaderVec,

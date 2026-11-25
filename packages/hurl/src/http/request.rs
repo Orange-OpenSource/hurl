@@ -214,15 +214,9 @@ impl Request {
         self.headers
             .get_all(COOKIE)
             .iter()
-            .flat_map(|h| parse_cookies(h.value.as_str().trim()))
+            .flat_map(|h| RequestCookie::from_header(h.value.as_str().trim()))
             .collect()
     }
-}
-
-fn parse_cookies(s: &str) -> Vec<RequestCookie> {
-    s.split(';')
-        .map(|t| RequestCookie::from_str(t.trim()))
-        .collect()
 }
 
 #[cfg(test)]
@@ -269,17 +263,6 @@ mod tests {
         assert!(hello_request().cookies().is_empty());
         assert_eq!(
             cookies_request().cookies(),
-            vec![
-                RequestCookie::new("cookie1", "value1"),
-                RequestCookie::new("cookie2", "value2"),
-            ]
-        );
-    }
-
-    #[test]
-    fn test_parse_cookies() {
-        assert_eq!(
-            parse_cookies("cookie1=value1; cookie2=value2"),
             vec![
                 RequestCookie::new("cookie1", "value1"),
                 RequestCookie::new("cookie2", "value2"),

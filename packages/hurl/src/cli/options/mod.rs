@@ -34,7 +34,8 @@ use std::time::Duration;
 
 use hurl::http;
 use hurl::http::{
-    CertFile, CredentialForwarding, FollowLocation, Header, HeaderVec, RequestedHttpVersion,
+    CertFile, CredentialForwarding, FollowLocation, Header, HeaderVec, RequestCookie,
+    RequestedHttpVersion,
 };
 use hurl::pretty::PrettyMode;
 use hurl::runner::{Output, RunnerOptions, RunnerOptionsBuilder, Value};
@@ -472,7 +473,9 @@ impl CliOptions {
         let color_stdout = self.color_stdout;
         let context_dir = ContextDir::new(current_dir, file_root);
         let continue_on_error = self.continue_on_error;
-        let cookie_input_file = self.cookie_input_file.clone();
+
+        // --cookie can be either data or input file.
+        let (cookie_input_file, cookies) = parse_cookie_arg(self.cookie_input_file.as_deref());
         let delay = self.delay;
         let digest = self.digest;
         let fail_with_body = self.fail_with_body;
@@ -579,6 +582,7 @@ impl CliOptions {
             .connects_to(&connects_to)
             .continue_on_error(continue_on_error)
             .context_dir(&context_dir)
+            .cookies(&cookies)
             .cookie_input_file(cookie_input_file)
             .fail_with_body(fail_with_body)
             .follow_location(follow_location)
@@ -636,13 +640,28 @@ impl CliOptions {
     }
 }
 
+/// Parses the `--cookie` argument `arg`, and returns either a cookie input file or a list of cookies.
+///
+/// Like curl, if `arg` contains a `=`, it is parsed as cookies data (with format
+/// `NAME1=VALUE1; NAME2=VALUE2`), otherwise it's a path to a cookie file (using the Netscape cookie
+/// file format).
+fn parse_cookie_arg(arg: Option<&str>) -> (Option<PathBuf>, Vec<RequestCookie>) {
+    match arg {
+        Some(data) if data.contains('=') => (None, RequestCookie::from_header(data)),
+        Some(filename) => (Some(PathBuf::from(filename)), vec![]),
+        None => (None, vec![]),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::cli::options::{EnvVars, HttpVersion, RunContext, TlsVersion};
     use crate::cli::{OutputType, options};
+    use hurl::http::RequestCookie;
     use hurl::pretty::PrettyMode;
     use std::collections::HashMap;
     use std::ffi::OsString;
+    use std::path::PathBuf;
     use std::{env, fs};
 
     fn args_from(args: &[&str]) -> Vec<OsString> {
@@ -667,6 +686,46 @@ mod tests {
         fs::create_dir_all(&config_dir).unwrap();
         fs::write(&config_file, content).unwrap();
         home.to_string_lossy().to_string()
+    }
+
+    #[test]
+    fn parse_cookie_arg_as_file() {
+        assert_eq!(options::parse_cookie_arg(None), (None, vec![]));
+        assert_eq!(
+            options::parse_cookie_arg(Some("cookies.txt")),
+            (Some(PathBuf::from("cookies.txt")), vec![])
+        );
+        assert_eq!(
+            options::parse_cookie_arg(Some("/tmp/my cookies;v2.txt")),
+            (Some(PathBuf::from("/tmp/my cookies;v2.txt")), vec![])
+        );
+    }
+
+    #[test]
+    fn parse_cookie_arg_as_data() {
+        assert_eq!(
+            options::parse_cookie_arg(Some("fruit=lemon")),
+            (None, vec![RequestCookie::new("fruit", "lemon")])
+        );
+        assert_eq!(
+            options::parse_cookie_arg(Some("fruit=lemon; color=green")),
+            (
+                None,
+                vec![
+                    RequestCookie::new("fruit", "lemon"),
+                    RequestCookie::new("color", "green")
+                ]
+            )
+        );
+        assert_eq!(
+            options::parse_cookie_arg(Some("fruit=")),
+            (None, vec![RequestCookie::new("fruit", "")])
+        );
+        // Like curl, any argument with a `=` is data, even if it looks like a path.
+        assert_eq!(
+            options::parse_cookie_arg(Some("/tmp/a=b.txt")),
+            (None, vec![RequestCookie::new("/tmp/a", "b.txt")])
+        );
     }
 
     #[test]
