@@ -1,1 +1,2 @@
 curl --cookie tests_ok/cookie/cookie_file.cookies 'http://localhost:8000/cookie_file'
+curl --cookie 'cookie1=valueA' 'http://localhost:8000/cookie_file'
