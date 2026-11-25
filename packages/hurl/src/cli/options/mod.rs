@@ -72,7 +72,7 @@ pub struct CliOptions {
     pub connect_timeout: Duration,
     pub connects_to: Vec<String>,
     pub continue_on_error: bool,
-    pub cookie_input_file: Option<String>,
+    pub cookies: Option<String>,
     pub cookie_output_file: Option<PathBuf>,
     pub curl_file: Option<PathBuf>,
     pub delay: Duration,
@@ -385,7 +385,7 @@ impl Default for CliOptions {
             connect_timeout: Duration::from_secs(300),
             connects_to: Vec::new(),
             continue_on_error: false,
-            cookie_input_file: None,
+            cookies: None,
             cookie_output_file: None,
             curl_file: None,
             delay: Duration::from_millis(0),
@@ -475,7 +475,7 @@ impl CliOptions {
         let continue_on_error = self.continue_on_error;
 
         // --cookie can be either data or input file.
-        let (cookie_input_file, cookies) = parse_cookie_arg(self.cookie_input_file.as_deref());
+        let (cookie_input_file, cookies) = parse_cookie_arg(self.cookies.as_deref());
         let delay = self.delay;
         let digest = self.digest;
         let fail_with_body = self.fail_with_body;

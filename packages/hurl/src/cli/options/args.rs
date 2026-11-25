@@ -139,7 +139,7 @@ where
         .arg(commands::report_junit())
         .arg(commands::report_tap())
         // Other options
-        .arg(commands::cookies_input_file())
+        .arg(commands::cookie())
         .arg(commands::cookies_output_file())
         .arg(commands::file_root())
         .arg(commands::glob())
@@ -198,7 +198,7 @@ fn parse_arg_matches(
     let connect_timeout = connect_timeout(arg_matches, default_options.connect_timeout)?;
     let connects_to = connects_to(arg_matches, default_options.connects_to);
     let continue_on_error = continue_on_error(arg_matches, default_options.continue_on_error);
-    let cookie_input_file = cookie_input_file(arg_matches, default_options.cookie_input_file);
+    let cookies = cookies(arg_matches, default_options.cookies);
     let cookie_output_file = cookie_output_file(arg_matches, default_options.cookie_output_file);
     let curl_file = curl_file(arg_matches, default_options.curl_file);
     let delay = delay(arg_matches, default_options.delay)?;
@@ -272,7 +272,7 @@ fn parse_arg_matches(
         connect_timeout,
         connects_to,
         continue_on_error,
-        cookie_input_file,
+        cookies,
         cookie_output_file,
         curl_file,
         delay,
@@ -435,8 +435,8 @@ fn continue_on_error(arg_matches: &ArgMatches, default_value: bool) -> bool {
     }
 }
 
-fn cookie_input_file(arg_matches: &ArgMatches, default_value: Option<String>) -> Option<String> {
-    get::<String>(arg_matches, "cookies_input_file").or(default_value)
+fn cookies(arg_matches: &ArgMatches, default_value: Option<String>) -> Option<String> {
+    get::<String>(arg_matches, "cookie").or(default_value)
 }
 
 fn cookie_output_file(arg_matches: &ArgMatches, default_value: Option<PathBuf>) -> Option<PathBuf> {

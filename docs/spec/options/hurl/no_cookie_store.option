@@ -2,7 +2,7 @@ name: no_cookie_store
 long: no-cookie-store
 help: Do not use cookie store between requests
 help_heading: HTTP options
-conflict: cookies_input_file
+conflict: cookie
 cli_only: true
 config_file: true
 env_var: HURL_NO_COOKIE_STORE

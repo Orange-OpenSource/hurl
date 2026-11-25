@@ -107,12 +107,12 @@ pub fn continue_on_error() -> clap::Arg {
         .action(clap::ArgAction::SetTrue)
 }
 
-pub fn cookies_input_file() -> clap::Arg {
-    clap::Arg::new("cookies_input_file")
+pub fn cookie() -> clap::Arg {
+    clap::Arg::new("cookie")
         .long("cookie")
         .short('b')
-        .value_name("FILE|DATA")
-        .help("Add cookies to send to the server, from a file or a string")
+        .value_name("DATA|FILE")
+        .help("Send cookies from DATA string or read them from FILE")
         .help_heading("Other options")
         .num_args(1)
 }
@@ -425,7 +425,7 @@ pub fn no_cookie_store() -> clap::Arg {
         .long("no-cookie-store")
         .help("Do not use cookie store between requests")
         .help_heading("HTTP options")
-        .conflicts_with("cookies_input_file")
+        .conflicts_with("cookie")
         .action(clap::ArgAction::SetTrue)
 }
 

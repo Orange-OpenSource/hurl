@@ -1,0 +1,13 @@
+name: cookie
+long: cookie
+short: b
+value: DATA|FILE
+help: Send cookies from DATA string or read them from FILE
+help_heading: Other options
+cli_only: true
+---
+Pass DATA to the HTTP server in the Cookie header, or read cookies from FILE.
+
+If the argument contains a `=` character, it is used as inline cookie DATA, in the form `NAME1=VALUE1; NAME2=VALUE2`. These cookies are sent with each request of the run.
+
+Otherwise, the argument is the name of a FILE to read cookies from (using the Netscape cookie file format). Combined with [`-c, --cookie-jar`](#cookie-jar), you can simulate a cookie storage between successive Hurl runs.

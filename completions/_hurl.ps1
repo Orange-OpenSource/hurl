@@ -29,7 +29,7 @@ Register-ArgumentCompleter -Native -CommandName 'hurl' -ScriptBlock {
             [CompletionResult]::new('--connect-timeout', 'connect-timeout', [CompletionResultType]::ParameterName, 'Maximum time allowed for connection')
             [CompletionResult]::new('--connect-to', 'connect-to', [CompletionResultType]::ParameterName, 'For a request to the given HOST1:PORT1 pair, connect to HOST2:PORT2 instead')
             [CompletionResult]::new('--continue-on-error', 'continue-on-error', [CompletionResultType]::ParameterName, 'Continue executing requests even if an error occurs')
-            [CompletionResult]::new('--cookie', 'cookie', [CompletionResultType]::ParameterName, 'Add cookies to send to the server, from a file or a string')
+            [CompletionResult]::new('--cookie', 'cookie', [CompletionResultType]::ParameterName, 'Send cookies from DATA string or read them from FILE')
             [CompletionResult]::new('--cookie-jar', 'cookie-jar', [CompletionResultType]::ParameterName, 'Write cookies to FILE after running the session')
             [CompletionResult]::new('--curl', 'curl', [CompletionResultType]::ParameterName, 'Export each request to a list of curl commands')
             [CompletionResult]::new('--delay', 'delay', [CompletionResultType]::ParameterName, 'Sets delay before each request (aka sleep)')

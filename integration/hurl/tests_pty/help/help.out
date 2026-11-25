@@ -141,7 +141,7 @@ Report options:
       --report-tap <FILE>    Write a TAP report to FILE
 
 Other options:
-  -b, --cookie <FILE|DATA>  Add cookies to send to the server, from a file or a string
+  -b, --cookie <DATA|FILE>  Send cookies from DATA string or read them from FILE
   -c, --cookie-jar <FILE>   Write cookies to FILE after running the session
       --file-root <DIR>     Set root directory to import files [default: input file directory]
       --glob <GLOB>         Specify input files that match the given GLOB. Multiple glob flags may

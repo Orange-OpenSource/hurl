@@ -112,12 +112,15 @@ def zsh_option(option: Option):
     if option.append:
         cardinality = "*"
 
-    if option.value == "FILE" or option.value == "PATH":
+    value = option.value or ""
+    if "DIR" in value:
+        action = ": :_files -/"
+    elif "FILE" in value or "PATH" in value:
         action = ": :_files"
     # This ensures that the completion waits for user input
     # TODO: Either check for a pattern using _guard
     #       Or display a help message using _message
-    elif option.value:
+    elif value:
         action = ": :"
 
     if option.short and option.long:
