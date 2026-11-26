@@ -78,6 +78,7 @@ pub fn run(
     // Evaluates our source requests given our set of variables
     let http_request = match request::eval_request(
         &entry.request,
+        &runner_options.headers,
         &runner_options.cookies,
         variables,
         context_dir,
@@ -275,7 +276,6 @@ impl ClientOptions {
             cookie_input_file: runner_options.cookie_input_file.clone(),
             digest: runner_options.digest,
             follow_location: runner_options.follow_location,
-            headers: runner_options.headers.clone(),
             http_version: runner_options.http_version,
             ip_resolve: runner_options.ip_resolve,
             max_filesize: runner_options.max_filesize,

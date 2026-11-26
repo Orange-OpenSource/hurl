@@ -37,10 +37,13 @@ use super::variable::VariableSet;
 
 /// Transforms an AST `request` to a spec request given a set of `variables`.
 ///
-/// Cookies can come from the Hurl AST (i.e. the `request` instance), but users can also
-/// provide optional `option_cookies` (for instance, from the command line using `--cookie`).
+/// Headers can come from the Hurl AST (i.e. the `request` instance), but users can also
+/// provide additional `option_headers` (for instance, from the command line using `--header`).
+/// Like headers, cookies can come from the Hurl AST, but users can also add optional `option_cookies`
+/// (for instance, from the command line using `--cookie`).
 pub fn eval_request(
     request: &Request,
+    option_headers: &HeaderVec,
     option_cookies: &[RequestCookie],
     variables: &VariableSet,
     context_dir: &ContextDir,
@@ -56,6 +59,7 @@ pub fn eval_request(
         let header = Header::new(&name, &value);
         headers.push(header);
     }
+    headers.extend(option_headers);
 
     // Basic auth
     if let Some(kv) = &request.basic_auth() {
@@ -376,9 +380,11 @@ mod tests {
     #[test]
     fn test_error_variable() {
         let variables = VariableSet::new();
+        let headers = HeaderVec::new();
         let cookies = vec![];
         let error = eval_request(
             &hello_request(),
+            &headers,
             &cookies,
             &variables,
             &ContextDir::default(),
@@ -400,6 +406,7 @@ mod tests {
     #[test]
     fn test_hello_request() {
         let mut variables = VariableSet::new();
+        let headers = HeaderVec::new();
         let cookies = vec![];
         variables.insert(
             String::from("base_url"),
@@ -407,6 +414,7 @@ mod tests {
         );
         let http_request = eval_request(
             &hello_request(),
+            &headers,
             &cookies,
             &variables,
             &ContextDir::default(),
@@ -418,6 +426,7 @@ mod tests {
     #[test]
     fn test_query_request() {
         let mut variables = VariableSet::new();
+        let headers = HeaderVec::new();
         let cookies = vec![];
         variables.insert(
             String::from("param1"),
@@ -425,6 +434,7 @@ mod tests {
         );
         let http_request = eval_request(
             &query_request(),
+            &headers,
             &cookies,
             &variables,
             &ContextDir::default(),
@@ -442,9 +452,16 @@ mod tests {
     fn eval_cookies(content: &str, option_cookies: &[RequestCookie]) -> Vec<RequestCookie> {
         let request = parse_request(content);
         let variables = VariableSet::new();
-        eval_request(&request, option_cookies, &variables, &ContextDir::default())
-            .unwrap()
-            .cookies
+        let headers = HeaderVec::new();
+        eval_request(
+            &request,
+            &headers,
+            option_cookies,
+            &variables,
+            &ContextDir::default(),
+        )
+        .unwrap()
+        .cookies
     }
 
     #[test]
@@ -538,12 +555,14 @@ GET http://localhost:8000/hello
 {{name}}: {{value}}
 ";
         let request = parse_request(content);
+        let headers = HeaderVec::new();
         let mut variables = VariableSet::new();
         variables.insert("name".to_string(), Value::String("fruit".to_string()));
         variables.insert("value".to_string(), Value::String("lemon".to_string()));
         let option_cookies = [RequestCookie::new("fruit", "apple")];
         let cookies = eval_request(
             &request,
+            &headers,
             &option_cookies,
             &variables,
             &ContextDir::default(),

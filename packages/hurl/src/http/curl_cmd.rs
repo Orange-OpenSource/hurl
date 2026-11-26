@@ -104,7 +104,7 @@ impl CurlCmd {
         args.append(&mut params);
 
         let mut headers = request_spec.headers.clone();
-        headers.extend(&options.headers);
+
         // We need to filter added headers that have been explicitly removed by user
         headers.retain(|h| !options.no_headers.iter().any(|name| h.name_eq(name)));
         let mut params = headers_params(
@@ -746,18 +746,20 @@ mod tests {
     #[test]
     fn hello_request_with_options() {
         let secrets: &[&str] = &[];
+        let mut headers = HeaderVec::new();
+        headers.push(Header::new("Test-Header-1", "content-1"));
+        headers.push(Header::new("Test-Header-2", "content-2"));
+        headers.push(Header::new("Test-Header-Empty", ""));
+
         let request = RequestSpec {
             method: Method("GET".to_string()),
             url: Url::from_str("http://localhost:8000/hello").unwrap(),
+            headers,
             ..Default::default()
         };
 
         let context_dir = ContextDir::default();
         let cookie_store = CookieStore::new();
-        let mut headers = HeaderVec::new();
-        headers.push(Header::new("Test-Header-1", "content-1"));
-        headers.push(Header::new("Test-Header-2", "content-2"));
-        headers.push(Header::new("Test-Header-Empty", ""));
 
         let mut proxy_headers = HeaderVec::new();
         proxy_headers.push(Header::new("X-Foo", "foo"));
@@ -774,7 +776,6 @@ mod tests {
             cookie_input_file: Some(PathBuf::from("cookie_file")),
             digest: false,
             follow_location: FollowLocation::Follow(CredentialForwarding::OnlyInitialHost),
-            headers,
             http_version: RequestedHttpVersion::Http10,
             insecure: true,
             ip_resolve: IpResolve::IpV6,

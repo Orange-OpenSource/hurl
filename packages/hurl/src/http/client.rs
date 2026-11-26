@@ -101,7 +101,6 @@ impl Client {
         // back on the original host, mirroring libcurl's behaviour.
         let original_headers = request_spec.headers.clone();
         let original_cookies = request_spec.cookies.clone();
-        let original_options_headers = options.headers.clone();
         let original_options_user = options.user.clone();
 
         // Unfortunately, follow-location feature from libcurl can not be used as libcurl returns a
@@ -148,7 +147,6 @@ impl Client {
             // A -> B -> A will forward credentials on the final step.
             let mut headers = original_headers.clone();
             let mut cookies = original_cookies.clone();
-            options.headers = original_options_headers.clone();
             options.user = original_options_user.clone();
             if should_strip_credentials_on_redirect(
                 original_url,
@@ -157,7 +155,6 @@ impl Client {
             ) {
                 headers.remove_credentials();
                 cookies.clear();
-                options.headers.remove_credentials();
                 options.user = None;
             }
 
@@ -523,8 +520,7 @@ impl Client {
         let request_spec_body = &request_spec.body.bytes();
         self.set_body(request_spec_body)?;
 
-        let mut headers = request_spec.headers.clone();
-        headers.extend(&options.headers);
+        let headers = request_spec.headers.clone();
         self.set_headers(
             &headers,
             request_spec.implicit_content_type.as_deref(),
