@@ -242,7 +242,7 @@ pub fn get_entry_options(
             }
             OptionKind::NetRcFile(value) => {
                 let filename = eval_template(value, variables)?;
-                entry_options.netrc_file = Some(filename);
+                entry_options.netrc_file = Some(PathBuf::from(filename));
             }
             OptionKind::NetRcOptional(value) => {
                 let value = eval_boolean_option(value, variables)?;

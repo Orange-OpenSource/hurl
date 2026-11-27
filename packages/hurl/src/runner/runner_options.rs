@@ -58,7 +58,7 @@ pub struct RunnerOptionsBuilder {
     max_send_speed: Option<BytesPerSec>,
     negotiate: bool,
     netrc: bool,
-    netrc_file: Option<String>,
+    netrc_file: Option<PathBuf>,
     netrc_optional: bool,
     no_assert: bool,
     no_headers: Vec<String>,
@@ -377,7 +377,7 @@ impl RunnerOptionsBuilder {
     }
 
     /// Sets the netrc file.
-    pub fn netrc_file(&mut self, netrc_file: Option<String>) -> &mut Self {
+    pub fn netrc_file(&mut self, netrc_file: Option<PathBuf>) -> &mut Self {
         self.netrc_file = netrc_file;
         self
     }
@@ -659,7 +659,7 @@ pub struct RunnerOptions {
     /// Sets the netrc flag.
     pub(crate) netrc: bool,
     /// Sets the netrc file.
-    pub(crate) netrc_file: Option<String>,
+    pub(crate) netrc_file: Option<PathBuf>,
     /// Sets the optional netrc flag.
     pub(crate) netrc_optional: bool,
     /// Ignores all asserts defined in the Hurl file.

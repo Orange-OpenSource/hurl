@@ -129,6 +129,7 @@ pub struct CertFile {
 
 impl From<&str> for CertFile {
     /// Parses a certificate file from a "curl" option string `PATH:PASSWORD`
+    // TODO: check on Windows with drive letter
     fn from(value: &str) -> Self {
         let mut iter = value.chars();
         let mut cert = String::new();

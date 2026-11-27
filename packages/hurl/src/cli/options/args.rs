@@ -340,18 +340,8 @@ fn cacert_file(
     default_value: Option<PathBuf>,
 ) -> Result<Option<PathBuf>, CliOptionsError> {
     match get_string(arg_matches, "cacert_file") {
+        Some(filename) => to_path_buf(&filename).map(Some),
         None => Ok(default_value),
-        Some(filename) => {
-            let path = PathBuf::from(&filename);
-            if path.exists() {
-                Ok(Some(path))
-            } else {
-                Err(CliOptionsError::Error(format!(
-                    "Input file {} does not exist",
-                    path.display()
-                )))
-            }
-        }
     }
 }
 
@@ -366,11 +356,12 @@ fn client_cert_file(
     match get::<String>(arg_matches, "client_cert_file") {
         None => Ok(default_value),
         Some(filename) => {
-            if !Path::new(&filename).is_file() {
-                let message = format!("File {filename} does not exist");
-                Err(CliOptionsError::Error(message))
-            } else {
+            // TODO: cert args can be in the form `certificate[:password]`
+            if Path::new(&filename).is_file() {
                 Ok(Some(filename))
+            } else {
+                let message = format!("File {filename} is not a file");
+                Err(CliOptionsError::Error(message))
             }
         }
     }
@@ -381,16 +372,8 @@ fn client_key_file(
     default_value: Option<PathBuf>,
 ) -> Result<Option<PathBuf>, CliOptionsError> {
     match get::<String>(arg_matches, "client_key_file") {
+        Some(filename) => to_path_buf(&filename).map(Some),
         None => Ok(default_value),
-        Some(filename) => {
-            let path = PathBuf::from(&filename);
-            if !path.is_file() {
-                let message = format!("File {filename} does not exist");
-                Err(CliOptionsError::Error(message))
-            } else {
-                Ok(Some(path))
-            }
-        }
     }
 }
 
@@ -605,15 +588,15 @@ fn input_files(
     let mut files = vec![];
     if let Some(filenames) = get_strings(arg_matches, "input_files") {
         for filename in &filenames {
-            let filename = Path::new(filename);
-            if !filename.exists() {
-                return Err(CliOptionsError::InvalidInputFile(filename.to_path_buf()));
+            let path = Path::new(filename);
+            if !path.exists() {
+                return Err(CliOptionsError::InvalidInputFile(path.to_path_buf()));
             }
-            if filename.is_file() {
-                let file = Input::from(filename);
+            if path.is_file() {
+                let file = Input::from(path);
                 files.push(file);
-            } else if filename.is_dir() {
-                walks_hurl_files(filename, &mut files)?;
+            } else if path.is_dir() {
+                walks_hurl_files(path, &mut files)?;
             }
         }
     }
@@ -744,18 +727,11 @@ fn netrc(arg_matches: &ArgMatches, default_value: bool) -> bool {
 
 fn netrc_file(
     arg_matches: &ArgMatches,
-    default_value: Option<String>,
-) -> Result<Option<String>, CliOptionsError> {
+    default_value: Option<PathBuf>,
+) -> Result<Option<PathBuf>, CliOptionsError> {
     match get::<String>(arg_matches, "netrc_file") {
+        Some(filename) => to_path_buf(&filename).map(Some),
         None => Ok(default_value),
-        Some(filename) => {
-            if !Path::new(&filename).is_file() {
-                let message = format!("File {filename} does not exist");
-                Err(CliOptionsError::Error(message))
-            } else {
-                Ok(Some(filename))
-            }
-        }
     }
 }
 
@@ -1102,4 +1078,15 @@ fn get_strings(matches: &ArgMatches, name: &str) -> Option<Vec<String>> {
     matches
         .get_many::<String>(name)
         .map(|v| v.map(|x| x.to_string()).collect())
+}
+
+/// Given a `filename`, returns a [`PathBuf`] if it's a file or an error
+fn to_path_buf(filename: &str) -> Result<PathBuf, CliOptionsError> {
+    let path = PathBuf::from(filename);
+    if path.is_file() {
+        Ok(path)
+    } else {
+        let message = format!("File {} is not a file", path.display());
+        Err(CliOptionsError::Error(message))
+    }
 }

@@ -563,7 +563,7 @@ impl ClientOptions {
         }
         if let Some(filename) = &self.netrc_file {
             args.push(Arg::plain("--netrc-file"));
-            args.push(Arg::quoted(filename));
+            args.push(Arg::quoted(&filename.to_string_lossy()));
         }
         if self.netrc_optional {
             args.push(Arg::plain("--netrc-optional"));
@@ -785,7 +785,7 @@ mod tests {
             max_send_speed: Some(BytesPerSec(8000)),
             negotiate: true,
             netrc: false,
-            netrc_file: Some("/var/run/netrc".to_string()),
+            netrc_file: Some(PathBuf::from("/var/run/netrc")),
             netrc_optional: true,
             no_headers: Vec::new(),
             ntlm: true,

@@ -16,6 +16,7 @@
  *
  */
 use std::ffi::{CStr, CString};
+use std::path::Path;
 use std::ptr;
 use std::time::Duration;
 
@@ -214,7 +215,15 @@ pub fn total_time_t(easy: &mut Easy) -> Result<Duration, Error> {
 }
 
 /// Read .netrc information from a file.
-pub fn netrc_file(easy: &mut Easy, filename: &str) -> Result<(), Error> {
+pub fn netrc_file(easy: &mut Easy, filename: &Path) -> Result<(), Error> {
+    let Some(filename) = filename.to_str() else {
+        let mut err = Error::new(curl_sys::CURLE_CONV_FAILED);
+        err.set_extra(format!(
+            "netrc file path is not valid UTF-8: {}",
+            filename.display()
+        ));
+        return Err(err);
+    };
     let filename = CString::new(filename)?;
     cvt(easy, unsafe {
         curl_sys::curl_easy_setopt(easy.raw(), CURLOPT_NETRC_FILE, filename.as_ptr())

@@ -49,7 +49,7 @@ pub struct ClientOptions {
     pub max_send_speed: Option<BytesPerSec>,
     pub negotiate: bool,
     pub netrc: bool,
-    pub netrc_file: Option<String>,
+    pub netrc_file: Option<PathBuf>,
     pub netrc_optional: bool,
     pub no_headers: Vec<String>,
     pub no_proxy: Option<String>,
