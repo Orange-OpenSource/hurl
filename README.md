@@ -1622,7 +1622,13 @@ $ curl --location --remote-name https://github.com/Orange-OpenSource/hurl/releas
 $ sudo apt update && sudo apt install ./hurl_${VERSION}_amd64.deb
 ```
 
-For Ubuntu >=22.04, Hurl can be installed from `ppa:lepapareil/hurl`
+For Ubuntu 26.04, Hurl can be installed using `apt` (the version may be different from the latest available one):
+
+```shell
+$ sudo apt update && sudo apt install hurl
+```
+
+For Ubuntu 22.04 and 24.04, Hurl can be installed from `ppa:lepapareil/hurl`
 
 ```shell
 $ VERSION=8.1.0
