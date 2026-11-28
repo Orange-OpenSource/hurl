@@ -35,7 +35,7 @@ regex = "1.13.2"
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = { version = "1.0.154", features = ["arbitrary_precision"] }
 sha2 = "0.11.1"
-url = "2.5.8"
+url = "2.5.9"
 xml = "1.4.0"
 # uuid features: lets you generate random UUIDs and use a faster (but still sufficiently random) RNG
 uuid = { version = "1.29.3", features = ["v4" , "fast-rng"] }
@@ -46,7 +46,7 @@ terminal_size = "0.4.4"
 winres = "0.1.12"
 
 [build-dependencies]
-cc = "1.11.2"
+cc = "1.11.3"
 
 [lints]
 workspace = true
