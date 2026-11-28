@@ -190,7 +190,7 @@ fn parse_arg_matches(
 ) -> Result<CliOptions, CliOptionsError> {
     let aws_sigv4 = aws_sigv4(arg_matches, default_options.aws_sigv4);
     let cacert_file = cacert_file(arg_matches, default_options.cacert_file)?;
-    let client_cert_file = client_cert_file(arg_matches, default_options.client_cert_file)?;
+    let client_cert_file = client_cert_file(arg_matches, default_options.client_cert_file);
     let client_key_file = client_key_file(arg_matches, default_options.client_key_file)?;
     let color_stdout = color(arg_matches, default_options.color_stdout);
     let color_stderr = color(arg_matches, default_options.color_stderr);
@@ -349,22 +349,11 @@ fn aws_sigv4(arg_matches: &ArgMatches, default_value: Option<String>) -> Option<
     get::<String>(arg_matches, "aws_sigv4").or(default_value)
 }
 
-fn client_cert_file(
-    arg_matches: &ArgMatches,
-    default_value: Option<String>,
-) -> Result<Option<String>, CliOptionsError> {
-    match get::<String>(arg_matches, "client_cert_file") {
-        None => Ok(default_value),
-        Some(filename) => {
-            // TODO: cert args can be in the form `certificate[:password]`
-            if Path::new(&filename).is_file() {
-                Ok(Some(filename))
-            } else {
-                let message = format!("File {filename} is not a file");
-                Err(CliOptionsError::Error(message))
-            }
-        }
-    }
+fn client_cert_file(arg_matches: &ArgMatches, default_value: Option<String>) -> Option<String> {
+    // --cert are in the form `certificate[:password]`. We don't do any validation here, the certificate
+    // file existence is checked later. That's why we have a code rather different from other `file-like` option
+    // (`cacert_file` for instance).
+    get::<String>(arg_matches, "client_cert_file").or(default_value)
 }
 
 fn client_key_file(

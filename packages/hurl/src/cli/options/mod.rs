@@ -458,7 +458,18 @@ impl CliOptions {
     ) -> Result<RunnerOptions, CliError> {
         let aws_sigv4 = self.aws_sigv4.clone();
         let cacert_file = self.cacert_file.clone();
-        let client_cert_file = self.client_cert_file.as_deref().map(CertFile::from);
+        let client_cert_file = match &self.client_cert_file {
+            Some(value) => {
+                // The value is in the form `certificate[:password]`, we only check the certificate part.
+                let cert = CertFile::from(value.as_str());
+                if !cert.path.is_file() {
+                    let msg = format!("File {} is not a file", cert.path.display());
+                    return Err(CliError::InvalidOption(msg));
+                }
+                Some(cert)
+            }
+            None => None,
+        };
         let client_key_file = self.client_key_file.clone();
         let compressed = self.compressed;
         let connect_timeout = self.connect_timeout;

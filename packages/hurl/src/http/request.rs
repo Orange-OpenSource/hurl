@@ -128,45 +128,59 @@ pub struct CertFile {
 }
 
 impl From<&str> for CertFile {
-    /// Parses a certificate file from a "curl" option string `PATH:PASSWORD`
-    // TODO: check on Windows with drive letter
+    /// Parses a certificate file from a "curl" option string `PATH[:PASSWORD]`.
     fn from(value: &str) -> Self {
-        let mut iter = value.chars();
+        CertFile::parse(value, cfg!(windows))
+    }
+}
+
+impl CertFile {
+    /// Parses a certificate file from a "curl" option string `PATH[:PASSWORD]`, following curl rules:
+    ///
+    /// - in the certificate part, `\:` and `\\` are escape sequences, any other `\` is kept
+    ///   literally (so Windows path separators are preserved),
+    /// - the first unescaped `:` separates the certificate from the password, the password is
+    ///   taken as is,
+    /// - if `is_windows` is `true`, a leading drive letter (`C:\` or `C:/`) is not considered as
+    ///   a separator.
+    fn parse(value: &str, is_windows: bool) -> Self {
+        let chars = value.chars().collect::<Vec<_>>();
         let mut cert = String::new();
-        let mut password = String::new();
-        // The state of the parser:
-        // - `true` if we're parsing the certificate portion of `cert_and_pass`
-        // - `false` if we're parsing the password portion of `cert_and_pass`
-        let mut parse_cert = true;
-        while let Some(c) = iter.next() {
-            if parse_cert {
-                // We're parsing the certificate, do some escaping
-                match c {
-                    '\\' => {
-                        // We read the next escaped char, if we failed, we're at the end of this string,
-                        // the read char is not an escaping \.
-                        match iter.next() {
-                            Some(c) => cert.push(c),
-                            None => {
-                                cert.push('\\');
-                                break;
-                            }
-                        }
-                    }
-                    ':' if parse_cert => parse_cert = false,
-                    c => cert.push(c),
+        let mut i = 0;
+
+        if is_windows
+            && chars.len() >= 3
+            && chars[0].is_ascii_alphabetic()
+            && chars[1] == ':'
+            && (chars[2] == '\\' || chars[2] == '/')
+        {
+            cert.push(chars[0]);
+            cert.push(':');
+            i = 2;
+        }
+
+        while i < chars.len() {
+            match chars[i] {
+                '\\' if matches!(chars.get(i + 1), Some('\\') | Some(':')) => {
+                    cert.push(chars[i + 1]);
+                    i += 2;
                 }
-            } else {
-                // We have already found a cert/password separator, we don't need to escape anything now
-                // we just update the password
-                password.push(c);
+                ':' => {
+                    let password = chars[i + 1..].iter().collect::<String>();
+                    return CertFile {
+                        path: PathBuf::from(cert),
+                        password: Some(password),
+                    };
+                }
+                c => {
+                    cert.push(c);
+                    i += 1;
+                }
             }
         }
-        let cert = PathBuf::from(cert);
-        let password = if parse_cert { None } else { Some(password) };
         CertFile {
-            path: cert,
-            password,
+            path: PathBuf::from(cert),
+            password: None,
         }
     }
 }
@@ -281,59 +295,6 @@ mod tests {
         assert_eq!(TlsVersion::Tls12.to_string(), "1.2");
     }
 
-    #[test]
-    fn test_parse_cert() {
-        assert_eq!(
-            CertFile::from("foobar"),
-            CertFile {
-                path: "foobar".into(),
-                password: None
-            }
-        );
-        assert_eq!(
-            CertFile::from("foobar:toto"),
-            CertFile {
-                path: "foobar".into(),
-                password: Some("toto".to_string())
-            }
-        );
-        assert_eq!(
-            CertFile::from("foobar:toto:tata"),
-            CertFile {
-                path: "foobar".into(),
-                password: Some("toto:tata".to_string())
-            }
-        );
-        assert_eq!(
-            CertFile::from("foobar:"),
-            CertFile {
-                path: "foobar".into(),
-                password: Some(String::new())
-            }
-        );
-        assert_eq!(
-            CertFile::from("foobar\\"),
-            CertFile {
-                path: "foobar\\".into(),
-                password: None
-            }
-        );
-        assert_eq!(
-            CertFile::from("foo\\:bar\\:baz:toto:tata\\:tutu"),
-            CertFile {
-                path: "foo:bar:baz".into(),
-                password: Some("toto:tata\\:tutu".to_string())
-            }
-        );
-        assert_eq!(
-            CertFile::from("foo\\\\:toto\\:tata:tutu"),
-            CertFile {
-                path: "foo\\".into(),
-                password: Some("toto\\:tata:tutu".to_string())
-            }
-        );
-    }
-
     fn cert(path: &str, password: Option<&str>) -> CertFile {
         CertFile {
             path: PathBuf::from(path),
@@ -342,7 +303,7 @@ mod tests {
     }
 
     #[test]
-    fn parse_cert_option() {
+    fn test_parse_cert() {
         assert_eq!(CertFile::from("foobar"), cert("foobar", None));
         assert_eq!(CertFile::from("foobar:toto"), cert("foobar", Some("toto")));
         assert_eq!(
@@ -358,6 +319,74 @@ mod tests {
         assert_eq!(
             CertFile::from("foo\\\\:toto\\:tata:tutu"),
             cert("foo\\", Some("toto\\:tata:tutu"))
+        );
+    }
+
+    #[test]
+    fn parse_cert_keeps_non_escaping_backslash() {
+        for is_windows in [false, true] {
+            assert_eq!(
+                CertFile::parse("certs\\client.p12", is_windows),
+                cert("certs\\client.p12", None)
+            );
+            assert_eq!(
+                CertFile::parse("certs\\client.p12:pwd", is_windows),
+                cert("certs\\client.p12", Some("pwd"))
+            );
+            assert_eq!(
+                CertFile::parse("\\\\server\\share\\a.p12:pwd", is_windows),
+                cert("\\server\\share\\a.p12", Some("pwd"))
+            );
+        }
+    }
+
+    #[test]
+    fn parse_cert_windows_drive_letter() {
+        assert_eq!(
+            CertFile::parse("C:\\certs\\a.p12", true),
+            cert("C:\\certs\\a.p12", None)
+        );
+        assert_eq!(
+            CertFile::parse("C:\\certs\\a.p12:pwd", true),
+            cert("C:\\certs\\a.p12", Some("pwd"))
+        );
+        assert_eq!(
+            CertFile::parse("c:/certs/a.p12:pwd", true),
+            cert("c:/certs/a.p12", Some("pwd"))
+        );
+        assert_eq!(
+            CertFile::parse("C:\\certs\\a\\:b.p12:pwd:x", true),
+            cert("C:\\certs\\a:b.p12", Some("pwd:x"))
+        );
+        // Drive relative path, not detected as a drive letter, colon must be escaped.
+        assert_eq!(
+            CertFile::parse("C:a.p12:pwd", true),
+            cert("C", Some("a.p12:pwd"))
+        );
+        assert_eq!(
+            CertFile::parse("C\\:a.p12:pwd", true),
+            cert("C:a.p12", Some("pwd"))
+        );
+        // Not a letter.
+        assert_eq!(
+            CertFile::parse("1:\\a.p12", true),
+            cert("1", Some("\\a.p12"))
+        );
+    }
+
+    #[test]
+    fn parse_cert_no_drive_letter_on_unix() {
+        assert_eq!(
+            CertFile::parse("C:\\certs\\a.p12", false),
+            cert("C", Some("\\certs\\a.p12"))
+        );
+        assert_eq!(
+            CertFile::parse("C:/certs/a.p12:pwd", false),
+            cert("C", Some("/certs/a.p12:pwd"))
+        );
+        assert_eq!(
+            CertFile::parse("/etc/certs/a.p12:pwd", false),
+            cert("/etc/certs/a.p12", Some("pwd"))
         );
     }
 }
